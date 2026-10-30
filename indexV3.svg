@@ -2233,9 +2233,21 @@ Thank you for using Ultra Gаmе Stash V2!
         image: "https://i.postimg.cc/8CVG0dbt/retro-bowl-logo.png" // paste an image URL here (optional)
       },
       {
+        title: "Dice A Million",
+        description: "(Takes a second to load) Roll the dice?",
+        url: "https://cdn.jsdelivr.net/gh/NotRexed/Unblocked-Games/diceamillion/index.html",
+        image: "https://i.postimg.cc/MGDg9p8k/Dice-AMillion.avif" // paste an image URL here (optional)
+      },
+      {
+        title: "Cookie Clicker",
+        description: "Click the cookie and gain clicks!",
+        url: "https://cdn.jsdelivr.net/gh/N3rdy3333/UGS/Cookie_Clicker.html",
+        image: "https://i.postimg.cc/44MqL0jb/cookieclicker.jpg" // paste an image URL here (optional)
+      },
+      {
         title: "Geometry Dash",
-        description: "Jump on cubes and avoid the spikes!",
-        url: "https://cdn.jsdelivr.net/gh/N3rdy3333/UGS/GeometryDash.html",
+        description: "FIXED! Jump on cubes and avoid the spikes!",
+        url: "https://cdn.jsdelivr.net/gh/ihavenoidea212/geometry-dash/index.html",
         image: "https://i.postimg.cc/c4MPJq76/image-2026-10-29-162642587.png" // paste an image URL here (optional)
       },
       {
