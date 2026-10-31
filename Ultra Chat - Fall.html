@@ -1,0 +1,4610 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ultrа Gаmе Stаsh Chаt </title>
+
+<style>
+:root{
+  --bg:#1a0f08;
+  --panel:rgba(48,28,14,.72);
+  --line:rgba(255,200,120,.18);
+  --text:#fff3e0;
+  --muted:#d1b48c;
+  --accent:#c8791f;
+  --accent2:#f0b44c;
+  --good:#c9f27a;
+
+  --accent-rgb:200,121,31;
+  --accent2-rgb:240,180,76;
+  --bright-rgb:255,214,130;
+  --name-color:#ffd98a;
+  --logo1:#c8791f;
+  --logo2:#f0b44c;
+  --orb1:#d9661f;
+  --orb2:#f0b44c;
+  --orb3:#9c2f1a;
+}
+
+:root[data-theme="red"]{
+  --accent:#ff2d55;
+  --accent2:#ff7a59;
+  --accent-rgb:255,45,85;
+  --accent2-rgb:255,122,89;
+  --bright-rgb:255,150,150;
+  --name-color:#ff9aa8;
+  --logo1:#ff2d55;
+  --logo2:#ff7a59;
+  --orb1:#ff2d55;
+  --orb2:#ff7a59;
+  --orb3:#ff5c8a;
+}
+
+:root[data-theme="orange"]{
+  --accent:#ff7a18;
+  --accent2:#ffb347;
+  --accent-rgb:255,122,24;
+  --accent2-rgb:255,179,71;
+  --bright-rgb:255,200,120;
+  --name-color:#ffcf8a;
+  --logo1:#ff7a18;
+  --logo2:#ffb347;
+  --orb1:#ff7a18;
+  --orb2:#ffb347;
+  --orb3:#ff9f4d;
+}
+
+:root[data-theme="yellow"]{
+  --accent:#e6c400;
+  --accent2:#ffe066;
+  --accent-rgb:230,196,0;
+  --accent2-rgb:255,224,102;
+  --bright-rgb:255,238,150;
+  --name-color:#ffe89a;
+  --logo1:#e6c400;
+  --logo2:#ffe066;
+  --orb1:#e6c400;
+  --orb2:#ffe066;
+  --orb3:#f2d94e;
+}
+
+:root[data-theme="green"]{
+  --accent:#12b76a;
+  --accent2:#7ee787;
+  --accent-rgb:18,183,106;
+  --accent2-rgb:126,231,135;
+  --bright-rgb:160,255,180;
+  --name-color:#9dffb0;
+  --logo1:#12b76a;
+  --logo2:#7ee787;
+  --orb1:#12b76a;
+  --orb2:#7ee787;
+  --orb3:#2fdd8f;
+}
+
+:root[data-theme="purple"]{
+  --accent:#7c3dff;
+  --accent2:#c77dff;
+  --accent-rgb:124,61,255;
+  --accent2-rgb:199,125,255;
+  --bright-rgb:216,180,255;
+  --name-color:#d9b3ff;
+  --logo1:#7c3dff;
+  --logo2:#c77dff;
+  --orb1:#7c3dff;
+  --orb2:#c77dff;
+  --orb3:#a06bff;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  color:var(--text);
+  font-family:"Comic Sans MS","Comic Sans",cursive;
+}
+
+body{
+  background:#1a0f08;
+}
+
+/* LIVE BACKGROUND */
+
+#background{
+  position:fixed;
+  inset:0;
+  overflow:hidden;
+  z-index:-2;
+  background:
+    radial-gradient(circle at 20% 20%,rgba(var(--accent-rgb),.22),transparent 30%),
+    radial-gradient(circle at 80% 70%,rgba(var(--accent2-rgb),.16),transparent 30%),
+    linear-gradient(135deg,#2a170b,#120a05);
+}
+
+.orb{
+  position:absolute;
+  border-radius:50%;
+  filter:blur(55px);
+  opacity:.45;
+  animation:float 12s ease-in-out infinite alternate;
+}
+
+.orb.one{
+  width:280px;
+  height:280px;
+  background:var(--orb1);
+  top:-80px;
+  left:-80px;
+}
+
+.orb.two{
+  width:240px;
+  height:240px;
+  background:var(--orb2);
+  right:-70px;
+  bottom:-60px;
+  animation-delay:-4s;
+}
+
+.orb.three{
+  width:180px;
+  height:180px;
+  background:var(--orb3);
+  left:45%;
+  top:40%;
+  animation-delay:-7s;
+}
+
+@keyframes float{
+  from{
+    transform:translate(0,0) scale(1);
+  }
+  to{
+    transform:translate(50px,-35px) scale(1.15);
+  }
+}
+
+/* APP */
+
+#app{
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  background:rgba(26,15,8,.38);
+  backdrop-filter:blur(14px);
+}
+
+/* HEADER */
+
+header{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding:15px 18px;
+  border-bottom:1px solid var(--line);
+  background:rgba(36,20,10,.72);
+  backdrop-filter:blur(20px);
+  box-shadow:0 8px 30px rgba(0,0,0,.2);
+}
+
+.logo{
+  width:38px;
+  height:38px;
+  flex-shrink:0;
+  border-radius:11px;
+  background:linear-gradient(135deg,var(--logo1),var(--logo2));
+  transform:rotate(-45deg);
+  box-shadow:
+    0 0 20px rgba(var(--accent-rgb),.45),
+    0 0 45px rgba(var(--accent2-rgb),.2);
+  animation:logoPulse 3s ease-in-out infinite;
+}
+
+@keyframes logoPulse{
+  0%,100%{
+    box-shadow:
+      0 0 20px rgba(var(--accent-rgb),.45),
+      0 0 45px rgba(var(--accent2-rgb),.2);
+  }
+
+  50%{
+    box-shadow:
+      0 0 30px rgba(var(--accent-rgb),.75),
+      0 0 60px rgba(var(--accent2-rgb),.35);
+  }
+}
+
+.title{
+  font-weight:950;
+  font-size:16px;
+  letter-spacing:.3px;
+}
+
+.sub{
+  font-size:11px;
+  color:var(--muted);
+  margin-top:2px;
+}
+
+.status-wrap{
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.status{
+  margin-left:0;
+
+  /* Connected text intentionally NOT Comic Sans */
+  font-family:Arial,Helvetica,sans-serif;
+
+  color:var(--good);
+  font-size:12px;
+  font-weight:800;
+
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+
+/* ADMIN BUTTON */
+
+#adminBtn{
+  padding:7px 10px;
+  border-radius:10px;
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:10px;
+  font-weight:900;
+  color:var(--text);
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:none;
+}
+
+#adminBtn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 5px 15px rgba(255,215,0,.12);
+}
+
+#adminBtn.active{
+  color:#15100a;
+  background:linear-gradient(135deg,#ffd84d,#ff9f1c);
+  border-color:rgba(255,220,90,.65);
+  box-shadow:0 0 18px rgba(255,190,45,.25);
+}
+
+.admin-crown{
+  margin-left:5px;
+  font-size:11px;
+  filter:drop-shadow(0 0 4px rgba(255,210,60,.45));
+}
+
+/* SPECIAL ADMIN ANNOUNCEMENT BAR */
+
+#specialAnnouncementBar{
+  display:none;
+  text-align:center;
+  padding:8px 12px;
+  font-family:Arial,Helvetica,sans-serif;
+  font-weight:900;
+  font-size:12px;
+  letter-spacing:1.5px;
+  color:#15100a;
+  background:linear-gradient(90deg,#ffd84d,#ff9f1c,#ffd84d);
+  background-size:200% 100%;
+  animation:bradyBarShift 3s linear infinite;
+  box-shadow:0 0 20px rgba(255,190,45,.35);
+}
+
+@keyframes bradyBarShift{
+  0%{background-position:0% 0%;}
+  100%{background-position:200% 0%;}
+}
+
+/* ADMIN ONLINE ANNOUNCEMENT BAR (regular + special admins) */
+
+#adminAnnouncementBar{
+  display:none;
+  text-align:center;
+  padding:8px 12px;
+  font-family:Arial,Helvetica,sans-serif;
+  font-weight:900;
+  font-size:12px;
+  letter-spacing:1.5px;
+  color:#0a1420;
+  background:linear-gradient(90deg,#7ec8ff,#3d8bff,#7ec8ff);
+  background-size:200% 100%;
+  animation:bradyBarShift 3s linear infinite;
+  box-shadow:0 0 20px rgba(70,140,255,.35);
+}
+
+/* ADMIN ONLINE PANEL SECTION (visible to any admin) */
+
+#adminOnlineSection{
+  margin:0 0 16px;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid rgba(120,190,255,.35);
+  background:rgba(70,140,255,.08);
+}
+
+#adminOnlineToggleWrap{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:12px;
+  font-weight:800;
+  cursor:pointer;
+  color:var(--text);
+}
+
+#adminOnlineToggleWrap input{
+  width:17px;
+  height:17px;
+  cursor:pointer;
+  accent-color:#3d8bff;
+}
+
+/* SPECIAL ADMIN PANEL SECTION */
+
+#specialAdminSection{
+  display:none;
+  margin:0 0 16px;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid rgba(255,220,90,.35);
+  background:rgba(255,190,45,.08);
+}
+
+#bradyToggleWrap{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:12px;
+  font-weight:800;
+  cursor:pointer;
+  color:var(--text);
+}
+
+#bradyToggleWrap input{
+  width:17px;
+  height:17px;
+  cursor:pointer;
+  accent-color:#ff9f1c;
+}
+
+/* MESSAGES */
+
+.msg-actions{
+  display:flex;
+  gap:6px;
+  margin-top:7px;
+  opacity:0;
+  transition:.15s;
+}
+
+.msg.mine .msg-actions{
+  opacity:1;
+}
+
+body.admin-active .msg-actions{
+  opacity:1;
+}
+
+.msg-action.admin-only{
+  display:none;
+}
+
+body.admin-active .msg-action.admin-only{
+  display:inline-block;
+}
+
+.msg-action{
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:9px;
+  padding:5px 9px;
+  font-family:"Comic Sans MS","Comic Sans",cursive;
+  font-size:10px;
+  font-weight:900;
+  cursor:pointer;
+  color:var(--text);
+  background:rgba(255,255,255,.07);
+  box-shadow:none;
+}
+
+.msg-action:hover{
+  transform:none;
+  filter:brightness(1.15);
+  box-shadow:none;
+}
+
+.msg-action:disabled{
+  opacity:.55;
+  cursor:wait;
+  transform:none;
+}
+
+.msg-edit{
+  width:100%;
+  margin-top:3px;
+  border:1px solid rgba(var(--bright-rgb),.35);
+  border-radius:10px;
+  padding:8px 10px;
+  background:rgba(255,255,255,.07);
+  color:var(--text);
+  font-family:"Comic Sans MS","Comic Sans",cursive;
+  font-size:14px;
+  outline:none;
+}
+
+.msg-edit-buttons{
+  display:flex;
+  gap:6px;
+  margin-top:6px;
+}
+
+.msg-edit-buttons button{
+  padding:6px 10px;
+  font-size:10px;
+}
+
+.attachment{
+  margin-top:8px;
+}
+
+.attachment-image{
+  display:block;
+  max-width:280px;
+  max-height:280px;
+  border-radius:12px;
+  cursor:pointer;
+  border:1px solid rgba(255,255,255,.12);
+}
+
+.attachment-file{
+  display:inline-block;
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  padding:9px 11px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:10px;
+  background:rgba(255,255,255,.06);
+  color:var(--text);
+  text-decoration:none;
+  font-size:12px;
+}
+
+.attachment-file:hover{
+  background:rgba(255,255,255,.10);
+}
+
+.edited{
+  margin-left:5px;
+  font-size:9px;
+  opacity:.65;
+}
+
+.edited-btn{
+  margin-left:5px;
+  padding:0;
+  border:0;
+  background:none;
+  box-shadow:none;
+
+  font-family:"Comic Sans MS","Comic Sans",cursive;
+  font-size:9px;
+  color:inherit;
+  opacity:.7;
+  text-decoration:underline;
+
+  cursor:pointer;
+}
+
+.edited-btn:hover{
+  opacity:1;
+  transform:none;
+  box-shadow:none;
+}
+
+.prev-text{
+  margin-top:7px;
+  padding:8px 10px;
+  border-radius:10px;
+  border:1px dashed rgba(255,255,255,.22);
+  background:rgba(255,255,255,.04);
+
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:11px;
+  font-style:italic;
+  color:var(--muted);
+
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+
+#messages{
+  flex:1;
+  overflow:auto;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  scroll-behavior:smooth;
+}
+
+#messages::-webkit-scrollbar{
+  width:7px;
+}
+
+#messages::-webkit-scrollbar-track{
+  background:transparent;
+}
+
+#messages::-webkit-scrollbar-thumb{
+  background:rgba(255,255,255,.13);
+  border-radius:20px;
+}
+
+.msg{
+  max-width:82%;
+  padding:11px 14px;
+  border:1px solid var(--line);
+  border-radius:17px;
+  background:rgba(255,255,255,.055);
+  backdrop-filter:blur(12px);
+  box-shadow:0 5px 20px rgba(0,0,0,.12);
+  animation:messageIn .25s ease-out;
+  transition:.2s;
+}
+
+@keyframes messageIn{
+  from{
+    opacity:0;
+    transform:translateY(8px) scale(.98);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+.msg:hover{
+  border-color:rgba(255,255,255,.2);
+  transform:translateY(-1px);
+}
+
+.msg.mine{
+  align-self:flex-end;
+
+  border-color:rgba(var(--bright-rgb),.25);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(var(--accent-rgb),.19),
+      rgba(var(--accent2-rgb),.10)
+    );
+
+  box-shadow:
+    0 5px 25px rgba(var(--accent2-rgb),.08);
+}
+
+.name{
+  font-size:12px;
+  font-weight:900;
+  color:var(--name-color);
+  margin-bottom:2px;
+}
+
+.text{
+  white-space:pre-wrap;
+  word-break:break-word;
+  line-height:1.4;
+}
+
+.time{
+  font-size:10px;
+  color:var(--muted);
+  margin-top:5px;
+  opacity:.75;
+}
+
+.system{
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+  padding:8px;
+}
+
+/* NOTICE */
+
+.notice{
+  display:none;
+  padding:0 18px 9px;
+  color:#ffbd66;
+  font-size:12px;
+  text-align:center;
+}
+
+/* BOTTOM BAR */
+
+.bar{
+  display:flex;
+  gap:8px;
+  padding:12px;
+  border-top:1px solid var(--line);
+  background:rgba(4,7,18,.7);
+  backdrop-filter:blur(22px);
+}
+
+/* INPUT */
+
+input{
+  min-width:0;
+  flex:1;
+
+  border:1px solid var(--line);
+  border-radius:14px;
+
+  background:rgba(255,255,255,.065);
+
+  color:var(--text);
+
+  padding:12px 14px;
+
+  font-family:"Comic Sans MS","Comic Sans",cursive;
+  font-size:14px;
+
+  outline:none;
+
+  transition:
+    border-color .2s,
+    background .2s,
+    box-shadow .2s;
+}
+
+input::placeholder{
+  color:#b79a76;
+}
+
+input:focus{
+  border-color:rgba(var(--bright-rgb),.55);
+
+  background:rgba(255,255,255,.085);
+
+  box-shadow:
+    0 0 0 3px rgba(var(--accent2-rgb),.08),
+    0 0 20px rgba(var(--accent2-rgb),.06);
+}
+
+/* BUTTONS */
+
+button{
+  border:0;
+  border-radius:14px;
+
+  padding:12px 17px;
+
+  font-family:"Comic Sans MS","Comic Sans",cursive;
+  font-weight:900;
+
+  cursor:pointer;
+
+  color:#2a1305;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--accent),
+      var(--accent2)
+    );
+
+  box-shadow:
+    0 5px 18px rgba(var(--accent2-rgb),.16);
+
+  transition:
+    transform .15s,
+    box-shadow .15s,
+    filter .15s;
+}
+
+button:hover{
+  transform:translateY(-2px);
+
+  box-shadow:
+    0 8px 25px rgba(var(--accent2-rgb),.25);
+
+  filter:brightness(1.08);
+}
+
+button:active{
+  transform:translateY(0) scale(.97);
+}
+
+button:disabled{
+  opacity:.55;
+  cursor:wait;
+  transform:none;
+  filter:none;
+}
+
+/* ATTACH BUTTON */
+
+#attachBtn{
+  width:47px;
+  padding:0;
+  font-size:21px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+
+#attachmentPreview{
+  display:none;
+  flex-wrap:wrap;
+  padding:8px 12px;
+  border-top:1px solid var(--line);
+  background:rgba(4,7,18,.7);
+  color:var(--muted);
+  font-size:11px;
+  align-items:center;
+  gap:8px;
+}
+
+#attachmentPreview button{
+  padding:5px 9px;
+  font-size:10px;
+  margin-left:auto;
+}
+
+#attachmentProgressTrack{
+  flex-basis:100%;
+  height:5px;
+  border-radius:5px;
+  background:rgba(255,255,255,.1);
+  overflow:hidden;
+  display:none;
+}
+
+#attachmentProgressFill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  transition:width .15s linear;
+}
+
+#emojiBtn{
+  width:47px;
+  padding:0;
+
+  font-size:21px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  flex-shrink:0;
+}
+
+/* THEME BUTTON */
+
+#themeBtn{
+  width:47px;
+  padding:0;
+
+  font-size:21px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  flex-shrink:0;
+}
+
+/* PIN BUTTON */
+
+#pinBtn{
+  position:relative;
+
+  width:47px;
+  padding:0;
+
+  font-size:21px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  flex-shrink:0;
+}
+
+#pinCount{
+  display:none;
+
+  position:absolute;
+  top:-4px;
+  right:-4px;
+
+  min-width:16px;
+  height:16px;
+  padding:0 3px;
+
+  border-radius:999px;
+
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:10px;
+  font-weight:900;
+  line-height:16px;
+  text-align:center;
+
+  color:#15100a;
+  background:linear-gradient(135deg,#ffd84d,#ff9f1c);
+  box-shadow:0 0 8px rgba(255,190,45,.5);
+}
+
+#pinCount.show{
+  display:block;
+}
+
+/* THEME PICKER */
+
+#themePicker{
+  position:absolute;
+
+  left:12px;
+  bottom:75px;
+
+  width:210px;
+  max-width:calc(100vw - 24px);
+
+  padding:10px;
+
+  display:none;
+
+  flex-direction:column;
+  gap:6px;
+
+  background:rgba(40,22,10,.95);
+
+  border:1px solid rgba(255,255,255,.15);
+
+  border-radius:18px;
+
+  backdrop-filter:blur(25px);
+
+  box-shadow:
+    0 20px 60px rgba(0,0,0,.45);
+
+  z-index:10;
+
+  animation:pickerIn .18s ease-out;
+}
+
+.theme-option{
+  display:flex;
+  align-items:center;
+  gap:10px;
+
+  padding:8px 10px;
+
+  border:1px solid transparent;
+  border-radius:12px;
+
+  background:rgba(255,255,255,.04);
+
+  cursor:pointer;
+
+  color:var(--text);
+
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:12px;
+  font-weight:800;
+
+  box-shadow:none;
+
+  transition:.15s;
+}
+
+.theme-option:hover{
+  transform:none;
+  background:rgba(255,255,255,.09);
+  box-shadow:none;
+}
+
+.theme-option.selected{
+  border-color:rgba(255,255,255,.35);
+  background:rgba(255,255,255,.12);
+}
+
+.theme-swatch{
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  flex-shrink:0;
+  box-shadow:0 0 10px rgba(0,0,0,.35);
+}
+
+/* EMOJI PICKER */
+
+#emojiPicker{
+  position:absolute;
+
+  right:12px;
+  bottom:75px;
+
+  width:310px;
+  max-width:calc(100vw - 24px);
+
+  max-height:330px;
+
+  padding:12px;
+
+  display:none;
+
+  grid-template-columns:repeat(7,1fr);
+  gap:5px;
+
+  overflow-y:auto;
+
+  background:rgba(40,22,10,.95);
+
+  border:1px solid rgba(255,255,255,.15);
+
+  border-radius:18px;
+
+  backdrop-filter:blur(25px);
+
+  box-shadow:
+    0 20px 60px rgba(0,0,0,.45);
+
+  z-index:10;
+
+  animation:pickerIn .18s ease-out;
+}
+
+@keyframes pickerIn{
+  from{
+    opacity:0;
+    transform:translateY(8px) scale(.97);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+.emoji{
+  border:0;
+  padding:7px;
+
+  background:transparent;
+
+  box-shadow:none;
+
+  font-family:"Segoe UI Emoji","Apple Color Emoji",sans-serif;
+
+  font-size:22px;
+
+  border-radius:10px;
+
+  cursor:pointer;
+}
+
+.emoji:hover{
+  background:rgba(255,255,255,.1);
+  transform:scale(1.15);
+  box-shadow:none;
+}
+
+/* SETUP */
+
+#setup{
+  transition:opacity .2s;
+}
+
+#composer{
+  display:none;
+}
+
+/* ADMIN MODAL */
+
+#adminModalOverlay{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(3,4,10,.6);
+  backdrop-filter:blur(6px);
+  z-index:50;
+  animation:pickerIn .16s ease-out;
+}
+
+#adminModal{
+  width:min(320px,88vw);
+  padding:20px;
+  border-radius:18px;
+  background:rgba(40,22,10,.96);
+  border:1px solid rgba(255,220,90,.35);
+  box-shadow:0 25px 70px rgba(0,0,0,.5),0 0 30px rgba(255,190,45,.12);
+}
+
+#adminModal h3{
+  margin:0 0 4px;
+  font-size:15px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+
+#adminModal p{
+  margin:0 0 12px;
+  font-size:12px;
+  color:var(--muted);
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+#adminPasscodeInput{
+  width:100%;
+  margin-bottom:6px;
+}
+
+#adminModalError{
+  min-height:16px;
+  font-size:11px;
+  color:#ff9a9a;
+  font-family:Arial,Helvetica,sans-serif;
+  margin-bottom:8px;
+}
+
+#adminModalButtons{
+  display:flex;
+  gap:8px;
+  justify-content:flex-end;
+}
+
+#adminModalButtons button{
+  padding:9px 14px;
+  font-size:12px;
+}
+
+#adminModalCancel{
+  background:rgba(255,255,255,.08);
+  color:var(--text);
+  box-shadow:none;
+}
+
+/* CHANGE USERNAME BUTTON */
+
+#changeUsernameBtn{
+  padding:7px 10px;
+  border-radius:10px;
+  font-size:13px;
+  font-weight:900;
+  color:var(--text);
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:none;
+}
+
+#changeUsernameBtn:hover{
+  transform:translateY(-1px) rotate(90deg);
+  box-shadow:0 5px 15px rgba(var(--bright-rgb),.12);
+}
+
+/* USERNAME RESET MODAL */
+
+#usernameResetOverlay{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(3,4,10,.6);
+  backdrop-filter:blur(6px);
+  z-index:50;
+  animation:pickerIn .16s ease-out;
+}
+
+#usernameResetModal{
+  width:min(320px,88vw);
+  padding:20px;
+  border-radius:18px;
+  background:rgba(40,22,10,.96);
+  border:1px solid rgba(255,220,90,.35);
+  box-shadow:0 25px 70px rgba(0,0,0,.5),0 0 30px rgba(255,190,45,.12);
+}
+
+#usernameResetModal h3{
+  margin:0 0 4px;
+  font-size:15px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+
+#usernameResetModal p{
+  margin:0 0 12px;
+  font-size:12px;
+  color:var(--muted);
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+#newUsernameInput,
+#usernameResetCodeInput{
+  width:100%;
+  margin-bottom:6px;
+}
+
+#usernameResetError{
+  min-height:16px;
+  font-size:11px;
+  color:#ff9a9a;
+  font-family:Arial,Helvetica,sans-serif;
+  margin-bottom:8px;
+}
+
+#usernameResetButtons{
+  display:flex;
+  gap:8px;
+  justify-content:flex-end;
+}
+
+#usernameResetButtons button{
+  padding:9px 14px;
+  font-size:12px;
+}
+
+#usernameResetCancel{
+  background:rgba(255,255,255,.08);
+  color:var(--text);
+  box-shadow:none;
+}
+
+/* ADMIN PANEL BUTTON */
+
+#adminPanelBtn{
+  padding:7px 10px;
+  border-radius:10px;
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:10px;
+  font-weight:900;
+  color:var(--text);
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:none;
+}
+
+#adminPanelBtn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 5px 15px rgba(var(--bright-rgb),.12);
+}
+
+/* ADMIN PANEL MODAL */
+
+#adminPanelOverlay{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(3,4,10,.6);
+  backdrop-filter:blur(6px);
+  z-index:50;
+  animation:pickerIn .16s ease-out;
+}
+
+#adminPanel{
+  width:min(360px,90vw);
+  max-height:85vh;
+  overflow-y:auto;
+  padding:20px;
+  border-radius:18px;
+  background:rgba(40,22,10,.96);
+  border:1px solid rgba(255,220,90,.35);
+  box-shadow:0 25px 70px rgba(0,0,0,.5),0 0 30px rgba(255,190,45,.12);
+}
+
+#adminPanel h3{
+  margin:0 0 4px;
+  font-size:15px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+
+#adminPanel p{
+  margin:0 0 12px;
+  font-size:12px;
+  color:var(--muted);
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+#timeoutUsernameInput{
+  width:100%;
+  margin-bottom:8px;
+}
+
+#timeoutDurationSelect{
+  width:100%;
+  margin-bottom:6px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:rgba(255,255,255,.065);
+  color:var(--text);
+  padding:12px 14px;
+  font-family:"Comic Sans MS","Comic Sans",cursive;
+  font-size:14px;
+  outline:none;
+}
+
+#timeoutCustomMinutes{
+  width:100%;
+  margin-bottom:6px;
+}
+
+#adminPanelError{
+  min-height:16px;
+  font-size:11px;
+  color:#ff9a9a;
+  font-family:Arial,Helvetica,sans-serif;
+  margin-bottom:8px;
+}
+
+#adminPanelButtons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  justify-content:flex-end;
+}
+
+#adminPanelButtons button{
+  flex:1 1 auto;
+  padding:9px 12px;
+  font-size:11px;
+  white-space:nowrap;
+}
+
+#banUserBtn{
+  background:linear-gradient(135deg,#ff3d5c,#ff7a59);
+  box-shadow:0 5px 18px rgba(255,61,92,.25);
+}
+
+#banUserBtn:hover{
+  box-shadow:0 8px 25px rgba(255,61,92,.35);
+}
+
+#adminPanelCancel{
+  background:rgba(255,255,255,.08);
+  color:var(--text);
+  box-shadow:none;
+
+}
+
+#activeTimeoutsWrap{
+  margin-top:16px;
+  padding-top:14px;
+  border-top:1px solid rgba(255,255,255,.12);
+}
+
+#activeTimeoutsLabel{
+  font-size:11px;
+  font-weight:900;
+  color:var(--muted);
+  font-family:Arial,Helvetica,sans-serif;
+  text-transform:uppercase;
+  letter-spacing:.4px;
+  margin-bottom:8px;
+}
+
+#activeTimeoutsEmpty{
+  font-size:12px;
+  color:var(--muted);
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+.timeout-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 9px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:12px;
+  background:rgba(255,255,255,.05);
+  margin-bottom:7px;
+}
+
+.timeout-row-info{
+  flex:1;
+  min-width:0;
+}
+
+.timeout-row-name{
+  font-size:12px;
+  font-weight:900;
+  color:var(--text);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.timeout-row-time{
+  font-size:10px;
+  color:var(--muted);
+  font-family:Arial,Helvetica,sans-serif;
+  margin-top:1px;
+}
+
+.timeout-row button{
+  padding:6px 9px;
+  font-size:10px;
+  flex-shrink:0;
+}
+
+#activeBansWrap{
+  margin-top:16px;
+  padding-top:14px;
+  border-top:1px solid rgba(255,255,255,.12);
+}
+
+#activeBansWrap p{
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:11px;
+  color:var(--muted);
+}
+
+#activeBansEmpty{
+  font-size:12px;
+  color:var(--muted);
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+.msg-action.confirm-delete{
+  background:linear-gradient(135deg,#ff3d5c,#ff7a59);
+  border-color:rgba(255,120,120,.5);
+  color:#fff;
+}
+
+/* PINNED MESSAGE ROW HIGHLIGHT (in main chat) */
+
+.msg.pinned{
+  border-left:2px solid #ff9f1c;
+  padding-left:9px;
+}
+
+.pin-flag{
+  margin-left:5px;
+  font-size:11px;
+}
+
+/* PINNED MESSAGES PANEL */
+
+#pinnedPanelOverlay{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(3,4,10,.6);
+  backdrop-filter:blur(6px);
+  z-index:50;
+  animation:pickerIn .16s ease-out;
+}
+
+#pinnedPanel{
+  width:min(360px,90vw);
+  max-height:85vh;
+  overflow-y:auto;
+  padding:20px;
+  border-radius:18px;
+  background:rgba(40,22,10,.96);
+  border:1px solid rgba(255,220,90,.35);
+  box-shadow:0 25px 70px rgba(0,0,0,.5),0 0 30px rgba(255,190,45,.12);
+}
+
+#pinnedPanel h3{
+  margin:0 0 4px;
+  font-size:15px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+
+#pinnedPanel p{
+  margin:0 0 12px;
+  font-size:12px;
+  color:var(--muted);
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+#pinnedMessagesEmpty{
+  font-size:12px;
+  color:var(--muted);
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+.pinned-row{
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+  padding:8px 9px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:12px;
+  background:rgba(255,255,255,.05);
+  margin-bottom:7px;
+}
+
+.pinned-row-info{
+  flex:1;
+  min-width:0;
+}
+
+.pinned-row-name{
+  font-size:12px;
+  font-weight:900;
+  color:var(--text);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.pinned-row-text{
+  font-size:12px;
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+  margin-top:2px;
+  overflow-wrap:break-word;
+}
+
+.pinned-row button{
+  padding:6px 9px;
+  font-size:10px;
+  flex-shrink:0;
+}
+
+#pinnedPanelButtons{
+  display:flex;
+  justify-content:flex-end;
+  margin-top:4px;
+}
+
+#pinnedPanelClose{
+  background:rgba(255,255,255,.08);
+  color:var(--text);
+  box-shadow:none;
+  padding:9px 14px;
+  font-size:12px;
+}
+
+#myUidWrap{
+  margin-top:16px;
+  padding-top:14px;
+  border-top:1px solid rgba(255,255,255,.12);
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:12px;
+  color:var(--muted);
+}
+
+#resetCodeWrap{
+  margin-top:16px;
+  padding-top:14px;
+  border-top:1px solid rgba(255,255,255,.12);
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:12px;
+  color:var(--muted);
+}
+
+#resetCodeRow{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+#resetCodeText{
+  flex:1;
+  min-width:0;
+  padding:9px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:10px;
+  background:rgba(255,255,255,.05);
+  color:var(--text);
+  font-size:16px;
+  font-weight:900;
+  letter-spacing:3px;
+  text-align:center;
+}
+
+#copyResetCodeBtn{
+  padding:8px 11px;
+  font-size:10px;
+  flex-shrink:0;
+}
+
+#resetCodeCountdown{
+  margin-top:6px;
+  font-size:10px;
+}
+
+#myUidWrap code{
+  background:rgba(255,255,255,.08);
+  padding:1px 4px;
+  border-radius:5px;
+  color:var(--text);
+}
+
+#myUidRow{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+#myUidText{
+  flex:1;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  padding:8px 9px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:10px;
+  background:rgba(255,255,255,.05);
+  color:var(--text);
+  font-size:11px;
+}
+
+#copyUidBtn{
+  padding:8px 11px;
+  font-size:10px;
+  flex-shrink:0;
+}
+
+/* TIMEOUT LOCK BANNER */
+
+#timeoutBanner{
+  display:none;
+  padding:10px 18px;
+  color:#ff9a9a;
+  font-size:12px;
+  text-align:center;
+  font-weight:900;
+  background:rgba(255,80,80,.08);
+  border-top:1px solid rgba(255,120,120,.2);
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+  header{
+    padding:12px;
+  }
+
+  .title{
+    font-size:14px;
+  }
+
+  .sub{
+    font-size:10px;
+  }
+
+  .status{
+    font-size:10px;
+  }
+
+  #adminBtn{
+    padding:6px 8px;
+    font-size:9px;
+  }
+
+  #messages{
+    padding:13px;
+  }
+
+  .msg{
+    max-width:90%;
+  }
+
+  .bar{
+    padding:9px;
+  }
+
+  .attachment-image{
+    max-width:220px;
+    max-height:220px;
+  }
+
+  button{
+    padding:11px 13px;
+  }
+
+  #emojiPicker{
+    bottom:67px;
+  }
+
+  #themePicker{
+    bottom:67px;
+  }
+}
+/* AUTUMN: logo leaf + falling leaves */
+
+.logo::after{
+  content:"🍂";
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  height:100%;
+  font-size:20px;
+  transform:rotate(45deg);
+}
+
+#leaves{
+  position:fixed;
+  inset:0;
+  z-index:3;
+  overflow:hidden;
+  pointer-events:none;
+}
+
+.leaf{
+  position:absolute;
+  top:-60px;
+  user-select:none;
+  pointer-events:none;
+  filter:drop-shadow(0 3px 5px rgba(0,0,0,.35));
+  animation:leafFall linear infinite,leafSway ease-in-out infinite alternate;
+}
+
+@keyframes leafFall{
+  0%{top:-60px;opacity:0}
+  8%{opacity:.9}
+  92%{opacity:.9}
+  100%{top:105vh;opacity:0}
+}
+
+@keyframes leafSway{
+  0%{transform:translateX(-35px) rotate(-40deg)}
+  100%{transform:translateX(45px) rotate(70deg)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  #leaves{display:none}
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="background">
+  <div class="orb one"></div>
+  <div class="orb two"></div>
+  <div class="orb three"></div>
+</div>
+
+<div id="leaves"></div>
+
+<div id="app">
+
+<div id="adminAnnouncementBar">ADMIN ONLINE</div>
+<div id="specialAnnouncementBar">BRADY'S ONLINE</div>
+
+<header>
+
+  <div class="logo"></div>
+
+  <div>
+    <div class="title">ULTRA GAME STASH CHAT</div>
+
+    <div class="sub">
+      Private chatroom. Limited to District 303 only.
+    </div>
+  </div>
+
+  <div class="status-wrap">
+    <div class="status" id="status">
+      ● Connecting…
+    </div>
+
+    <button id="changeUsernameBtn" type="button" title="Change username" style="display:none;">
+      🔄
+    </button>
+
+    <button id="adminBtn" type="button" title="Admin mode">
+      👑 ADMIN
+    </button>
+
+    <button id="adminPanelBtn" type="button" title="Admin panel" style="display:none;">
+      🛠️ PANEL
+    </button>
+  </div>
+
+</header>
+
+<div id="messages">
+  <div class="system">
+    Connecting to chat…
+  </div>
+</div>
+
+<div id="notice" class="notice"></div>
+
+<div id="timeoutBanner"></div>
+
+<div id="attachmentPreview">
+  <span id="attachmentName"></span>
+  <button id="removeAttachment" type="button">REMOVE</button>
+  <div id="attachmentProgressTrack">
+    <div id="attachmentProgressFill"></div>
+  </div>
+</div>
+
+<div id="setup" class="bar">
+
+  <input
+    id="nameInput"
+    maxlength="20"
+    placeholder="Set a username. Please use a real name or nickname."
+    autocomplete="off"
+  >
+
+  <button id="joinBtn">
+    JOIN
+  </button>
+
+</div>
+
+<div id="composer" class="bar">
+
+  <input
+    id="fileInput"
+    type="file"
+    accept="*/*"
+    hidden
+  >
+
+  <button id="themeBtn" type="button" title="Chat theme">
+    🎨
+  </button>
+
+  <button id="pinBtn" type="button" title="Pinned messages">
+    📌
+    <span id="pinCount">0</span>
+  </button>
+
+  <button id="attachBtn" type="button" title="Attach file">
+    📎
+  </button>
+
+  <button id="emojiBtn" type="button" title="Emoji">
+    😊
+  </button>
+
+  <input
+    id="messageInput"
+    maxlength="300"
+    placeholder="Type a message"
+    autocomplete="off"
+  >
+
+  <button id="send">
+    SEND
+  </button>
+
+</div>
+
+<div id="emojiPicker"></div>
+
+<div id="themePicker"></div>
+
+</div>
+
+<div id="adminModalOverlay">
+  <div id="adminModal">
+    <h3>👑 Admin mode</h3>
+    <p>Enter the admin passcode to unlock the crown for your messages.</p>
+    <input id="adminPasscodeInput" type="password" placeholder="Passcode" autocomplete="off">
+    <div id="adminModalError"></div>
+    <div id="adminModalButtons">
+      <button id="adminModalCancel" type="button">CANCEL</button>
+      <button id="adminModalSubmit" type="button">ENABLE</button>
+    </div>
+  </div>
+</div>
+
+<div id="adminPanelOverlay">
+  <div id="adminPanel">
+    <h3>🛠️ Admin panel</h3>
+    <p>Timeout or ban a user by their exact username. Timed-out and banned users can't send messages.</p>
+
+    <div id="adminOnlineSection">
+      <label id="adminOnlineToggleWrap">
+        <input type="checkbox" id="adminOnlineToggle">
+        <span>Show "ADMIN ONLINE" banner for everyone</span>
+      </label>
+    </div>
+
+    <div id="specialAdminSection">
+      <label id="bradyToggleWrap">
+        <input type="checkbox" id="bradyOnlineToggle">
+        <span>Show "BRADY'S ONLINE" banner for everyone</span>
+      </label>
+    </div>
+
+    <input id="timeoutUsernameInput" type="text" placeholder="Exact username" autocomplete="off" maxlength="20">
+
+    <select id="timeoutDurationSelect">
+      <option value="1">1 minute</option>
+      <option value="5" selected>5 minutes</option>
+      <option value="10">10 minutes</option>
+      <option value="30">30 minutes</option>
+      <option value="60">1 hour</option>
+      <option value="180">3 hours</option>
+      <option value="1440">24 hours</option>
+    </select>
+
+    <input id="timeoutCustomMinutes" type="number" min="1" step="1" placeholder="Or enter custom minutes (overrides preset above)" autocomplete="off">
+
+    <div id="adminPanelError"></div>
+
+    <div id="adminPanelButtons">
+      <button id="adminPanelSubmit" type="button">TIMEOUT USER</button>
+      <button id="banUserBtn" type="button">BAN PERMANENTLY</button>
+      <button id="adminPanelCancel" type="button">CLOSE</button>
+    </div>
+
+    <div id="activeTimeoutsWrap">
+      <div id="activeTimeoutsLabel">Active timeouts</div>
+      <div id="activeTimeoutsList">
+        <div id="activeTimeoutsEmpty">No one is currently timed out.</div>
+      </div>
+    </div>
+
+    <div id="activeBansWrap">
+      <div id="activeTimeoutsLabel">Active bans</div>
+      <p style="margin:0 0 8px;">
+        Bans are matched to a user's actual Firebase ID, not just their name, so they can't dodge it by rejoining with a new username. That ID is only known once the user has sent at least one message since the page loaded.
+      </p>
+      <div id="activeBansList">
+        <div id="activeBansEmpty">No one is currently banned.</div>
+      </div>
+    </div>
+
+    <div id="resetCodeWrap">
+      <div id="activeTimeoutsLabel">Username reset code</div>
+      <p style="margin:0 0 8px;">
+        If someone wants to change their username, tell them this code. It rotates automatically every 5 minutes, so it won't work for long if it leaks.
+      </p>
+      <div id="resetCodeRow">
+        <span id="resetCodeText">------</span>
+        <button id="copyResetCodeBtn" type="button">COPY</button>
+      </div>
+      <div id="resetCodeCountdown"></div>
+    </div>
+
+    <div id="myUidWrap">
+      <div id="activeTimeoutsLabel">Your Firebase Auth UID</div>
+      <p style="margin:0 0 8px;">
+        Timeouts, bans, message deletion, and the ADMIN ONLINE / BRADY'S ONLINE banners for other users only work in the database if this UID is listed as <code>true</code> under <code>admins</code> in your Realtime Database, and your rules grant write access to <code>adminAnnouncement</code> and <code>specialAnnouncement</code> the same way they do for <code>timeouts</code>/<code>banned</code>. The 👑 ADMIN button above only unlocks this panel — it does not grant real database permission by itself.
+      </p>
+      <div id="myUidRow">
+        <span id="myUidText">Signing in…</span>
+        <button id="copyUidBtn" type="button">COPY</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="pinnedPanelOverlay">
+  <div id="pinnedPanel">
+    <h3>📌 Pinned messages</h3>
+    <p>Only admins and special admins can pin or unpin messages.</p>
+
+    <div id="pinnedMessagesList">
+      <div id="pinnedMessagesEmpty">No messages are pinned yet.</div>
+    </div>
+
+    <div id="pinnedPanelButtons">
+      <button id="pinnedPanelClose" type="button">CLOSE</button>
+    </div>
+  </div>
+</div>
+
+<div id="usernameResetOverlay">
+  <div id="usernameResetModal">
+    <h3>🔄 Change username</h3>
+    <p>Enter your new username and the reset code from an admin. Ask an admin — the code rotates every few minutes.</p>
+    <input id="newUsernameInput" type="text" placeholder="New username" autocomplete="off" maxlength="20">
+    <input id="usernameResetCodeInput" type="text" placeholder="Reset code from an admin" autocomplete="off" maxlength="6">
+    <div id="usernameResetError"></div>
+    <div id="usernameResetButtons">
+      <button id="usernameResetCancel" type="button">CANCEL</button>
+      <button id="usernameResetSubmit" type="button">CHANGE USERNAME</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+
+import{
+  initializeApp
+}from"https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+
+import{
+  getAuth,
+  signInAnonymously,
+  onAuthStateChanged
+}from"https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
+import{
+  getDatabase,
+  ref,
+  push,
+  set,
+  update,
+  remove,
+  onChildAdded,
+  onValue,
+  query,
+  limitToLast,
+  serverTimestamp
+}from"https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
+
+import{
+  getStorage,
+  ref as storageRef,
+  uploadBytesResumable,
+  getDownloadURL
+}from"https://www.gstatic.com/firebasejs/12.18.0/firebase-storage.js";
+
+
+/* FIREBASE */
+
+const firebaseConfig={
+  apiKey:"AIzaSyA2AI35AEKEwQg0z_2oi3XKU1xuSMvRd7c",
+  authDomain:"ultra-game-stash-chat.firebaseapp.com",
+  databaseURL:"https://ultra-game-stash-chat-default-rtdb.firebaseio.com",
+  projectId:"ultra-game-stash-chat",
+  storageBucket:"ultra-game-stash-chat.firebasestorage.app",
+  messagingSenderId:"820754891552",
+  appId:"1:820754891552:web:084ccb23a9b96723a0cd45",
+  measurementId:"G-3JTLLPFTJ5"
+};
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getDatabase(app);
+const storage=getStorage(app);
+
+
+/* ELEMENTS */
+
+const messages=document.getElementById("messages");
+const status=document.getElementById("status");
+const notice=document.getElementById("notice");
+
+const setup=document.getElementById("setup");
+const composer=document.getElementById("composer");
+
+const nameInput=document.getElementById("nameInput");
+const messageInput=document.getElementById("messageInput");
+
+const emojiBtn=document.getElementById("emojiBtn");
+const emojiPicker=document.getElementById("emojiPicker");
+
+const themeBtn=document.getElementById("themeBtn");
+const themePicker=document.getElementById("themePicker");
+
+const pinBtn=document.getElementById("pinBtn");
+const pinCount=document.getElementById("pinCount");
+const pinnedPanelOverlay=document.getElementById("pinnedPanelOverlay");
+const pinnedMessagesList=document.getElementById("pinnedMessagesList");
+const pinnedPanelClose=document.getElementById("pinnedPanelClose");
+
+const attachBtn=document.getElementById("attachBtn");
+const fileInput=document.getElementById("fileInput");
+const attachmentPreview=document.getElementById("attachmentPreview");
+const attachmentName=document.getElementById("attachmentName");
+const removeAttachment=document.getElementById("removeAttachment");
+const attachmentProgressTrack=document.getElementById("attachmentProgressTrack");
+const attachmentProgressFill=document.getElementById("attachmentProgressFill");
+const sendBtn=document.getElementById("send");
+const adminBtn=document.getElementById("adminBtn");
+
+const changeUsernameBtn=document.getElementById("changeUsernameBtn");
+const usernameResetOverlay=document.getElementById("usernameResetOverlay");
+const newUsernameInput=document.getElementById("newUsernameInput");
+const usernameResetCodeInput=document.getElementById("usernameResetCodeInput");
+const usernameResetError=document.getElementById("usernameResetError");
+const usernameResetSubmit=document.getElementById("usernameResetSubmit");
+const usernameResetCancel=document.getElementById("usernameResetCancel");
+const resetCodeText=document.getElementById("resetCodeText");
+const resetCodeCountdown=document.getElementById("resetCodeCountdown");
+const copyResetCodeBtn=document.getElementById("copyResetCodeBtn");
+
+const adminModalOverlay=document.getElementById("adminModalOverlay");
+const adminPasscodeInput=document.getElementById("adminPasscodeInput");
+const adminModalError=document.getElementById("adminModalError");
+const adminModalSubmit=document.getElementById("adminModalSubmit");
+const adminModalCancel=document.getElementById("adminModalCancel");
+
+const specialAnnouncementBar=document.getElementById("specialAnnouncementBar");
+const specialAdminSection=document.getElementById("specialAdminSection");
+const bradyOnlineToggle=document.getElementById("bradyOnlineToggle");
+const adminAnnouncementBar=document.getElementById("adminAnnouncementBar");
+const adminOnlineToggle=document.getElementById("adminOnlineToggle");
+
+const adminPanelBtn=document.getElementById("adminPanelBtn");
+const adminPanelOverlay=document.getElementById("adminPanelOverlay");
+const timeoutUsernameInput=document.getElementById("timeoutUsernameInput");
+const timeoutDurationSelect=document.getElementById("timeoutDurationSelect");
+const timeoutCustomMinutes=document.getElementById("timeoutCustomMinutes");
+const adminPanelError=document.getElementById("adminPanelError");
+const adminPanelSubmit=document.getElementById("adminPanelSubmit");
+const banUserBtn=document.getElementById("banUserBtn");
+const adminPanelCancel=document.getElementById("adminPanelCancel");
+const activeTimeoutsList=document.getElementById("activeTimeoutsList");
+const activeBansList=document.getElementById("activeBansList");
+const timeoutBanner=document.getElementById("timeoutBanner");
+const myUidText=document.getElementById("myUidText");
+const copyUidBtn=document.getElementById("copyUidBtn");
+
+
+let user=null;
+let nickname="";
+let joined=false;
+let lastSent=0;
+let selectedFile=null;
+
+let isAdmin=false;
+let isSpecialAdmin=false;
+const ADMIN_PASSCODE="S6N63";
+const SPECIAL_ADMIN_PASSCODE="z40k2";
+
+/* TIMEOUTS */
+
+let timeoutsByKey={};
+let myTimeoutUntil=0;
+let timeoutTickHandle=null;
+
+/* BANS */
+
+let bannedByUid={};
+const nameToUid={};
+
+/* PINNED MESSAGES */
+
+let pinnedByKey={};
+const rowsByKey={};
+
+const MAX_FILE_SIZE=25*1024*1024;
+
+
+/* WORD FILTER */
+
+const blockedWords=[
+  /f+u+c+k+/i,
+  /s+h+i+t+/i,
+  /b+i+t+c+h/i,
+  /a+s+s+h+o+l+e/i,
+  /d+a+m+n/i,
+  /b+a+s+t+a+r+d/i,
+  /d+i+c+k/i,
+  /p+i+s+s/i,
+  /c+r+a+p/i,
+  /c+u+n+t/i,
+  /w+h+o+r+e/i,
+  /s+l+u+t/i,
+  /r+a+p+e/i,
+  /n+i+g+[a@]r?/i,
+  /f+[a@]g+/i,
+  /k+i+k+e/i,
+  /c+h+i+n+k/i,
+  /g+[o0]+[o0]+k/i,
+  /r+[e3]+t+[a@]r+d/i,
+  /t+r+[a@]+n+n+y/i,
+  /n+e+g+a/i,
+  /n+e+g+a+r/i,
+  /n+e+g+e+r/i,
+  /n+i+g+g+e+r/i
+];
+
+
+function normalizeForFilter(text){
+
+  return text
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^a-z0-9@]+/g,"");
+
+}
+
+
+function containsBlockedWord(text){
+
+  const normalized=normalizeForFilter(text);
+
+  return blockedWords.some(
+    pattern=>pattern.test(normalized)
+  );
+
+}
+
+
+/* NOTICE */
+
+function noticeMsg(x){
+
+  notice.textContent=x;
+
+  notice.style.display=x
+    ?"block"
+    :"none";
+
+}
+
+
+/* ADD MESSAGE */
+
+function renderEditedIndicator(row,tm,d){
+
+  const existingBtn=
+    tm.querySelector(".edited-btn");
+
+  if(existingBtn)
+    existingBtn.remove();
+
+  const existingPrev=
+    row.querySelector(".prev-text");
+
+  if(existingPrev)
+    existingPrev.remove();
+
+  if(!d.edited)
+    return;
+
+  const editedBtn=
+    document.createElement("button");
+
+  editedBtn.type="button";
+  editedBtn.className="edited-btn";
+  editedBtn.textContent="edited";
+
+  editedBtn.onclick=()=>{
+
+    const open=
+      row.querySelector(".prev-text");
+
+    if(open){
+
+      open.remove();
+
+      return;
+    }
+
+    const prevBox=
+      document.createElement("div");
+
+    prevBox.className="prev-text";
+
+    prevBox.textContent=
+      "Previous message: "+
+      (d.previousText||"(no earlier version saved)");
+
+    row.appendChild(prevBox);
+
+  };
+
+  tm.appendChild(editedBtn);
+
+}
+
+
+function addMessage(d,key){
+
+  if(key && messages.querySelector(`[data-key="${CSS.escape(key)}"]`))
+    return;
+
+  if(d.uid && d.name)
+    nameToUid[d.name]=d.uid;
+
+  const row=document.createElement("div");
+
+  row.className=
+    "msg"+
+    (d.uid===user?.uid?" mine":"")+
+    (key && pinnedByKey[key]?" pinned":"");
+
+  row.dataset.key=key;
+
+  if(key)
+    rowsByKey[key]=row;
+
+  const n=document.createElement("div");
+
+  n.className="name";
+  n.textContent=d.name||"Guest";
+
+  const t=document.createElement("div");
+
+  t.className="text";
+  t.textContent=d.text||"";
+
+  row.append(n);
+
+  if(d.text)
+    row.appendChild(t);
+
+  if(d.attachment){
+
+    const attachment=d.attachment;
+
+    const wrap=document.createElement("div");
+    wrap.className="attachment";
+
+    if(
+      attachment.type &&
+      attachment.type.startsWith("image/")
+    ){
+
+      const img=document.createElement("img");
+      img.className="attachment-image";
+      img.src=attachment.url;
+      img.alt=attachment.name||"Attached image";
+      img.loading="lazy";
+
+      img.onclick=()=>{
+        window.open(attachment.url,"_blank","noopener,noreferrer");
+      };
+
+      wrap.appendChild(img);
+
+    }else{
+
+      const link=document.createElement("a");
+      link.className="attachment-file";
+      link.href=attachment.url;
+      link.target="_blank";
+      link.rel="noopener noreferrer";
+      link.textContent=
+        "📎 "+(attachment.name||"Attached file");
+
+      wrap.appendChild(link);
+    }
+
+    row.appendChild(wrap);
+  }
+
+  const tm=document.createElement("div");
+
+  tm.className="time";
+
+  tm.textContent=
+    d.createdAt
+      ?new Date(d.createdAt)
+        .toLocaleTimeString(
+          [],
+          {
+            hour:"numeric",
+            minute:"2-digit"
+          }
+        )
+      :"now";
+
+  /* ADMIN CROWN */
+
+  if(d.admin||d.specialAdmin){
+
+    const crown=document.createElement("span");
+
+    crown.className="admin-crown";
+
+    if(d.specialAdmin){
+      crown.textContent="👑👑👑";
+      crown.title="Special Admin";
+    }else{
+      crown.textContent="👑";
+      crown.title="Admin";
+    }
+
+    tm.appendChild(crown);
+  }
+
+  /* PIN FLAG */
+
+  if(key && pinnedByKey[key]){
+
+    const flag=document.createElement("span");
+
+    flag.className="pin-flag";
+    flag.textContent="📌";
+    flag.title="Pinned";
+
+    tm.appendChild(flag);
+  }
+
+  renderEditedIndicator(row,tm,d);
+
+  row.appendChild(tm);
+
+  const isMine=d.uid===user?.uid;
+
+  {
+
+    const actions=document.createElement("div");
+
+    actions.className="msg-actions";
+
+    if(isMine){
+
+      const editBtn=document.createElement("button");
+
+      editBtn.className="msg-action";
+      editBtn.type="button";
+      editBtn.textContent="EDIT";
+
+      editBtn.onclick=()=>editMessage(row,key,d);
+
+      actions.appendChild(editBtn);
+    }
+
+    const deleteBtn=document.createElement("button");
+
+    deleteBtn.className=
+      "msg-action msg-action-delete admin-only";
+
+    deleteBtn.type="button";
+    deleteBtn.textContent="DELETE";
+    deleteBtn.dataset.confirm="false";
+
+    deleteBtn.onclick=()=>{
+
+      if(deleteBtn.dataset.confirm==="true"){
+
+        clearTimeout(deleteBtn._confirmTimer);
+
+        deleteMessage(row,key,deleteBtn);
+
+        return;
+      }
+
+      deleteBtn.dataset.confirm="true";
+      deleteBtn.textContent="CONFIRM?";
+      deleteBtn.classList.add("confirm-delete");
+
+      clearTimeout(deleteBtn._confirmTimer);
+
+      deleteBtn._confirmTimer=setTimeout(
+        ()=>{
+
+          deleteBtn.dataset.confirm="false";
+          deleteBtn.textContent="DELETE";
+          deleteBtn.classList.remove("confirm-delete");
+
+        },
+        4000
+      );
+
+    };
+
+    actions.appendChild(deleteBtn);
+
+    const pinMsgBtn=document.createElement("button");
+
+    pinMsgBtn.className=
+      "msg-action msg-action-pin admin-only";
+
+    pinMsgBtn.type="button";
+    pinMsgBtn.textContent=
+      (key && pinnedByKey[key])?"UNPIN":"PIN";
+
+    pinMsgBtn.onclick=async()=>{
+
+      pinMsgBtn.disabled=true;
+
+      try{
+
+        if(pinnedByKey[key]){
+
+          await remove(ref(db,"pinned/"+key));
+
+        }else{
+
+          await set(
+            ref(db,"pinned/"+key),
+            {
+              uid:d.uid||null,
+              name:d.name||"Guest",
+              text:d.text||"",
+              createdAt:d.createdAt||null,
+              pinnedBy:nickname||"",
+              pinnedAt:serverTimestamp()
+            }
+          );
+
+        }
+
+      }catch(e){
+
+        console.error(e);
+
+        noticeMsg(
+          "Couldn't update pin. Check your Firebase rules / your admins entry."
+        );
+
+      }finally{
+
+        pinMsgBtn.disabled=false;
+
+      }
+
+    };
+
+    actions.appendChild(pinMsgBtn);
+
+    row.appendChild(actions);
+  }
+
+  messages.appendChild(row);
+
+  messages.scrollTop=messages.scrollHeight;
+}
+
+
+function editMessage(row,key,d){
+
+  if(row.dataset.editing==="true")
+    return;
+
+  row.dataset.editing="true";
+
+  const textEl=row.querySelector(".text");
+  const actions=row.querySelector(".msg-actions");
+
+  if(actions)
+    actions.style.display="none";
+
+  const oldText=d.text||"";
+
+  const editInput=document.createElement("textarea");
+
+  editInput.className="msg-edit";
+  editInput.maxLength=300;
+  editInput.value=oldText;
+  editInput.rows=2;
+
+  const editButtons=document.createElement("div");
+
+  editButtons.className="msg-edit-buttons";
+
+  const saveBtn=document.createElement("button");
+
+  saveBtn.type="button";
+  saveBtn.textContent="SAVE";
+
+  const cancelBtn=document.createElement("button");
+
+  cancelBtn.type="button";
+  cancelBtn.textContent="CANCEL";
+
+  editButtons.append(saveBtn,cancelBtn);
+
+  textEl.replaceWith(editInput);
+
+  row.querySelector(".time").before(editButtons);
+
+  editInput.focus();
+  editInput.select();
+
+  const cancel=()=>{
+
+    editInput.replaceWith(textEl);
+    editButtons.remove();
+
+    if(actions)
+      actions.style.display="";
+
+    row.dataset.editing="false";
+  };
+
+  cancelBtn.onclick=cancel;
+
+  editInput.onkeydown=e=>{
+
+    if(e.key==="Escape"){
+
+      e.preventDefault();
+      cancel();
+
+    }
+
+    if((e.ctrlKey||e.metaKey)&&e.key==="Enter"){
+
+      e.preventDefault();
+      saveBtn.click();
+
+    }
+  };
+
+  saveBtn.onclick=async()=>{
+
+    if(amIBanned()){
+
+      noticeMsg(
+        "⛔ You've been permanently banned and can't send messages."
+      );
+
+      return;
+    }
+
+    if(myTimeoutUntil>Date.now()){
+
+      noticeMsg(
+        "🚫 You're timed out for another "+
+        formatRemaining(myTimeoutUntil-Date.now())+
+        "."
+      );
+
+      return;
+    }
+
+    const newText=
+      editInput.value.trim().slice(0,300);
+
+    if(!newText){
+
+      noticeMsg("Your message can't be empty.");
+
+      editInput.focus();
+
+      return;
+    }
+
+    if(containsBlockedWord(newText)){
+
+      noticeMsg(
+        "⚠️ That message contains a word that isn't allowed in this chat."
+      );
+
+      editInput.select();
+
+      return;
+    }
+
+    saveBtn.disabled=true;
+    cancelBtn.disabled=true;
+
+    try{
+
+      await update(
+        ref(db,"messages/"+key),
+        {
+          text:newText,
+          edited:true,
+          editedAt:serverTimestamp(),
+          uid:user.uid,
+          name:d.name||nickname,
+          createdAt:d.createdAt||serverTimestamp(),
+          previousText:oldText
+        }
+      );
+
+      d.text=newText;
+      d.edited=true;
+      d.previousText=oldText;
+
+      textEl.textContent=newText;
+
+      editInput.replaceWith(textEl);
+
+      editButtons.remove();
+
+      const timeEl=row.querySelector(".time");
+
+      renderEditedIndicator(row,timeEl,d);
+
+      if(actions)
+        actions.style.display="";
+
+      row.dataset.editing="false";
+
+      noticeMsg("");
+
+    }catch(e){
+
+      console.error(e);
+
+      noticeMsg(
+        "Message couldn't be edited. Check your Firebase rules."
+      );
+
+      saveBtn.disabled=false;
+      cancelBtn.disabled=false;
+    }
+  };
+}
+
+
+async function deleteMessage(row,key,btn){
+
+  if(!user || row.dataset.deleting==="true")
+    return;
+
+  row.dataset.deleting="true";
+
+  try{
+
+    if(btn){
+
+      btn.disabled=true;
+      btn.textContent="DELETING…";
+
+    }
+
+    await remove(
+      ref(db,"messages/"+key)
+    );
+
+    row.remove();
+
+    noticeMsg("");
+
+    sendMessage.busy=false;
+
+  }catch(e){
+
+    console.error(e);
+
+    row.dataset.deleting="false";
+
+    if(btn){
+
+      btn.disabled=false;
+      btn.textContent="DELETE";
+      btn.dataset.confirm="false";
+      btn.classList.remove("confirm-delete");
+
+    }
+
+    noticeMsg(
+      "Message couldn't be deleted. Check your Firebase rules / your admins entry."
+    );
+  }
+}
+
+
+/* JOIN */
+
+function join(){
+
+  const n=
+    nameInput.value
+      .trim()
+      .replace(/\s+/g," ");
+
+
+  if(n.length<2){
+
+    noticeMsg(
+      "Choose a nickname with at least 2 characters."
+    );
+
+    return;
+  }
+
+
+  nickname=n.slice(0,20);
+
+  joined=true;
+
+  setup.style.display="none";
+
+  composer.style.display="flex";
+
+  noticeMsg("");
+
+  updateMyTimeoutState();
+
+  messageInput.focus();
+
+  try{
+
+    localStorage.setItem("ugsChatNickname",nickname);
+
+  }catch(e){}
+
+}
+
+
+/* FILE ATTACHMENTS */
+
+function clearAttachment(){
+
+  selectedFile=null;
+  fileInput.value="";
+  attachmentPreview.style.display="none";
+  attachmentProgressTrack.style.display="none";
+  attachmentProgressFill.style.width="0%";
+  attachmentName.textContent="";
+
+}
+
+
+function showAttachment(file){
+
+  selectedFile=file;
+
+  attachmentName.textContent=
+    "📎 "+file.name+
+    " ("+(file.size/1024/1024).toFixed(2)+" MB)";
+
+  attachmentPreview.style.display="flex";
+}
+
+
+attachBtn.onclick=()=>{
+
+  if(!joined)
+    return;
+
+  fileInput.click();
+
+};
+
+
+fileInput.onchange=()=>{
+
+  const file=fileInput.files?.[0];
+
+  if(!file){
+
+    clearAttachment();
+
+    return;
+  }
+
+  if(file.size>MAX_FILE_SIZE){
+
+    noticeMsg(
+      "That file is too large. Maximum size is 25 MB."
+    );
+
+    clearAttachment();
+
+    return;
+  }
+
+  showAttachment(file);
+
+  noticeMsg("");
+};
+
+
+removeAttachment.onclick=()=>{
+
+  clearAttachment();
+
+  messageInput.focus();
+
+};
+
+
+/* FILE UPLOAD */
+
+function uploadAttachment(file){
+
+  return new Promise((resolve,reject)=>{
+
+    const safeFileName=
+      file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
+
+    const path=
+      "attachments/"+user.uid+"/"+Date.now()+"_"+safeFileName;
+
+    const fileRef=
+      storageRef(storage,path);
+
+    const task=
+      uploadBytesResumable(
+        fileRef,
+        file,
+        {
+          contentType:
+            file.type ||
+            "application/octet-stream",
+
+          customMetadata:{
+            originalName:file.name
+          }
+        }
+      );
+
+    attachmentProgressTrack.style.display="block";
+    attachmentPreview.style.display="flex";
+
+    let settled=false;
+    let lastBytes=0;
+
+    const watchdog=setTimeout(()=>{
+
+      if(settled)
+        return;
+
+      if(lastBytes>0)
+        return;
+
+      settled=true;
+
+      task.cancel();
+
+      const err=
+        new Error(
+          "Upload timed out with no response from Firebase Storage."
+        );
+
+      err.code="storage/no-response";
+
+      reject(err);
+
+    },20000);
+
+    task.on(
+
+      "state_changed",
+
+      snap=>{
+
+        lastBytes=snap.bytesTransferred;
+
+        const pct=
+          snap.totalBytes
+            ?Math.round(
+              (snap.bytesTransferred/
+              snap.totalBytes)*100
+            )
+            :0;
+
+        attachmentProgressFill.style.width=
+          pct+"%";
+
+        noticeMsg(
+          "Uploading file… "+pct+"%"
+        );
+
+      },
+
+      err=>{
+
+        if(settled)
+          return;
+
+        settled=true;
+
+        clearTimeout(watchdog);
+
+        reject(err);
+
+      },
+
+      async()=>{
+
+        if(settled)
+          return;
+
+        settled=true;
+
+        clearTimeout(watchdog);
+
+        try{
+
+          const url=
+            await getDownloadURL(
+              task.snapshot.ref
+            );
+
+          resolve({
+
+            name:file.name,
+            size:file.size,
+            type:
+              file.type ||
+              "application/octet-stream",
+
+            url,
+            path
+          });
+
+        }catch(err){
+
+          reject(err);
+
+        }
+      }
+    );
+  });
+}
+
+
+/* SEND */
+
+async function sendMessage(){
+
+  if(sendMessage.busy)
+    return;
+
+  const text=
+    messageInput.value.trim();
+
+  if(
+    !user ||
+    !joined ||
+    (!text && !selectedFile)
+  )
+    return;
+
+  if(Date.now()-lastSent<700)
+    return;
+
+  if(amIBanned()){
+
+    noticeMsg(
+      "⛔ You've been permanently banned and can't send messages."
+    );
+
+    return;
+  }
+
+  if(myTimeoutUntil>Date.now()){
+
+    noticeMsg(
+      "🚫 You're timed out for another "+
+      formatRemaining(myTimeoutUntil-Date.now())+
+      "."
+    );
+
+    return;
+  }
+
+  const safe=
+    text.slice(0,300);
+
+  if(
+    safe &&
+    containsBlockedWord(safe)
+  ){
+
+    noticeMsg(
+      "⚠️ That message contains a word that isn't allowed in this chat."
+    );
+
+    messageInput.select();
+
+    return;
+  }
+
+  sendMessage.busy=true;
+  lastSent=Date.now();
+
+  sendBtn.disabled=true;
+
+  const fileToSend=
+    selectedFile;
+
+  messageInput.value="";
+
+  try{
+
+    let attachment=null;
+
+    if(fileToSend){
+
+      attachment=
+        await uploadAttachment(
+          fileToSend
+        );
+    }
+
+    await set(
+      push(ref(db,"messages")),
+      {
+        uid:user.uid,
+        name:nickname,
+        text:safe,
+        createdAt:serverTimestamp(),
+
+        /* SAVE ADMIN STATUS WITH THE MESSAGE */
+
+        admin:isAdmin,
+        specialAdmin:isSpecialAdmin,
+
+        ...(attachment
+          ?{attachment}
+          :{})
+      }
+    );
+
+    clearAttachment();
+
+    noticeMsg("");
+
+  }catch(e){
+
+    console.error(
+      "Send failed:",
+      e
+    );
+
+    messageInput.value=safe;
+
+    let msg=
+      "Message or file failed to send.";
+
+    if(e?.code==="storage/unauthorized")
+
+      msg=
+        "File upload was denied by Firebase Storage rules. Check Storage → Rules.";
+
+    else if(e?.code==="storage/quota-exceeded")
+
+      msg=
+        "Firebase Storage quota has been exceeded.";
+
+    else if(e?.code==="storage/canceled")
+
+      msg=
+        "File upload was canceled.";
+
+    else if(e?.code==="storage/retry-limit-exceeded")
+
+      msg=
+        "File upload timed out. Check your connection and try again.";
+
+    else if(e?.code==="storage/no-response")
+
+      msg=
+        "Upload got no response after 20s — Cloud Storage may not be set up for this project yet, or Storage rules are blocking it.";
+
+    else if(
+      e?.code==="permission-denied" ||
+      e?.code==="PERMISSION_DENIED"
+    )
+
+      msg=
+        "Firebase Database permission was denied. Check Realtime Database → Rules.";
+
+    noticeMsg(msg);
+
+    if(fileToSend){
+
+      attachmentProgressTrack.style.display="none";
+
+      attachmentProgressFill.style.width="0%";
+
+    }
+
+  }finally{
+
+    sendMessage.busy=false;
+
+    sendBtn.disabled=false;
+
+  }
+}
+
+
+/* EMOJIS */
+
+const emojis=[
+  "😀","😃","😄","😁","😆","😅","😂","🤣",
+  "😊","😇","🙂","🙃","😉","😌","😍","🥰",
+  "😘","😎","🤓","🧐","🤩","🥳","😏","😮",
+  "😲","😳","🥺","😭","💀","👀","🔥","✨",
+  "⭐","🌟","💯","❤️","💙","💜","💚","🩵",
+  "🖤","🤍","💔","👍","👎","👏","🙌","🙏",
+  "💪","🤝","👋","🎉","🎊","🎮","🕹️","🏆",
+  "🥇","🚀","💥","⚡","🌈","☀️","🌙","🌎",
+  "🍕","🍔","🍟","🌭","🍿","🍪","🐶","🐱",
+  "🐭","🐹","🦊","🐻","🐼","🐸","🐵","🙈",
+  "🙉","🙊","🦄","🐲","👻","🤖","💎","💰",
+  "🎁","🎵","🎶","📱","💻","🖥️"
+];
+
+
+emojis.forEach(emoji=>{
+
+  const button=
+    document.createElement("button");
+
+  button.className="emoji";
+
+  button.textContent=emoji;
+
+  button.type="button";
+
+  button.onclick=()=>{
+
+    insertEmoji(emoji);
+
+  };
+
+  emojiPicker.appendChild(button);
+
+});
+
+
+function insertEmoji(emoji){
+
+  const start=
+    messageInput.selectionStart;
+
+  const end=
+    messageInput.selectionEnd;
+
+  const value=
+    messageInput.value;
+
+  messageInput.value=
+    value.slice(0,start)+
+    emoji+
+    value.slice(end);
+
+  messageInput.focus();
+
+  const position=
+    start+emoji.length;
+
+  messageInput.setSelectionRange(
+    position,
+    position
+  );
+
+}
+
+
+emojiBtn.onclick=e=>{
+
+  e.stopPropagation();
+
+  const open=
+    emojiPicker.style.display==="grid";
+
+  emojiPicker.style.display=
+    open
+      ?"none"
+      :"grid";
+
+};
+
+
+document.addEventListener(
+  "click",
+  e=>{
+
+    if(
+      !emojiPicker.contains(e.target)&&
+      e.target!==emojiBtn
+    ){
+
+      emojiPicker.style.display=
+        "none";
+
+    }
+
+    if(
+      !themePicker.contains(e.target)&&
+      e.target!==themeBtn
+    ){
+
+      themePicker.style.display=
+        "none";
+
+    }
+
+  }
+);
+
+
+/* THEMES */
+
+const themes=[
+  {
+    id:"blue",
+    label:"Autumn",
+    swatch:"linear-gradient(135deg,#c8791f,#f0b44c)"
+  },
+  {
+    id:"red",
+    label:"Red",
+    swatch:"linear-gradient(135deg,#ff2d55,#ff7a59)"
+  },
+  {
+    id:"orange",
+    label:"Orange",
+    swatch:"linear-gradient(135deg,#ff7a18,#ffb347)"
+  },
+  {
+    id:"yellow",
+    label:"Yellow",
+    swatch:"linear-gradient(135deg,#e6c400,#ffe066)"
+  },
+  {
+    id:"green",
+    label:"Green",
+    swatch:"linear-gradient(135deg,#12b76a,#7ee787)"
+  },
+  {
+    id:"purple",
+    label:"Purple",
+    swatch:"linear-gradient(135deg,#7c3dff,#c77dff)"
+  }
+];
+
+function applyTheme(id){
+
+  document.documentElement.setAttribute(
+    "data-theme",
+    id
+  );
+
+  themePicker
+    .querySelectorAll(".theme-option")
+    .forEach(el=>{
+
+      el.classList.toggle(
+        "selected",
+        el.dataset.theme===id
+      );
+
+    });
+
+  try{
+
+    localStorage.setItem(
+      "ugsChatTheme",
+      id
+    );
+
+  }catch(e){}
+
+}
+
+themes.forEach(theme=>{
+
+  const option=
+    document.createElement("button");
+
+  option.type="button";
+  option.className="theme-option";
+  option.dataset.theme=theme.id;
+
+  const swatch=
+    document.createElement("span");
+
+  swatch.className="theme-swatch";
+  swatch.style.background=theme.swatch;
+
+  const label=
+    document.createElement("span");
+
+  label.textContent=theme.label;
+
+  option.append(swatch,label);
+
+  option.onclick=()=>{
+
+    applyTheme(theme.id);
+
+  };
+
+  themePicker.appendChild(option);
+
+});
+
+let savedTheme="blue";
+
+try{
+
+  savedTheme=
+    localStorage.getItem("ugsChatTheme")||
+    "blue";
+
+}catch(e){}
+
+applyTheme(savedTheme);
+
+themeBtn.onclick=e=>{
+
+  e.stopPropagation();
+
+  const open=
+    themePicker.style.display==="flex";
+
+  themePicker.style.display=
+    open
+      ?"none"
+      :"flex";
+
+};
+
+
+/* ADMIN */
+
+function openAdminModal(){
+
+  adminPasscodeInput.value="";
+  adminModalError.textContent="";
+  adminModalOverlay.style.display="flex";
+
+  requestAnimationFrame(()=>{
+    adminPasscodeInput.focus();
+  });
+}
+
+function closeAdminModal(){
+
+  adminModalOverlay.style.display="none";
+}
+
+function setAdminMode(on,special){
+
+  isAdmin=on;
+  isSpecialAdmin=!!(on&&special);
+
+  adminBtn.textContent=
+    on
+      ?(isSpecialAdmin?"👑👑👑 ADMIN ON":"👑 ADMIN ON")
+      :"👑 ADMIN";
+
+  adminBtn.classList.toggle(
+    "active",
+    on
+  );
+
+  adminPanelBtn.style.display=
+    on?"inline-flex":"none";
+
+  document.body.classList.toggle(
+    "admin-active",
+    on
+  );
+
+  specialAdminSection.style.display=
+    isSpecialAdmin?"block":"none";
+
+  if(!on)
+    closeAdminPanel();
+
+  try{
+
+    if(on)
+      localStorage.setItem("ugsChatAdmin","1");
+    else
+      localStorage.removeItem("ugsChatAdmin");
+
+    if(isSpecialAdmin)
+      localStorage.setItem("ugsChatSpecialAdmin","1");
+    else
+      localStorage.removeItem("ugsChatSpecialAdmin");
+
+  }catch(e){}
+
+}
+
+function submitAdminPasscode(){
+
+  const entered=
+    adminPasscodeInput.value.trim();
+
+  if(entered.toUpperCase()===ADMIN_PASSCODE.toUpperCase()){
+
+    setAdminMode(true,false);
+
+    closeAdminModal();
+
+    noticeMsg(
+      "👑 Admin mode enabled."
+    );
+
+  }else if(entered.toUpperCase()===SPECIAL_ADMIN_PASSCODE.toUpperCase()){
+
+    setAdminMode(true,true);
+
+    closeAdminModal();
+
+    noticeMsg(
+      "👑👑👑 Special admin mode enabled."
+    );
+
+  }else{
+
+    adminModalError.textContent=
+      "Incorrect admin passcode.";
+
+    adminPasscodeInput.select();
+
+  }
+}
+
+adminBtn.onclick=()=>{
+
+  if(isAdmin){
+
+    setAdminMode(false);
+
+    noticeMsg(
+      "Admin mode disabled."
+    );
+
+    return;
+  }
+
+  openAdminModal();
+};
+
+adminModalSubmit.onclick=submitAdminPasscode;
+
+adminModalCancel.onclick=closeAdminModal;
+
+adminPasscodeInput.onkeydown=e=>{
+
+  if(e.key==="Enter"){
+
+    e.preventDefault();
+
+    submitAdminPasscode();
+
+  }
+
+  if(e.key==="Escape"){
+
+    e.preventDefault();
+
+    closeAdminModal();
+
+  }
+};
+
+adminModalOverlay.onclick=e=>{
+
+  if(e.target===adminModalOverlay)
+    closeAdminModal();
+
+};
+
+
+/* USERNAME RESET CODE */
+
+const USERNAME_RESET_WINDOW_MS=5*60*1000;
+
+function usernameResetCode(){
+
+  const bucket=
+    Math.floor(Date.now()/USERNAME_RESET_WINDOW_MS);
+
+  const str=
+    ADMIN_PASSCODE+"::"+bucket;
+
+  let hash=0;
+
+  for(let i=0;i<str.length;i++)
+    hash=(hash*31+str.charCodeAt(i))>>>0;
+
+  return String(hash%1000000).padStart(6,"0");
+
+}
+
+function usernameResetSecondsLeft(){
+
+  const elapsed=
+    Date.now()%USERNAME_RESET_WINDOW_MS;
+
+  return Math.ceil(
+    (USERNAME_RESET_WINDOW_MS-elapsed)/1000
+  );
+
+}
+
+function updateResetCodeDisplay(){
+
+  resetCodeText.textContent=
+    usernameResetCode();
+
+  const secs=
+    usernameResetSecondsLeft();
+
+  const m=Math.floor(secs/60);
+  const s=secs%60;
+
+  resetCodeCountdown.textContent=
+    "Changes in "+m+":"+String(s).padStart(2,"0");
+
+}
+
+copyResetCodeBtn.onclick=async()=>{
+
+  try{
+
+    await navigator.clipboard.writeText(
+      resetCodeText.textContent||""
+    );
+
+    const original=copyResetCodeBtn.textContent;
+
+    copyResetCodeBtn.textContent="COPIED";
+
+    setTimeout(()=>{
+      copyResetCodeBtn.textContent=original;
+    },1500);
+
+  }catch(e){
+
+    console.error(e);
+
+  }
+};
+
+function openUsernameReset(){
+
+  newUsernameInput.value="";
+  usernameResetCodeInput.value="";
+  usernameResetError.textContent="";
+
+  usernameResetOverlay.style.display="flex";
+
+  requestAnimationFrame(()=>{
+    newUsernameInput.focus();
+  });
+}
+
+function closeUsernameReset(){
+
+  usernameResetOverlay.style.display="none";
+
+}
+
+function submitUsernameReset(){
+
+  const newName=
+    newUsernameInput.value
+      .trim()
+      .replace(/\s+/g," ");
+
+  const code=
+    usernameResetCodeInput.value.trim();
+
+  if(newName.length<2){
+
+    usernameResetError.textContent=
+      "Choose a username with at least 2 characters.";
+
+    newUsernameInput.focus();
+
+    return;
+  }
+
+  if(code!==usernameResetCode()){
+
+    usernameResetError.textContent=
+      "Incorrect or expired code. Ask an admin for the current one.";
+
+    usernameResetCodeInput.select();
+
+    return;
+  }
+
+  nickname=newName.slice(0,20);
+
+  try{
+
+    localStorage.setItem("ugsChatNickname",nickname);
+
+  }catch(e){}
+
+  closeUsernameReset();
+
+  noticeMsg(
+    "Username changed to "+nickname+"."
+  );
+}
+
+changeUsernameBtn.onclick=openUsernameReset;
+
+usernameResetSubmit.onclick=submitUsernameReset;
+
+usernameResetCancel.onclick=closeUsernameReset;
+
+usernameResetOverlay.onclick=e=>{
+
+  if(e.target===usernameResetOverlay)
+    closeUsernameReset();
+
+};
+
+newUsernameInput.onkeydown=e=>{
+
+  if(e.key==="Enter"){
+
+    e.preventDefault();
+    usernameResetCodeInput.focus();
+
+  }
+
+  if(e.key==="Escape"){
+
+    e.preventDefault();
+    closeUsernameReset();
+
+  }
+};
+
+usernameResetCodeInput.onkeydown=e=>{
+
+  if(e.key==="Enter"){
+
+    e.preventDefault();
+    submitUsernameReset();
+
+  }
+
+  if(e.key==="Escape"){
+
+    e.preventDefault();
+    closeUsernameReset();
+
+  }
+};
+
+
+/* ADMIN PANEL — TIMEOUTS */
+
+function timeoutKeyFor(name){
+
+  return encodeURIComponent(name)
+    .replace(/\./g,"%2E");
+
+}
+
+function activeTimeoutFor(name){
+
+  let latest=0;
+
+  for(const key in timeoutsByKey){
+
+    const t=timeoutsByKey[key];
+
+    if(
+      t &&
+      t.username===name &&
+      t.expiresAt>Date.now() &&
+      t.expiresAt>latest
+    )
+      latest=t.expiresAt;
+
+  }
+
+  return latest||null;
+
+}
+
+function formatRemaining(ms){
+
+  const totalSec=Math.max(0,Math.ceil(ms/1000));
+  const m=Math.floor(totalSec/60);
+  const s=totalSec%60;
+
+  return m+":"+String(s).padStart(2,"0");
+
+}
+
+function renderActiveTimeouts(){
+
+  activeTimeoutsList.innerHTML="";
+
+  const now=Date.now();
+
+  const rows=Object.entries(timeoutsByKey)
+    .filter(([,t])=>t && t.expiresAt>now)
+    .sort((a,b)=>b[1].expiresAt-a[1].expiresAt);
+
+  if(rows.length===0){
+
+    const empty=document.createElement("div");
+
+    empty.id="activeTimeoutsEmpty";
+    empty.textContent="No one is currently timed out.";
+
+    activeTimeoutsList.appendChild(empty);
+
+    return;
+  }
+
+  rows.forEach(([key,t])=>{
+
+    const row=document.createElement("div");
+    row.className="timeout-row";
+
+    const info=document.createElement("div");
+    info.className="timeout-row-info";
+
+    const name=document.createElement("div");
+    name.className="timeout-row-name";
+    name.textContent=t.username;
+
+    const time=document.createElement("div");
+    time.className="timeout-row-time";
+    time.textContent="expires in "+formatRemaining(t.expiresAt-now);
+
+    info.append(name,time);
+
+    const liftBtn=document.createElement("button");
+    liftBtn.type="button";
+    liftBtn.textContent="LIFT";
+
+    liftBtn.onclick=async()=>{
+
+      liftBtn.disabled=true;
+
+      try{
+
+        await remove(ref(db,"timeouts/"+key));
+
+      }catch(e){
+
+        console.error(e);
+        liftBtn.disabled=false;
+
+      }
+    };
+
+    row.append(info,liftBtn);
+
+    activeTimeoutsList.appendChild(row);
+
+  });
+
+}
+
+function amIBanned(){
+
+  return !!(user && bannedByUid[user.uid]);
+
+}
+
+function updateMyTimeoutState(){
+
+  const until=
+    nickname
+      ?activeTimeoutFor(nickname)
+      :null;
+
+  myTimeoutUntil=until||0;
+
+  const banned=amIBanned();
+  const timedOut=myTimeoutUntil>Date.now();
+  const locked=banned||timedOut;
+
+  messageInput.disabled=locked;
+  sendBtn.disabled=locked;
+  attachBtn.disabled=locked;
+
+  if(banned){
+
+    timeoutBanner.style.display="block";
+
+    timeoutBanner.textContent=
+      "⛔ You have been permanently banned and can't send messages.";
+
+  }else if(timedOut){
+
+    timeoutBanner.style.display="block";
+
+    timeoutBanner.textContent=
+      "🚫 You've been timed out and can't send messages for "+
+      formatRemaining(myTimeoutUntil-Date.now())+
+      ".";
+
+  }else{
+
+    timeoutBanner.style.display="none";
+
+  }
+}
+
+function renderActiveBans(){
+
+  activeBansList.innerHTML="";
+
+  const entries=Object.entries(bannedByUid)
+    .filter(([,b])=>b);
+
+  if(entries.length===0){
+
+    const empty=document.createElement("div");
+
+    empty.id="activeBansEmpty";
+    empty.textContent="No one is currently banned.";
+
+    activeBansList.appendChild(empty);
+
+    return;
+  }
+
+  entries.forEach(([uid,b])=>{
+
+    const row=document.createElement("div");
+    row.className="timeout-row";
+
+    const info=document.createElement("div");
+    info.className="timeout-row-info";
+
+    const name=document.createElement("div");
+    name.className="timeout-row-name";
+    name.textContent=b.username||"(unknown username)";
+
+    const time=document.createElement("div");
+    time.className="timeout-row-time";
+    time.textContent="permanently banned";
+
+    info.append(name,time);
+
+    const unbanBtn=document.createElement("button");
+    unbanBtn.type="button";
+    unbanBtn.textContent="UNBAN";
+
+    unbanBtn.onclick=async()=>{
+
+      unbanBtn.disabled=true;
+
+      try{
+
+        await remove(ref(db,"banned/"+uid));
+
+      }catch(e){
+
+        console.error(e);
+        unbanBtn.disabled=false;
+
+      }
+    };
+
+    row.append(info,unbanBtn);
+
+    activeBansList.appendChild(row);
+
+  });
+
+}
+
+/* PINNED MESSAGES */
+
+function updatePinBadge(){
+
+  const n=Object.keys(pinnedByKey).length;
+
+  pinCount.textContent=n;
+  pinCount.classList.toggle("show",n>0);
+
+}
+
+function refreshPinnedRowHighlights(){
+
+  Object.entries(rowsByKey).forEach(([key,row])=>{
+
+    if(!row || !row.isConnected){
+      delete rowsByKey[key];
+      return;
+    }
+
+    const isPinned=!!pinnedByKey[key];
+
+    row.classList.toggle("pinned",isPinned);
+
+    const pinBtnEl=row.querySelector(".msg-action-pin");
+
+    if(pinBtnEl)
+      pinBtnEl.textContent=isPinned?"UNPIN":"PIN";
+
+    const tm=row.querySelector(".time");
+
+    if(tm){
+
+      let flag=tm.querySelector(".pin-flag");
+
+      if(isPinned && !flag){
+
+        flag=document.createElement("span");
+        flag.className="pin-flag";
+        flag.textContent="📌";
+        flag.title="Pinned";
+
+        tm.appendChild(flag);
+
+      }else if(!isPinned && flag){
+
+        flag.remove();
+
+      }
+    }
+  });
+}
+
+function renderPinnedMessages(){
+
+  pinnedMessagesList.innerHTML="";
+
+  const entries=Object.entries(pinnedByKey)
+    .filter(([,p])=>p)
+    .sort(
+      (a,b)=>(b[1].pinnedAt||0)-(a[1].pinnedAt||0)
+    );
+
+  if(entries.length===0){
+
+    const empty=document.createElement("div");
+
+    empty.id="pinnedMessagesEmpty";
+    empty.textContent="No messages are pinned yet.";
+
+    pinnedMessagesList.appendChild(empty);
+
+    return;
+  }
+
+  entries.forEach(([key,p])=>{
+
+    const row=document.createElement("div");
+    row.className="pinned-row";
+
+    const info=document.createElement("div");
+    info.className="pinned-row-info";
+
+    const name=document.createElement("div");
+    name.className="pinned-row-name";
+    name.textContent=p.name||"Guest";
+
+    const text=document.createElement("div");
+    text.className="pinned-row-text";
+    text.textContent=p.text||"";
+
+    info.append(name,text);
+
+    row.appendChild(info);
+
+    if(isAdmin){
+
+      const unpinBtn=document.createElement("button");
+      unpinBtn.type="button";
+      unpinBtn.textContent="UNPIN";
+
+      unpinBtn.onclick=async()=>{
+
+        unpinBtn.disabled=true;
+
+        try{
+
+          await remove(ref(db,"pinned/"+key));
+
+        }catch(e){
+
+          console.error(e);
+          unpinBtn.disabled=false;
+
+        }
+      };
+
+      row.appendChild(unpinBtn);
+    }
+
+    pinnedMessagesList.appendChild(row);
+
+  });
+
+}
+
+function watchPinned(){
+
+  onValue(
+    ref(db,"pinned"),
+    snap=>{
+
+      pinnedByKey=snap.val()||{};
+
+      updatePinBadge();
+      refreshPinnedRowHighlights();
+
+      if(pinnedPanelOverlay.style.display==="flex")
+        renderPinnedMessages();
+
+    }
+  );
+}
+
+function openPinnedPanel(){
+
+  renderPinnedMessages();
+
+  pinnedPanelOverlay.style.display="flex";
+
+}
+
+function closePinnedPanel(){
+
+  pinnedPanelOverlay.style.display="none";
+
+}
+
+function openAdminPanel(){
+
+  timeoutUsernameInput.value="";
+  timeoutCustomMinutes.value="";
+  adminPanelError.textContent="";
+
+  clearTimeout(banUserBtn._confirmTimer);
+  banUserBtn.dataset.confirm="false";
+  banUserBtn.textContent="BAN PERMANENTLY";
+
+  renderActiveTimeouts();
+  renderActiveBans();
+
+  adminPanelOverlay.style.display="flex";
+
+  requestAnimationFrame(()=>{
+    timeoutUsernameInput.focus();
+  });
+}
+
+function closeAdminPanel(){
+
+  adminPanelOverlay.style.display="none";
+
+}
+
+function minutesFromPanel(){
+
+  const custom=
+    Number(timeoutCustomMinutes.value);
+
+  if(custom && custom>0)
+    return Math.floor(custom);
+
+  return Number(timeoutDurationSelect.value)||5;
+
+}
+
+async function submitTimeout(){
+
+  const targetName=
+    timeoutUsernameInput.value.trim();
+
+  if(!targetName){
+
+    adminPanelError.textContent=
+      "Enter the exact username to time out.";
+
+    timeoutUsernameInput.focus();
+
+    return;
+  }
+
+  const minutes=
+    minutesFromPanel();
+
+  const expiresAt=
+    Date.now()+minutes*60000;
+
+  adminPanelSubmit.disabled=true;
+
+  try{
+
+    await set(
+      ref(db,"timeouts/"+timeoutKeyFor(targetName)),
+      {
+        username:targetName,
+        expiresAt,
+        issuedBy:nickname||"admin",
+        issuedAt:serverTimestamp()
+      }
+    );
+
+    adminPanelError.textContent="";
+
+    noticeMsg(
+      "🚫 "+targetName+" has been timed out for "+minutes+" minute"+(minutes===1?"":"s")+"."
+    );
+
+    timeoutUsernameInput.value="";
+    timeoutCustomMinutes.value="";
+
+  }catch(e){
+
+    console.error(e);
+
+    adminPanelError.textContent=
+      "Couldn't apply timeout. Check your Firebase rules / your admins entry.";
+
+  }finally{
+
+    adminPanelSubmit.disabled=false;
+
+  }
+}
+
+async function submitBan(){
+
+  const targetName=
+    timeoutUsernameInput.value.trim();
+
+  if(!targetName){
+
+    adminPanelError.textContent=
+      "Enter the exact username to ban.";
+
+    timeoutUsernameInput.focus();
+
+    return;
+  }
+
+  const targetUid=
+    nameToUid[targetName];
+
+  if(!targetUid){
+
+    adminPanelError.textContent=
+      "Can't find that user's ID yet — they need to have sent at least one message since the page loaded.";
+
+    return;
+  }
+
+  if(banUserBtn.dataset.confirm!=="true"){
+
+    banUserBtn.dataset.confirm="true";
+
+    const original=banUserBtn.textContent;
+
+    banUserBtn.textContent="CLICK AGAIN TO CONFIRM";
+
+    clearTimeout(banUserBtn._confirmTimer);
+
+    banUserBtn._confirmTimer=setTimeout(
+      ()=>{
+
+        banUserBtn.dataset.confirm="false";
+        banUserBtn.textContent=original;
+
+      },
+      4000
+    );
+
+    return;
+  }
+
+  clearTimeout(banUserBtn._confirmTimer);
+
+  banUserBtn.dataset.confirm="false";
+  banUserBtn.textContent="BAN PERMANENTLY";
+  banUserBtn.disabled=true;
+
+  try{
+
+    await set(
+      ref(db,"banned/"+targetUid),
+      {
+        username:targetName,
+        bannedAt:serverTimestamp(),
+        bannedBy:nickname||"admin"
+      }
+    );
+
+    adminPanelError.textContent="";
+
+    noticeMsg(
+      "⛔ "+targetName+" has been permanently banned."
+    );
+
+    timeoutUsernameInput.value="";
+
+  }catch(e){
+
+    console.error(e);
+
+    adminPanelError.textContent=
+      "Couldn't apply ban. Check your Firebase rules / your admins entry.";
+
+  }finally{
+
+    banUserBtn.disabled=false;
+
+  }
+}
+
+adminPanelBtn.onclick=()=>{
+
+  if(!isAdmin)
+    return;
+
+  openAdminPanel();
+
+};
+
+pinBtn.onclick=()=>{
+
+  openPinnedPanel();
+
+};
+
+pinnedPanelClose.onclick=closePinnedPanel;
+
+/* ANNOUNCEMENT BANNERS: ADMIN ONLINE (any admin) + BRADY'S ONLINE (special admin) */
+
+onValue(
+  ref(db,"adminAnnouncement"),
+  snap=>{
+
+    const on=!!snap.val();
+
+    adminAnnouncementBar.style.display=
+      on?"block":"none";
+
+    adminOnlineToggle.checked=on;
+
+  }
+);
+
+onValue(
+  ref(db,"specialAnnouncement"),
+  snap=>{
+
+    const on=!!snap.val();
+
+    specialAnnouncementBar.style.display=
+      on?"block":"none";
+
+    bradyOnlineToggle.checked=on;
+
+  }
+);
+
+adminOnlineToggle.onchange=async()=>{
+
+  if(!isAdmin){
+    adminOnlineToggle.checked=false;
+    return;
+  }
+
+  const desired=adminOnlineToggle.checked;
+
+  try{
+
+    await set(
+      ref(db,"adminAnnouncement"),
+      desired
+    );
+
+    adminPanelError.textContent="";
+
+  }catch(e){
+
+    console.error(e);
+
+    adminOnlineToggle.checked=!desired;
+
+    adminPanelError.textContent=
+      "Couldn't update the ADMIN ONLINE banner. Check your Firebase rules / your admins entry.";
+
+  }
+
+};
+
+bradyOnlineToggle.onchange=async()=>{
+
+  if(!isSpecialAdmin){
+    bradyOnlineToggle.checked=false;
+    return;
+  }
+
+  const desired=bradyOnlineToggle.checked;
+
+  try{
+
+    await set(
+      ref(db,"specialAnnouncement"),
+      desired
+    );
+
+    adminPanelError.textContent="";
+
+  }catch(e){
+
+    console.error(e);
+
+    bradyOnlineToggle.checked=!desired;
+
+    adminPanelError.textContent=
+      "Couldn't update the BRADY'S ONLINE banner. Check your Firebase rules / your admins entry.";
+
+  }
+
+};
+
+adminPanelSubmit.onclick=submitTimeout;
+
+banUserBtn.onclick=submitBan;
+
+adminPanelCancel.onclick=closeAdminPanel;
+
+copyUidBtn.onclick=async()=>{
+
+  try{
+
+    await navigator.clipboard.writeText(myUidText.textContent||"");
+
+    const original=copyUidBtn.textContent;
+
+    copyUidBtn.textContent="COPIED";
+
+    setTimeout(()=>{
+      copyUidBtn.textContent=original;
+    },1500);
+
+  }catch(e){
+
+    console.error(e);
+
+  }
+};
+
+adminPanelOverlay.onclick=e=>{
+
+  if(e.target===adminPanelOverlay)
+    closeAdminPanel();
+
+};
+
+timeoutUsernameInput.onkeydown=e=>{
+
+  if(e.key==="Enter"){
+
+    e.preventDefault();
+    submitTimeout();
+
+  }
+
+  if(e.key==="Escape"){
+
+    e.preventDefault();
+    closeAdminPanel();
+
+  }
+};
+
+function watchTimeouts(){
+
+  onValue(
+    ref(db,"timeouts"),
+    snap=>{
+
+      timeoutsByKey=snap.val()||{};
+
+      updateMyTimeoutState();
+
+      if(adminPanelOverlay.style.display==="flex")
+        renderActiveTimeouts();
+
+    }
+  );
+}
+
+function watchBans(){
+
+  onValue(
+    ref(db,"banned"),
+    snap=>{
+
+      bannedByUid=snap.val()||{};
+
+      updateMyTimeoutState();
+
+      if(adminPanelOverlay.style.display==="flex")
+        renderActiveBans();
+
+    }
+  );
+}
+
+if(!timeoutTickHandle){
+
+  timeoutTickHandle=setInterval(
+    ()=>{
+
+      updateMyTimeoutState();
+
+      if(adminPanelOverlay.style.display==="flex"){
+
+        renderActiveTimeouts();
+        renderActiveBans();
+
+      }
+
+    },
+    1000
+  );
+}
+
+
+/* RESTORE SAVED STATE */
+
+try{
+
+  const savedNickname=
+    localStorage.getItem("ugsChatNickname");
+
+  if(savedNickname){
+
+    nameInput.value=savedNickname;
+
+    join();
+
+  }
+
+}catch(e){}
+
+try{
+
+  if(localStorage.getItem("ugsChatAdmin")==="1")
+    setAdminMode(
+      true,
+      localStorage.getItem("ugsChatSpecialAdmin")==="1"
+    );
+
+}catch(e){}
+
+
+/* BUTTONS */
+
+document.getElementById(
+  "joinBtn"
+).onclick=join;
+
+
+nameInput.onkeydown=e=>{
+
+  if(e.key==="Enter")
+    join();
+
+};
+
+
+document.getElementById(
+  "send"
+).onclick=sendMessage;
+
+
+messageInput.onkeydown=e=>{
+
+  if(e.key==="Enter"){
+
+    e.preventDefault();
+
+    sendMessage();
+
+  }
+
+};
+
+
+/* FIREBASE AUTH */
+
+try{
+
+  await signInAnonymously(auth);
+
+}catch(e){
+
+  console.error(e);
+
+  status.textContent=
+    "Setup needed";
+
+  status.style.color=
+    "#ff718c";
+
+  noticeMsg(
+    "Enable Anonymous Authentication in Firebase, then reload."
+  );
+
+}
+
+
+onAuthStateChanged(
+  auth,
+  u=>{
+
+    if(!u)
+      return;
+
+    user=u;
+
+    status.textContent=
+      "● Connected";
+
+    status.style.color=
+      "#c9f27a";
+
+    myUidText.textContent=u.uid;
+
+
+    const first=
+      messages.querySelector(
+        ".system"
+      );
+
+
+    if(first)
+      first.remove();
+
+
+    onChildAdded(
+
+      query(
+        ref(db,"messages"),
+        limitToLast(100)
+      ),
+
+      snap=>{
+
+        addMessage(
+          snap.val(),
+          snap.key
+        );
+
+      }
+
+    );
+
+    watchTimeouts();
+    watchBans();
+    watchPinned();
+
+  }
+);
+
+</script>
+
+<script>
+(function(){
+  const layer=document.getElementById("leaves");
+  if(!layer) return;
+  const icons=["🍁","🍂","🍁","🍂","🍃","🌾"];
+  for(let i=0;i<7;i++){
+    const l=document.createElement("div");
+    l.className="leaf";
+    l.textContent=icons[i%icons.length];
+    l.style.left=(Math.random()*100)+"%";
+    l.style.fontSize=(20+Math.random()*24)+"px";
+    const fall=12+Math.random()*10, sway=2.5+Math.random()*3;
+    l.style.animationDuration=fall+"s,"+sway+"s";
+    l.style.animationDelay=(-Math.random()*fall)+"s,"+(-Math.random()*sway)+"s";
+    layer.appendChild(l);
+  }
+})();
+</script>
+
+</body>
+</html>

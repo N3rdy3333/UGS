@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Announcements</title>
+<style>
+:root{
+  --bg:#1a0f08;--panel:rgba(48,28,14,.72);--line:rgba(255,200,120,.18);
+  --text:#fff3e0;--muted:#d1b48c;--accent:#c8791f;--accent2:#f0b44c;
+  --accent-rgb:200,121,31;--accent2-rgb:240,180,76;--bright-rgb:255,214,130;
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;min-height:100%;color:var(--text);
+font-family:"Comic Sans MS","Comic Sans",cursive;background:#1a0f08}
+body{overflow:auto}
+#background{position:fixed;inset:0;z-index:-2;overflow:hidden;background:
+radial-gradient(circle at 20% 20%,rgba(var(--accent-rgb),.28),transparent 32%),
+radial-gradient(circle at 80% 70%,rgba(var(--accent2-rgb),.18),transparent 32%),
+linear-gradient(135deg,#2a170b,#120a05)}
+.orb{position:absolute;border-radius:50%;filter:blur(55px);opacity:.42;animation:float 12s ease-in-out infinite alternate}
+.one{width:280px;height:280px;background:#d9661f;top:-80px;left:-80px}
+.two{width:240px;height:240px;background:#f0b44c;right:-70px;bottom:-60px;animation-delay:-4s}
+.three{width:180px;height:180px;background:#9c2f1a;left:45%;top:40%;animation-delay:-7s}
+@keyframes float{to{transform:translate(50px,-35px) scale(1.15)}}
+
+#leaves{position:fixed;inset:0;z-index:3;overflow:hidden;pointer-events:none}
+.leaf{position:absolute;top:-60px;user-select:none;pointer-events:none;
+filter:drop-shadow(0 3px 5px rgba(0,0,0,.35));animation:fall linear infinite,sway ease-in-out infinite alternate}
+@keyframes fall{
+  0%{top:-60px;opacity:0}
+  8%{opacity:.95}
+  92%{opacity:.95}
+  100%{top:105vh;opacity:0}
+}
+@keyframes sway{
+  0%{transform:translateX(-35px) rotate(-40deg)}
+  100%{transform:translateX(45px) rotate(70deg)}
+}
+
+#app{width:100%;min-height:100vh;display:flex;flex-direction:column;
+background:rgba(26,15,8,.38)}
+header{display:flex;align-items:center;gap:13px;padding:15px 18px;
+border-bottom:1px solid var(--line);background:rgba(36,20,10,.72);
+backdrop-filter:blur(20px);box-shadow:0 8px 30px rgba(0,0,0,.25);
+position:sticky;top:0;z-index:5}
+.logo{width:38px;height:38px;flex-shrink:0;border-radius:11px;
+background:linear-gradient(135deg,var(--accent),var(--accent2));
+box-shadow:0 0 25px rgba(var(--accent-rgb),.5);
+display:flex;align-items:center;justify-content:center;font-size:21px;
+animation:pulse 3s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 38px rgba(var(--accent2-rgb),.6)}}
+.title{font-weight:900;font-size:17px;letter-spacing:1px}
+.sub{font-size:11px;color:var(--muted);margin-top:3px;font-style:italic}
+.status-wrap{margin-left:auto;display:flex;align-items:center;gap:8px}
+.status{font-size:11px;color:#c9f27a;font-weight:800}
+button{border:0;border-radius:12px;padding:10px 14px;font-weight:800;font-family:inherit;
+cursor:pointer;color:#2a1305;background:linear-gradient(135deg,var(--accent2),var(--accent));
+box-shadow:0 5px 18px rgba(var(--accent-rgb),.25);transition:.15s}
+button:hover{transform:translateY(-1px);filter:brightness(1.1)}
+button:disabled{opacity:.5;cursor:wait;transform:none}
+#adminBtn{padding:8px 11px;font-size:11px;color:var(--text);
+background:rgba(255,255,255,.08);border:1px solid rgba(255,220,160,.2);box-shadow:none}
+#adminBtn.active{color:#2a1305;background:linear-gradient(135deg,#ffd84d,#ff9f1c)}
+
+#content{width:min(900px,100%);margin:0 auto;padding:28px 18px 40px;flex:1}
+.hero{text-align:center;padding:10px 0 24px}
+.hero h1{margin:0;font-size:30px;color:#ffd98a;text-shadow:0 2px 14px rgba(var(--accent-rgb),.5)}
+.hero p{margin:8px 0 0;color:var(--muted);font-size:14px;font-style:italic}
+.hero .divider{margin-top:12px;font-size:18px;letter-spacing:8px;opacity:.85}
+
+#announcements{display:flex;flex-direction:column;gap:14px}
+.empty{text-align:center;color:var(--muted);padding:50px 15px;
+border:1px dashed rgba(255,200,120,.25);border-radius:18px;background:rgba(255,200,120,.04)}
+.announcement{padding:18px 18px 18px 20px;border:1px solid var(--line);border-left:4px solid var(--accent2);
+border-radius:18px;background:linear-gradient(135deg,rgba(255,200,120,.09),rgba(160,80,20,.07));
+backdrop-filter:blur(14px);box-shadow:0 8px 30px rgba(0,0,0,.2);animation:in .25s ease-out}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.announcement h2{margin:0 0 7px;font-size:19px;color:#ffe3b0}
+.announcement .date{font-size:11px;color:var(--muted);margin-bottom:10px}
+.announcement .body{font-size:15px;line-height:1.6;white-space:pre-wrap;word-break:break-word}
+.delete{margin-top:12px;padding:7px 10px;font-size:10px;background:linear-gradient(135deg,#b3341a,#d9692b);color:white}
+
+#adminPanel{display:none;margin:0 0 18px;padding:16px;border-radius:18px;
+border:1px solid rgba(255,200,90,.4);background:rgba(255,170,45,.08)}
+#adminPanel.show{display:block}
+#adminPanel h3{margin:0 0 4px;font-size:15px}
+#adminPanel p{margin:0 0 14px;color:var(--muted);font-size:11px}
+.field{margin-bottom:10px}
+label{display:block;font-size:10px;color:var(--muted);font-weight:800;margin-bottom:5px;text-transform:uppercase}
+input,textarea{width:100%;border:1px solid var(--line);border-radius:12px;
+background:rgba(255,230,190,.07);color:var(--text);padding:11px 12px;
+outline:none;font:14px "Comic Sans MS","Comic Sans",cursive}
+textarea{min-height:120px;resize:vertical}
+input:focus,textarea:focus{border-color:rgba(var(--bright-rgb),.6);box-shadow:0 0 0 3px rgba(var(--accent2-rgb),.12)}
+.admin-actions{display:flex;gap:8px;justify-content:flex-end}
+#adminNotice{min-height:17px;color:#ffbd66;font-size:11px;margin:8px 0}
+#footer{text-align:center;color:rgba(255,225,180,.5);font-size:11px;padding:15px}
+
+#modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;
+background:rgba(15,8,3,.7);backdrop-filter:blur(7px);z-index:20}
+#modal.show{display:flex}
+.modal-box{width:min(340px,88vw);padding:20px;border-radius:18px;background:rgba(40,22,10,.97);
+border:1px solid rgba(255,200,90,.4);box-shadow:0 25px 70px rgba(0,0,0,.55)}
+.modal-box h3{margin:0 0 5px;font-size:16px}
+.modal-box p{margin:0 0 13px;color:var(--muted);font-size:11px}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
+.cancel{background:rgba(255,255,255,.08);color:var(--text);box-shadow:none}
+#error{height:17px;color:#ff9a8a;font-size:11px}
+
+@media(max-width:600px){
+ header{padding:12px}.title{font-size:14px}.sub{font-size:10px}
+ .status{display:none}#content{padding:20px 12px 30px}.hero h1{font-size:25px}
+}
+@media(prefers-reduced-motion:reduce){#leaves{display:none}}
+</style>
+</head>
+<body>
+<div id="background"><div class="orb one"></div><div class="orb two"></div><div class="orb three"></div></div>
+
+<div id="leaves"></div>
+<div id="app">
+<header>
+  <div class="logo">🍂</div>
+  <div>
+    <div class="title">ANNOUNCEMENTS</div>
+    <div class="sub">Official updates and news</div>
+  </div>
+  <div class="status-wrap">
+    <div class="status" id="status">● Connecting…</div>
+    <button id="adminBtn" type="button">👑 ADMIN</button>
+  </div>
+</header>
+
+<main id="content">
+  <div class="hero">
+    <h1>🦃 Announcements 🍁</h1>
+    <p>Stay up to date with the latest news and updates this harvest season.</p>
+    <div class="divider">🌾🍂🎃🍂🌾</div>
+  </div>
+
+  <section id="adminPanel">
+    <h3>👑 Admin announcement editor</h3>
+    <p>Only this browser session gets the posting controls after the admin code is entered.</p>
+    <div class="field">
+      <label for="announcementTitle">Title</label>
+      <input id="announcementTitle" maxlength="100" placeholder="Announcement title">
+    </div>
+    <div class="field">
+      <label for="announcementBody">Announcement</label>
+      <textarea id="announcementBody" maxlength="5000" placeholder="Write your announcement..."></textarea>
+    </div>
+    <div id="adminNotice"></div>
+    <div class="admin-actions">
+      <button id="publishBtn" type="button">PUBLISH</button>
+    </div>
+  </section>
+
+  <section id="announcements">
+    <div class="empty" id="empty">Loading announcements…</div>
+  </section>
+</main>
+
+<div id="footer">🍁 Happy Thanksgiving! · Live announcements powered by Firebase 🍁</div>
+</div>
+
+<div id="modal">
+  <div class="modal-box">
+    <h3>👑 Admin access</h3>
+    <p>Enter the admin code to unlock the announcement editor.</p>
+    <input id="passcode" type="password" placeholder="Admin code" autocomplete="off">
+    <div id="error"></div>
+    <div class="modal-actions">
+      <button class="cancel" id="cancelBtn" type="button">CANCEL</button>
+      <button id="unlockBtn" type="button">UNLOCK</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+import {getAuth, signInAnonymously, onAuthStateChanged}
+  from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+import {getDatabase, ref, push, set, remove, onValue, serverTimestamp}
+  from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
+
+const firebaseConfig={
+  apiKey: "AIzaSyDEXMJcE2Tcup_0hK53sJnwmdMNg4xAUGU",
+  authDomain: "ultra-game-stash-announcements.firebaseapp.com",
+  projectId: "ultra-game-stash-announcements",
+  storageBucket: "ultra-game-stash-announcements.firebasestorage.app",
+  messagingSenderId: "43704195268",
+  appId: "1:43704195268:web:321319807d07d5d100d191",
+  measurementId: "G-TVT9QNBH5C"
+};
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getDatabase(app);
+
+const ADMIN_CODE="S6N63";
+let user=null;
+let isAdmin=false;
+
+const $=id=>document.getElementById(id);
+const modal=$("modal"), adminBtn=$("adminBtn"), adminPanel=$("adminPanel");
+const passcode=$("passcode"), error=$("error"), status=$("status");
+const titleInput=$("announcementTitle"), bodyInput=$("announcementBody");
+const publishBtn=$("publishBtn"), adminNotice=$("adminNotice");
+const announcements=$("announcements"), empty=$("empty");
+
+// Falling autumn leaves
+(function leaves(){
+  const layer=$("leaves");
+  const icons=["🍁","🍂","🍁","🍂","🍃","🌾"];
+  for(let i=0;i<10;i++){
+    const l=document.createElement("div");
+    l.className="leaf";
+    l.textContent=icons[i%icons.length];
+    l.style.left=(Math.random()*100)+"%";
+    l.style.fontSize=(20+Math.random()*26)+"px";
+    const fall=12+Math.random()*10, sway=2.5+Math.random()*3;
+    l.style.animationDuration=fall+"s,"+sway+"s";
+    l.style.animationDelay=(-Math.random()*fall)+"s,"+(-Math.random()*sway)+"s";
+    layer.appendChild(l);
+  }
+})();
+
+function escapeDate(value){
+  if(!value) return "Just now";
+  const d=new Date(value);
+  if(Number.isNaN(d.getTime())) return "Just now";
+  return d.toLocaleString(undefined,{dateStyle:"medium",timeStyle:"short"});
+}
+
+function render(data){
+  announcements.innerHTML="";
+  const entries=Object.entries(data||{}).map(([key,value])=>({key,...value}))
+    .sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+
+  if(!entries.length){
+    const e=document.createElement("div");
+    e.className="empty";
+    e.textContent="No announcements yet.";
+    announcements.appendChild(e);
+    return;
+  }
+
+  for(const item of entries){
+    const card=document.createElement("article");
+    card.className="announcement";
+
+    const h=document.createElement("h2");
+    h.textContent=item.title || "Announcement";
+
+    const date=document.createElement("div");
+    date.className="date";
+    date.textContent=escapeDate(item.createdAt);
+
+    const body=document.createElement("div");
+    body.className="body";
+    body.textContent=item.body || "";
+
+    card.append(h,date,body);
+
+    if(isAdmin){
+      const del=document.createElement("button");
+      del.className="delete";
+      del.textContent="DELETE";
+      del.onclick=async()=>{
+        if(!confirm("Delete this announcement?")) return;
+        try{
+          await remove(ref(db,"announcements/"+item.key));
+        }catch(e){
+          alert("Delete failed. Check your Firebase Realtime Database rules.");
+        }
+      };
+      card.appendChild(del);
+    }
+    announcements.appendChild(card);
+  }
+}
+
+let latestData={};
+let stopAnnouncements=null;
+
+function startAnnouncementsListener(){
+  if(stopAnnouncements) stopAnnouncements();
+  stopAnnouncements=onValue(
+    ref(db,"announcements"),
+    snap=>{
+      latestData=snap.val()||{};
+      empty.style.display="none";
+      renderCurrent();
+      status.textContent="● Live";
+    },
+    err=>{
+      console.error("Firebase announcements read error:",err);
+      announcements.innerHTML="";
+      const e=document.createElement("div");
+      e.className="empty";
+      e.innerHTML="<strong>Could not load announcements.</strong><br><span style=\"font-size:11px;opacity:.75\">"+
+        (err?.code||err?.message||"Firebase Realtime Database permission error")+
+        "</span>";
+      announcements.appendChild(e);
+      status.textContent="● Database error";
+    }
+  );
+}
+
+onAuthStateChanged(auth,u=>{
+  user=u;
+  if(u){
+    status.textContent="● Live";
+    startAnnouncementsListener();
+  }else{
+    status.textContent="● Connecting…";
+  }
+});
+
+signInAnonymously(auth).catch(e=>{
+  console.error(e);
+  status.textContent="● Firebase auth error";
+  announcements.innerHTML="<div class=\"empty\"><strong>Firebase authentication failed.</strong><br><span style=\"font-size:11px;opacity:.75\">Enable Anonymous authentication in Firebase Authentication.</span></div>";
+});
+
+function openModal(){
+  if(isAdmin){
+    adminPanel.classList.toggle("show");
+    return;
+  }
+  error.textContent="";
+  passcode.value="";
+  modal.classList.add("show");
+  setTimeout(()=>passcode.focus(),50);
+}
+adminBtn.onclick=openModal;
+
+$("cancelBtn").onclick=()=>modal.classList.remove("show");
+modal.addEventListener("click",e=>{if(e.target===modal)modal.classList.remove("show")});
+
+async function unlock(){
+  if(passcode.value.trim().toUpperCase()===ADMIN_CODE){
+    isAdmin=true;
+    modal.classList.remove("show");
+    adminBtn.classList.add("active");
+    adminBtn.textContent="👑 ADMIN ON";
+    adminPanel.classList.add("show");
+    renderCurrent();
+  }else{
+    error.textContent="Incorrect admin code.";
+    passcode.select();
+  }
+}
+$("unlockBtn").onclick=unlock;
+passcode.addEventListener("keydown",e=>{if(e.key==="Enter")unlock()});
+
+function renderCurrent(){ render(latestData); }
+
+publishBtn.onclick=async()=>{
+  if(!isAdmin || !user) return;
+  const title=titleInput.value.trim();
+  const body=bodyInput.value.trim();
+  adminNotice.textContent="";
+
+  if(!title || !body){
+    adminNotice.textContent="Enter both a title and announcement.";
+    return;
+  }
+
+  publishBtn.disabled=true;
+  try{
+    await set(push(ref(db,"announcements")),{
+      title:title.slice(0,100),
+      body:body.slice(0,5000),
+      createdAt:serverTimestamp(),
+      author:"Admin"
+    });
+    titleInput.value="";
+    bodyInput.value="";
+    adminNotice.textContent="Published.";
+  }catch(e){
+    console.error(e);
+    adminNotice.textContent="Publish failed. Check Firebase Realtime Database rules.";
+  }finally{
+    publishBtn.disabled=false;
+  }
+};
+</script>
+</body>
+</html>
