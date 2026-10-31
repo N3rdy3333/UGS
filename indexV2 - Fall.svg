@@ -1,0 +1,4146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ULTRA GAME STASH  (single-file SVG website) - Thanksgiving / fall edition
+
+  How this file is laid out:
+    1. The SVG draws a dark background and one full-window <iframe>.
+    2. The whole website (HTML + CSS + JavaScript) is written out in plain,
+       readable form inside the <script type="text/html"> block below.
+    3. A tiny script at the very bottom copies that block into the iframe.
+
+  Things you will probably want to edit (all inside the website block):
+    - const gаmеs ........ the list of games (title, description, url, image)
+    - const announcements  the announcement cards
+    - const externalСhаtUrl  link opened by the Chat button
+    - const suggestionsUrl / ratingsUrl  the two form links
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+  <title>Ultra Game Stash</title>
+  <rect width="100%" height="100%" fill="#0f0a06"/>
+
+  <foreignObject x="0" y="0" width="100%" height="100%">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;margin:0;padding:0;overflow:hidden">
+      <iframe id="site" title="Ultra Game Stash" style="display:block;width:100%;height:100%;border:0"></iframe>
+    </div>
+  </foreignObject>
+
+  <!-- ===================== THE WEBSITE (HTML + CSS + JS) ===================== -->
+  <script type="text/html" id="site-source"><![CDATA[<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+  <link rel="dns-prefetch" href="https://i.postimg.cc">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family:
+        "Comic Sans MS",
+        "Comic Sans",
+        cursive;
+    }
+    :root {
+      --orange: #ff7900;
+      --orange-light: #ffad42;
+      --black: #26150b;
+      --panel: #3e2212;
+      --panel-light: #563019;
+      --white: #fff5e9;
+      --muted: #c6b8a8;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--white);
+      background:
+        radial-gradient(
+          ellipse at top,
+          #512300 0%,
+          transparent 48%),
+        linear-gradient(
+          135deg,
+          #1e1009,
+          #1b0c02 55%,
+          #201209);
+    }
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+    button {
+      cursor: pointer;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 18px 22px;
+      background: rgba(30, 16, 9, .96);
+      border-bottom: 2px solid var(--orange);
+      box-shadow: 0 4px 24px #00000099;
+    }
+    .brand {
+      text-align: center;
+      margin-bottom: 16px;
+      font-size: clamp(25px, 4vw, 38px);
+      font-weight: bold;
+      color: var(--orange-light);
+      text-shadow: 0 0 16px #ff790055;
+    }
+    .brand span {
+      color: white;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .nav-button {
+      border: 1px solid #59300e;
+      color: var(--white);
+      background: #482815;
+      padding: 9px 16px;
+      border-radius: 12px;
+      transition: .2s;
+    }
+    .nav-button:hover,
+    .nav-button.active {
+      color: #301a0e;
+      background:
+        linear-gradient(
+          135deg,
+          var(--orange-light),
+          var(--orange));
+      border-color: var(--orange-light);
+      transform: translateY(-1px);
+    }
+    main {
+      max-width: 1100px;
+      margin: auto;
+      padding: 28px 20px 60px;
+    }
+    .page {
+      display: none;
+      animation: appear .22s ease;
+    }
+    .page.active {
+      display: block;
+    }
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .hero {
+      text-align: center;
+      padding: 55px 22px;
+      border: 1px solid #66340c;
+      border-radius: 22px;
+      background:
+        linear-gradient(
+          140deg,
+          #271103,
+          #2e190d 65%);
+      box-shadow: 0 12px 38px #00000066;
+    }
+    .hero h1 {
+      margin: 0 0 14px;
+      font-size: clamp(34px, 6vw, 58px);
+      color: var(--orange-light);
+      text-shadow: 0 0 22px #ff790044;
+    }
+    .hero p {
+      max-width: 650px;
+      margin: 0 auto 22px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .section-title {
+      font-size: 30px;
+      color: var(--orange-light);
+      margin: 0 0 8px;
+    }
+    .section-description {
+      color: var(--muted);
+      margin: 0 0 24px;
+      line-height: 1.6;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin-top: 22px;
+    }
+    .card {
+      padding: 20px;
+      border: 1px solid #3c291a;
+      border-radius: 17px;
+      background:
+        linear-gradient(
+          145deg,
+          #522d18,
+          #321c0f);
+      box-shadow: 0 8px 22px #00000044;
+      overflow-wrap: anywhere;
+    }
+    .card h3 {
+      margin: 0 0 10px;
+      color: var(--orange-light);
+      font-size: 21px;
+    }
+    .card p {
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .button {
+      display: inline-block;
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 17px;
+      color: #301a0e;
+      background:
+        linear-gradient(
+          135deg,
+          #ffb64f,
+          #ff7900);
+      font-weight: bold;
+      text-decoration: none;
+      transition: transform .2s, filter .2s;
+    }
+    .button:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.12);
+    }
+    .button.secondary {
+      color: var(--white);
+      border: 1px solid #5c3518;
+      background: #5a321a;
+    }
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .announcement-date {
+      color: #ffad42;
+      font-size: 13px;
+    }
+    .gаmе-image {
+      display: block;
+      width: calc(100% + 40px);
+      max-width: none;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      object-position: center;
+      margin: -20px -20px 14px;
+      border-radius: 16px 16px 0 0;
+      background: #2e190d;
+    }
+    .field {
+      width: 100%;
+      padding: 12px;
+      margin: 6px 0 12px;
+      border: 1px solid #49301c;
+      border-radius: 10px;
+      outline: none;
+      color: white;
+      background: #2e190d;
+    }
+    .field:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 2px #ff790022;
+    }
+    textarea.field {
+      resize: vertical;
+      min-height: 90px;
+    }
+    label {
+      display: block;
+      color: var(--orange-light);
+    }
+    .status {
+      color: var(--muted);
+      min-height: 22px;
+      margin: 10px 0;
+    }
+    .footer {
+      text-align: center;
+      color: #988a7c;
+      padding: 28px 12px;
+      border-top: 1px solid #39210f;
+      font-size: 13px;
+    }
+    .settings-launcher {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 1000;
+      width: 54px;
+      height: 54px;
+      border: 2px solid #ffad42;
+      border-radius: 50%;
+      color: #fff5e9;
+      background:
+        linear-gradient(
+          145deg,
+          #3b1b05,
+          #301a0e);
+      box-shadow: 0 5px 22px #000000aa, 0 0 15px #ff790044;
+      font-size: 25px;
+      display: grid;
+      place-items: center;
+      transition: transform .2s, background .2s;
+    }
+    .settings-launcher:hover {
+      transform: rotate(25deg) scale(1.06);
+    }
+    .settings-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1001;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: #000000bb;
+      backdrop-filter: blur(5px);
+    }
+    .settings-overlay.open {
+      display: flex;
+    }
+    .settings-dialog {
+      width: min(100%, 480px);
+      max-height: min(85vh, 700px);
+      overflow-y: auto;
+      padding: 24px;
+      border: 1px solid #ff7900;
+      border-radius: 20px;
+      color: var(--white);
+      background:
+        linear-gradient(
+          145deg,
+          #241105,
+          #2e190d 70%);
+      box-shadow: 0 18px 60px #000000cc, 0 0 28px #ff790022;
+    }
+    .settings-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .settings-heading h2 {
+      margin: 0;
+      color: var(--orange-light);
+    }
+    .settings-close {
+      width: 36px;
+      height: 36px;
+      border: 1px solid #68401d;
+      border-radius: 10px;
+      color: var(--white);
+      background: #21170f;
+      font-size: 20px;
+    }
+    .settings-intro {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .layout-option {
+      display: block;
+      width: 100%;
+      margin-top: 12px;
+      padding: 15px;
+      border: 1px solid #523116;
+      border-radius: 13px;
+      text-align: left;
+      color: var(--white);
+      background: #171411;
+      transition:
+        border-color .2s,
+        background .2s,
+        transform .2s;
+    }
+    .layout-option:hover {
+      transform: translateY(-1px);
+      border-color: #ffad42;
+    }
+    .layout-option.selected {
+      border: 2px solid #ff9b2f;
+      background:
+        linear-gradient(
+          120deg,
+          #422006,
+          #1b1510);
+    }
+    .layout-option strong {
+      display: block;
+      color: var(--orange-light);
+      margin-bottom: 4px;
+    }
+    .layout-option span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    body.layout-sidebar .topbar {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 230px;
+      overflow-y: auto;
+      padding: 26px 14px;
+      border-right: 2px solid var(--orange);
+      border-bottom: 0;
+      box-shadow: 5px 0 25px #00000088;
+    }
+    body.layout-sidebar .brand {
+      font-size: 27px;
+      line-height: 1.2;
+      margin: 8px 0 28px;
+    }
+    body.layout-sidebar nav {
+      flex-direction: column;
+      gap: 10px;
+    }
+    body.layout-sidebar .nav-button {
+      width: 100%;
+      text-align: left;
+      padding: 12px 14px;
+    }
+    body.layout-sidebar main {
+      max-width: 1100px;
+      margin-left: 230px;
+    }
+    body.layout-sidebar .footer {
+      margin-left: 230px;
+    }
+    body.layout-sidebar .hero {
+      text-align: left;
+    }
+    body.layout-sidebar .hero p {
+      margin-left: 0;
+    }
+    body.layout-sidebar .hero .button-row {
+      justify-content: flex-start !important;
+    }
+    body.layout-moonlight {
+      background:
+        radial-gradient(
+          circle at 88% 9%,
+          #613336 0%,
+          transparent 22%),
+        radial-gradient(
+          ellipse at 8% 40%,
+          #36181a 0%,
+          transparent 42%),
+        linear-gradient(
+          150deg,
+          #110c07,
+          #1f0e0f 58%,
+          #0d0a07);
+    }
+    body.layout-moonlight .topbar {
+      position: relative;
+      background: rgba(17, 12, 7, .94);
+      border-bottom: 1px solid #663c40;
+      box-shadow: 0 8px 28px #00000055;
+    }
+    body.layout-moonlight .brand,
+    body.layout-moonlight .hero h1,
+    body.layout-moonlight .section-title,
+    body.layout-moonlight .card h3,
+    body.layout-moonlight label {
+      color: #fcd3cd;
+    }
+    body.layout-moonlight nav {
+      gap: 8px;
+    }
+    body.layout-moonlight .nav-button {
+      border-color: #624244;
+      border-radius: 9px 9px 3px 3px;
+      background: #1f1112;
+    }
+    body.layout-moonlight .nav-button:hover,
+    body.layout-moonlight .nav-button.active {
+      color: #1f0e0f;
+      background:
+        linear-gradient(
+          135deg,
+          #fde2de,
+          #f99e90);
+      border-color: #fde2de;
+      box-shadow: 0 0 18px #f99e902b;
+    }
+    body.layout-moonlight main {
+      max-width: 1180px;
+    }
+    body.layout-moonlight .hero {
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(210px, .85fr);
+      align-items: center;
+      gap: 18px 34px;
+      min-height: 300px;
+      padding: clamp(28px, 5vw, 58px);
+      text-align: left;
+      border: 1px solid #6d4347;
+      border-radius: 8px 38px 8px 38px;
+      background:
+        linear-gradient(
+          115deg,
+          #2d1618 0%,
+          #1f1112 56%,
+          #170d0d 100%);
+      box-shadow: 0 18px 44px #00000055, inset 0 0 45px #f885730a;
+    }
+    body.layout-moonlight .hero::after {
+      content: "";
+      grid-column: 2;
+      grid-row: 1 / span 3;
+      justify-self: center;
+      width: clamp(130px, 17vw, 205px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background:
+        radial-gradient(
+          circle at 34% 30%,
+          #fff9f8 0%,
+          #fddcd7 26%,
+          #daa69e 54%,
+          #8a585c 72%,
+          #412527 73%);
+      box-shadow: 0 0 35px #fab3a955, 0 0 95px #c061692a;
+      opacity: .9;
+      pointer-events: none;
+    }
+    body.layout-moonlight .hero h1 {
+      grid-column: 1;
+      margin: 0;
+    }
+    body.layout-moonlight .hero p {
+      grid-column: 1;
+      margin: 0;
+      max-width: 590px;
+    }
+    body.layout-moonlight .hero .button-row {
+      grid-column: 1;
+      justify-content: flex-start !important;
+    }
+    body.layout-moonlight .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: stretch;
+      gap: 18px;
+    }
+    body.layout-moonlight .card {
+      border: 1px solid #5d383b;
+      border-radius: 5px 20px 5px 20px;
+      background:
+        linear-gradient(
+          145deg,
+          #2c191b,
+          #160e0e);
+      box-shadow: 0 12px 28px #00000044;
+    }
+    body.layout-moonlight .grid > .card:nth-child(4n+1) {
+      grid-row: span 2;
+    }
+    body.layout-moonlight .button {
+      color: #210e10;
+      background:
+        linear-gradient(
+          135deg,
+          #fde2de,
+          #f99e90);
+      box-shadow: 0 5px 18px #f8857322;
+    }
+    body.layout-moonlight .button.secondary {
+      color: #fef2f0;
+      border-color: #7d4348;
+      background: #2a191a;
+    }
+    body.layout-moonlight .field {
+      border-color: #7d4348;
+      background: #160e0e;
+    }
+    body.layout-moonlight .footer {
+      border-top-color: #5a3235;
+    }
+    @media (max-width: 720px) {
+      body.layout-moonlight .hero {
+        display: block;
+        text-align: center;
+      }
+      body.layout-moonlight .hero::after {
+        display: block;
+        width: 105px;
+        margin: 24px auto 0;
+      }
+      body.layout-moonlight .hero p {
+        margin: 12px auto 20px;
+      }
+      body.layout-moonlight .hero .button-row {
+        justify-content: center !important;
+      }
+      body.layout-moonlight .grid {
+        grid-template-columns: 1fr;
+      }
+      body.layout-moonlight .grid > .card:nth-child(4n+1) {
+        grid-row: auto;
+      }
+    }
+    body.layout-bottom {
+      padding-bottom: 82px;
+      background:
+        radial-gradient(
+          ellipse at top,
+          #512300 0%,
+          transparent 48%),
+        linear-gradient(
+          135deg,
+          #1e1009,
+          #1b0c02 55%,
+          #201209);
+    }
+    body.layout-bottom .topbar {
+      position: relative;
+      top: auto;
+      padding: 22px 20px 16px;
+      border-bottom: 1px solid #59300e;
+      box-shadow: none;
+    }
+    body.layout-bottom .brand {
+      margin-bottom: 10px;
+    }
+    body.layout-bottom nav {
+      position: fixed;
+      left: 50%;
+      bottom: 12px;
+      transform: translateX(-50%);
+      z-index: 900;
+      width: max-content;
+      max-width: calc(100% - 24px);
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: center;
+      gap: 7px;
+      padding: 8px 10px;
+      overflow-x: auto;
+      border: 1px solid #8d4a13;
+      border-radius: 18px;
+      background: rgba(12, 10, 8, .96);
+      box-shadow: 0 8px 30px #000000bb, 0 0 18px #ff790022;
+      backdrop-filter: blur(12px);
+    }
+    body.layout-bottom .nav-button {
+      flex: 0 0 auto;
+      white-space: nowrap;
+      padding: 9px 13px;
+      border-radius: 11px;
+    }
+    body.layout-bottom nav {
+      box-sizing: border-box;
+    }
+    body.layout-bottom main {
+      padding-top: 28px;
+    }
+    body.layout-topbar .topbar {
+      position: sticky;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+      padding: 14px 24px;
+      border-bottom: 2px solid var(--orange);
+    }
+    body.layout-topbar .brand {
+      flex: 0 0 auto;
+      margin: 0;
+      text-align: left;
+      font-size: clamp(21px, 2.4vw, 30px);
+    }
+    body.layout-topbar nav {
+      justify-content: flex-end;
+      gap: 6px;
+    }
+    body.layout-topbar .nav-button {
+      padding: 9px 12px;
+      border-radius: 8px;
+      white-space: nowrap;
+    }
+    body.layout-topbar main {
+      max-width: 1180px;
+    }
+    body.layout-topbar .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(220px, .8fr);
+      align-items: center;
+      gap: 20px 36px;
+      text-align: left;
+      padding: clamp(28px, 5vw, 58px);
+    }
+    body.layout-topbar .hero h1 {
+      grid-column: 1 / -1;
+      margin-bottom: 0;
+    }
+    body.layout-topbar .hero p {
+      margin: 0;
+    }
+    body.layout-topbar .hero .button-row {
+      justify-content: flex-start !important;
+      margin-top: 0;
+    }
+    body.layout-topbar .grid {
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+    @media (max-width: 820px) {
+      body.layout-topbar .topbar {
+        display: block;
+      }
+      body.layout-topbar .brand {
+        text-align: center;
+        margin-bottom: 12px;
+      }
+      body.layout-topbar nav {
+        justify-content: center;
+      }
+      body.layout-topbar .hero {
+        display: block;
+        text-align: center;
+      }
+      body.layout-topbar .hero p {
+        margin: 0 auto 22px;
+      }
+      body.layout-topbar .hero .button-row {
+        justify-content: center !important;
+      }
+    }
+    body.layout-imac {
+      --imac-accent: #fdd1ab;
+      padding-bottom: 150px;
+      background:
+        radial-gradient(
+          ellipse at 50% -10%,
+          #604227 0%,
+          transparent 48%),
+        radial-gradient(
+          ellipse at 90% 65%,
+          #4d2528 0%,
+          transparent 38%),
+        linear-gradient(
+          160deg,
+          #180f08,
+          #221911 52%,
+          #120d09);
+    }
+    body.layout-imac .topbar {
+      position: relative;
+      background: rgba(22, 15, 8, .76);
+      border-bottom: 1px solid #b9927055;
+      box-shadow: 0 8px 28px #00000033;
+      backdrop-filter: blur(16px);
+    }
+    body.layout-imac .brand,
+    body.layout-imac .hero h1,
+    body.layout-imac .section-title,
+    body.layout-imac .card h3 {
+      color: #feebda;
+    }
+    body.layout-imac > nav {
+      position: fixed !important;
+      left: 50% !important;
+      right: auto !important;
+      top: auto !important;
+      bottom: 14px !important;
+      transform: translateX(-50%) !important;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(7px, 1.2vw, 14px);
+      width: max-content;
+      max-width: calc(100% - 28px);
+      padding: 14px 20px;
+      overflow: visible;
+      border: 1px solid #feead835;
+      border-radius: 25px;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(69, 52, 37, .82),
+          rgba(29, 20, 12, .88));
+      box-shadow: 0 15px 42px #00000088, inset 0 1px 0 #ffffff20;
+      backdrop-filter: blur(22px) saturate(145%);
+      scrollbar-width: none;
+    }
+    body.layout-imac > nav::-webkit-scrollbar {
+      display: none;
+    }
+    body.layout-imac .nav-button {
+      position: relative;
+      display: flex;
+      flex: 0 0 68px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      width: 68px;
+      height: 68px;
+      padding: 6px 3px;
+      overflow: visible;
+      border: 1px solid #ffffff22;
+      border-radius: 19px;
+      color: #fff6ee;
+      background:
+        linear-gradient(
+          145deg,
+          #654f3b,
+          #3f2f21 62%,
+          #342619);
+      box-shadow: 0 5px 12px #00000055, inset 0 1px 0 #ffffff20;
+      font-size: 0;
+      line-height: 1;
+      white-space: normal;
+      transform-origin: center bottom;
+      will-change: transform;
+      backface-visibility: hidden;
+      transition:
+        transform .38s cubic-bezier(.2, .75, .25, 1),
+        box-shadow .38s ease,
+        border-color .32s ease,
+        filter .38s ease,
+        background .32s ease;
+    }
+    body.layout-imac .nav-button::before {
+      display: block;
+      font-size: 27px;
+      line-height: 1;
+      filter: drop-shadow(0 2px 2px #00000055);
+    }
+    body.layout-imac .nav-button::after {
+      content: attr(data-dock-label);
+      display: block;
+      max-width: 100%;
+      overflow: hidden;
+      color: #fef4eb;
+      font-size: 9px;
+      font-weight: 650;
+      line-height: 1.1;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      letter-spacing: .1px;
+    }
+    body.layout-imac .nav-button[data-page=home]::before {
+      content: "🏠";
+    }
+    body.layout-imac .nav-button[data-page=announcements]::before {
+      content: "📣";
+    }
+    body.layout-imac .nav-button[data-page=gаmеs]::before {
+      content: "🎮";
+    }
+    body.layout-imac .nav-button[data-page=сhаt]::before {
+      content: "💬";
+    }
+    body.layout-imac .nav-button[data-page=about]::before {
+      content: "🍁";
+    }
+    body.layout-imac .nav-button[data-page=suggestions]::before {
+      content: "💡";
+    }
+    body.layout-imac > nav {
+      transition: box-shadow .42s ease, background .42s ease;
+    }
+    body.layout-imac > nav:has(.nav-button:hover) {
+      box-shadow:
+        0 19px 48px #00000099,
+        0 0 26px #fcbf8a14,
+        inset 0 1px 0 #ffffff2b;
+    }
+    body.layout-imac .nav-button:hover {
+      z-index: 4;
+      transform: translateY(-13px) scale(1.16);
+      border-color: #fee1c7b8;
+      box-shadow:
+        0 14px 28px #00000099,
+        0 0 24px #fcbf8a48,
+        inset 0 1px 0 #ffffff4a;
+      filter: brightness(1.16) saturate(1.08);
+    }
+    body.layout-imac .nav-button:hover::after {
+      font-size: 9.5px;
+      text-shadow: 0 1px 5px #00000099;
+    }
+    body.layout-imac > nav:has(.nav-button:hover) .nav-button:not(:hover) {
+      transform: translateY(-2px) scale(.97);
+    }
+    body.layout-imac > nav:has(.nav-button:hover) .nav-button:hover + .nav-button,
+    body.layout-imac > nav:has(.nav-button:hover) .nav-button:has(+ .nav-button:hover) {
+      transform: translateY(-6px) scale(1.045);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      body.layout-imac > nav,
+      body.layout-imac .nav-button {
+        transition: none !important;
+      }
+    }
+    body.layout-imac .nav-button.active {
+      border-color: #fdd1aa9c;
+      background:
+        linear-gradient(
+          145deg,
+          #a67e5b,
+          #684a2f 70%,
+          #533a25);
+      box-shadow:
+        0 0 0 1px #fdd1aa20,
+        0 5px 16px #00000055,
+        inset 0 1px 0 #ffffff35;
+    }
+    body.layout-imac .nav-button.active::after {
+      color: #ffffff;
+    }
+    body.layout-imac .hero {
+      border: 1px solid #bb977840;
+      border-radius: 28px;
+      background:
+        linear-gradient(
+          135deg,
+          #39281a,
+          #261b12 60%,
+          #2a2017);
+      box-shadow: 0 18px 42px #00000033, inset 0 1px 0 #ffffff0b;
+    }
+    body.layout-imac .card {
+      border-color: #bb987a42;
+      border-radius: 19px;
+      background:
+        linear-gradient(
+          145deg,
+          #36271a,
+          #241a11);
+      box-shadow: 0 12px 30px #00000033;
+    }
+    body.layout-imac .button {
+      background:
+        linear-gradient(
+          135deg,
+          #fee0c6,
+          #fcbd86);
+      color: #2a1d11;
+    }
+    body.layout-imac .button.secondary,
+    body.layout-imac .field {
+      border-color: #ab876866;
+    }
+    body.layout-imac .button.secondary {
+      color: #fef1e5;
+      background: #3a2a1c;
+    }
+    body.layout-imac .field {
+      background: #20160d;
+    }
+    body.layout-imac .footer {
+      border-top-color: #896d5455;
+    }
+    body.layout-imac .settings-launcher {
+      border-color: #fdd1ab;
+      background:
+        linear-gradient(
+          145deg,
+          #654931,
+          #2a1d12);
+      box-shadow: 0 5px 22px #00000088, 0 0 15px #fcc18e24;
+    }
+    body.layout-imac .settings-dialog {
+      border-color: #c39975;
+      background:
+        linear-gradient(
+          145deg,
+          #402d1c,
+          #1b130c 75%);
+    }
+    body.layout-imac .settings-heading h2,
+    body.layout-imac .layout-option strong {
+      color: #fddabb;
+    }
+    body.layout-imac .layout-option {
+      border-color: #674c35;
+      background: #271c12;
+    }
+    body.layout-imac .layout-option.selected {
+      border-color: #fdd1ab;
+      background:
+        linear-gradient(
+          120deg,
+          #573c24,
+          #372618);
+    }
+    @media (max-width: 560px) {
+      body.layout-imac {
+        padding-bottom: 132px;
+      }
+      body.layout-imac > nav {
+        left: 8px !important;
+        right: 8px !important;
+        bottom: 9px !important;
+        width: auto;
+        transform: none !important;
+        max-width: none;
+        justify-content: flex-start;
+        gap: 8px;
+        padding: 14px 11px 14px;
+        border-radius: 20px;
+      }
+      body.layout-imac .nav-button {
+        flex-basis: 60px;
+        width: 60px;
+        height: 62px;
+        border-radius: 16px;
+      }
+      body.layout-imac .nav-button::before {
+        font-size: 24px;
+      }
+      body.layout-imac .nav-button:hover {
+        transform: translateY(-9px) scale(1.10);
+      }
+    }
+    body.layout-imac > nav {
+      width: max-content !important;
+      max-width: calc(100% - 28px) !important;
+      justify-content: center !important;
+      gap: clamp(7px, 1.2vw, 14px) !important;
+      padding: 14px 20px !important;
+      box-sizing: border-box;
+    }
+    body.layout-imac .nav-button {
+      flex: 0 0 68px !important;
+      width: 68px !important;
+      height: 68px !important;
+    }
+    body.layout-bottom > nav {
+      left: 50% !important;
+      right: auto !important;
+      width: max-content !important;
+      max-width: calc(100% - 24px) !important;
+      transform: translateX(-50%) !important;
+      justify-content: center !important;
+      padding: 8px 10px !important;
+      gap: 7px !important;
+      box-sizing: border-box;
+    }
+    body.layout-bottom .nav-button {
+      flex: 0 0 auto !important;
+    }
+    body.layout-liquid {
+      --imac-accent: #fee0c6;
+      padding-bottom: 150px;
+      background:
+        radial-gradient(
+          ellipse at 18% 4%,
+          #855933 0%,
+          transparent 38%),
+        radial-gradient(
+          ellipse at 85% 28%,
+          #8e4f55 0%,
+          transparent 38%),
+        radial-gradient(
+          ellipse at 52% 100%,
+          #6e4420 0%,
+          transparent 45%),
+        linear-gradient(
+          155deg,
+          #1d1209,
+          #291d12 50%,
+          #180f08);
+    }
+    body.layout-liquid .topbar {
+      position: relative;
+      background:
+        linear-gradient(
+          115deg,
+          rgba(255, 255, 255, .12),
+          rgba(252, 198, 151, .055) 42%,
+          rgba(250, 174, 162, .09));
+      border-bottom: 1px solid rgba(254, 236, 221, .25);
+      box-shadow: 0 10px 32px rgba(0, 0, 0, .18), inset 0 1px 0 rgba(255, 255, 255, .2);
+      backdrop-filter: blur(28px) saturate(190%);
+      -webkit-backdrop-filter: blur(28px) saturate(190%);
+    }
+    body.layout-liquid .brand,
+    body.layout-liquid .hero h1,
+    body.layout-liquid .section-title,
+    body.layout-liquid .card h3 {
+      color: #fff6ef;
+      text-shadow: 0 1px 18px rgba(252, 185, 127, .18);
+    }
+    body.layout-liquid > nav {
+      position: fixed !important;
+      left: 50% !important;
+      right: auto !important;
+      top: auto !important;
+      bottom: 14px !important;
+      transform: translateX(-50%) !important;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(7px, 1.2vw, 14px);
+      width: max-content;
+      max-width: calc(100% - 28px);
+      padding: 14px 20px;
+      overflow: visible;
+      border: 1px solid rgba(254, 242, 232, .48);
+      border-radius: 28px;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255, 255, 255, .29),
+          rgba(254, 224, 198, .12) 35%,
+          rgba(253, 206, 165, .16) 68%,
+          rgba(255, 255, 255, .2));
+      box-shadow:
+        0 18px 48px rgba(0, 0, 0, .42),
+        0 2px 16px rgba(252, 195, 146, .18),
+        inset 0 1.5px 0 rgba(255, 255, 255, .68),
+        inset 0 -1px 0 rgba(255, 255, 255, .12);
+      backdrop-filter: blur(34px) saturate(220%);
+      -webkit-backdrop-filter: blur(34px) saturate(220%);
+      scrollbar-width: none;
+    }
+    body.layout-liquid > nav::before {
+      content: "";
+      position: absolute;
+      inset: 1px 8% auto;
+      height: 1px;
+      border-radius: 50%;
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, .9),
+          transparent);
+      pointer-events: none;
+    }
+    body.layout-liquid > nav::-webkit-scrollbar {
+      display: none;
+    }
+    body.layout-liquid .nav-button {
+      position: relative;
+      display: flex;
+      flex: 0 0 68px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      width: 68px;
+      height: 68px;
+      padding: 6px 3px;
+      overflow: visible;
+      border: 1px solid rgba(255, 255, 255, .53);
+      border-radius: 20px;
+      color: #fffaf5;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255, 255, 255, .45),
+          rgba(254, 224, 197, .2) 45%,
+          rgba(207, 161, 121, .25));
+      box-shadow:
+        0 7px 17px rgba(0, 0, 0, .24),
+        inset 0 1.2px 0 rgba(255, 255, 255, .72),
+        inset 0 -1px 0 rgba(255, 255, 255, .14);
+      font-size: 0;
+      line-height: 1;
+      white-space: normal;
+      transform-origin: center bottom;
+      will-change: transform;
+      backface-visibility: hidden;
+      transition:
+        transform .48s cubic-bezier(.22, 1, .36, 1),
+        box-shadow .48s ease,
+        border-color .4s ease,
+        filter .48s ease,
+        background .48s ease;
+    }
+    body.layout-liquid .nav-button::before {
+      display: block;
+      font-size: 27px;
+      line-height: 1;
+      filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .3));
+    }
+    body.layout-liquid .nav-button::after {
+      content: attr(data-dock-label);
+      display: block;
+      max-width: 100%;
+      overflow: hidden;
+      color: #ffffff;
+      font-size: 9px;
+      font-weight: 650;
+      line-height: 1.1;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      letter-spacing: .1px;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, .38);
+    }
+    body.layout-liquid .nav-button[data-page=home]::before {
+      content: "🏠";
+    }
+    body.layout-liquid .nav-button[data-page=announcements]::before {
+      content: "📣";
+    }
+    body.layout-liquid .nav-button[data-page=gаmеs]::before {
+      content: "🎮";
+    }
+    body.layout-liquid .nav-button[data-page=сhаt]::before {
+      content: "💬";
+    }
+    body.layout-liquid .nav-button[data-page=about]::before {
+      content: "🍁";
+    }
+    body.layout-liquid .nav-button[data-page=suggestions]::before {
+      content: "💡";
+    }
+    body.layout-liquid > nav:has(.nav-button:hover) {
+      box-shadow:
+        0 22px 55px rgba(0, 0, 0, .45),
+        0 0 34px rgba(252, 195, 146, .25),
+        inset 0 1.5px 0 rgba(255, 255, 255, .8);
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255, 255, 255, .35),
+          rgba(254, 224, 198, .17) 35%,
+          rgba(253, 206, 165, .22) 68%,
+          rgba(255, 255, 255, .27));
+    }
+    body.layout-liquid .nav-button:hover {
+      z-index: 4;
+      transform: translateY(-13px) scale(1.16);
+      border-color: rgba(255, 255, 255, .95);
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255, 255, 255, .68),
+          rgba(254, 224, 197, .32) 48%,
+          rgba(253, 203, 160, .38));
+      box-shadow:
+        0 16px 30px rgba(0, 0, 0, .28),
+        0 0 27px rgba(253, 204, 162, .4),
+        inset 0 1.5px 0 rgba(255, 255, 255, .95);
+      filter: brightness(1.12) saturate(1.15);
+    }
+    body.layout-liquid > nav:has(.nav-button:hover) .nav-button:not(:hover) {
+      transform: translateY(-2px) scale(.97);
+    }
+    body.layout-liquid > nav:has(.nav-button:hover) .nav-button:hover + .nav-button,
+    body.layout-liquid > nav:has(.nav-button:hover) .nav-button:has(+ .nav-button:hover) {
+      transform: translateY(-6px) scale(1.045);
+    }
+    body.layout-liquid .nav-button.active {
+      border-color: rgba(255, 255, 255, .9);
+      background:
+        linear-gradient(
+          145deg,
+          rgba(254, 240, 228, .68),
+          rgba(252, 191, 138, .32) 60%,
+          rgba(253, 207, 166, .35));
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, .18),
+        0 6px 17px rgba(0, 0, 0, .2),
+        inset 0 1px 0 rgba(255, 255, 255, .85);
+    }
+    body.layout-liquid .hero {
+      border: 1px solid rgba(254, 235, 219, .28);
+      border-radius: 30px;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255, 255, 255, .13),
+          rgba(252, 192, 140, .065) 55%,
+          rgba(250, 176, 165, .1));
+      box-shadow: 0 18px 45px rgba(0, 0, 0, .18), inset 0 1px 0 rgba(255, 255, 255, .24);
+      backdrop-filter: blur(24px) saturate(160%);
+      -webkit-backdrop-filter: blur(24px) saturate(160%);
+    }
+    body.layout-liquid .card {
+      border: 1px solid rgba(254, 239, 225, .23);
+      border-radius: 22px;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255, 255, 255, .13),
+          rgba(252, 200, 154, .055) 55%,
+          rgba(253, 203, 159, .08));
+      box-shadow: 0 14px 34px rgba(0, 0, 0, .2), inset 0 1px 0 rgba(255, 255, 255, .18);
+      backdrop-filter: blur(18px) saturate(160%);
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
+    }
+    body.layout-liquid .button {
+      background:
+        linear-gradient(
+          135deg,
+          rgba(254, 244, 235, .96),
+          rgba(252, 200, 154, .92));
+      color: #322011;
+      box-shadow: 0 6px 20px rgba(251, 177, 112, .2), inset 0 1px 0 #ffffff;
+    }
+    body.layout-liquid .button.secondary,
+    body.layout-liquid .field {
+      border-color: rgba(254, 234, 217, .3);
+    }
+    body.layout-liquid .button.secondary {
+      color: #fff7f0;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255, 255, 255, .16),
+          rgba(253, 203, 159, .08));
+    }
+    body.layout-liquid .field {
+      background: rgba(30, 18, 8, .42);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    body.layout-liquid .footer {
+      border-top-color: rgba(254, 234, 217, .24);
+    }
+    body.layout-liquid .settings-launcher {
+      border-color: rgba(255, 255, 255, .62);
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255, 255, 255, .38),
+          rgba(232, 175, 125, .22));
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .28), inset 0 1px 0 rgba(255, 255, 255, .7);
+      backdrop-filter: blur(22px) saturate(180%);
+      -webkit-backdrop-filter: blur(22px) saturate(180%);
+    }
+    body.layout-liquid .settings-dialog {
+      border-color: rgba(254, 239, 226, .4);
+      background:
+        linear-gradient(
+          145deg,
+          rgba(90, 64, 41, .94),
+          rgba(42, 28, 16, .94));
+      backdrop-filter: blur(30px) saturate(180%);
+      -webkit-backdrop-filter: blur(30px) saturate(180%);
+    }
+    body.layout-liquid .settings-heading h2,
+    body.layout-liquid .layout-option strong {
+      color: #feebda;
+    }
+    body.layout-liquid .layout-option {
+      border-color: rgba(254, 236, 220, .24);
+      background: rgba(255, 255, 255, .06);
+    }
+    body.layout-liquid .layout-option.selected {
+      border-color: rgba(254, 223, 196, .75);
+      background:
+        linear-gradient(
+          120deg,
+          rgba(237, 179, 128, .2),
+          rgba(253, 203, 159, .14));
+    }
+    @media (max-width: 560px) {
+      body.layout-liquid {
+        padding-bottom: 132px;
+      }
+      body.layout-liquid > nav {
+        left: 8px !important;
+        right: 8px !important;
+        bottom: 9px !important;
+        width: auto;
+        transform: none !important;
+        max-width: none;
+        justify-content: flex-start;
+        gap: 8px;
+        padding: 14px 11px;
+        border-radius: 22px;
+      }
+      body.layout-liquid .nav-button {
+        flex-basis: 60px;
+        width: 60px;
+        height: 62px;
+        border-radius: 17px;
+      }
+      body.layout-liquid .nav-button::before {
+        font-size: 24px;
+      }
+      body.layout-liquid .nav-button:hover {
+        transform: translateY(-9px) scale(1.10);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      body.layout-liquid > nav,
+      body.layout-liquid .nav-button {
+        transition: none !important;
+      }
+    }
+    @media (max-width: 700px) {
+      body.layout-sidebar .topbar {
+        position: sticky;
+        top: 0;
+        bottom: auto;
+        width: auto;
+        padding: 14px 10px;
+        border-right: 0;
+        border-bottom: 2px solid var(--orange);
+      }
+      body.layout-sidebar .brand {
+        font-size: clamp(25px, 4vw, 38px);
+        margin: 0 0 16px;
+      }
+      body.layout-sidebar nav {
+        flex-direction: row;
+      }
+      body.layout-sidebar .nav-button {
+        width: auto;
+        text-align: center;
+      }
+      body.layout-sidebar main {
+        margin-left: auto;
+      }
+      body.layout-sidebar .footer {
+        margin-left: 0;
+      }
+      body.layout-sidebar .hero {
+        text-align: center;
+      }
+      body.layout-sidebar .hero p {
+        margin-left: auto;
+      }
+      body.layout-sidebar .hero .button-row {
+        justify-content: center !important;
+      }
+    }
+    @media (max-width: 600px) {
+      .topbar {
+        padding: 14px 10px;
+      }
+      .nav-button {
+        padding: 8px 11px;
+      }
+      main {
+        padding: 20px 12px 40px;
+      }
+      .hero {
+        padding: 36px 16px;
+      }
+    }
+    body.layout-liquid > nav {
+      isolation: isolate;
+      position: relative;
+      touch-action: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body.layout-liquid > nav .liquid-dock-lens {
+      position: absolute;
+      z-index: 1;
+      pointer-events: none;
+      left: 0;
+      top: 0;
+      width: 100px;
+      height: 100px;
+      margin: 0;
+      transform: translate3d(0, 0, 0) scale(.3);
+      transform-origin: 50% 50%;
+      opacity: 0;
+      border-radius: 26px;
+      border: 1px solid rgba(254, 240, 227, .42);
+      background:
+        radial-gradient(
+          ellipse at 27% 8%,
+          rgba(255, 255, 255, .34),
+          transparent 52%),
+        linear-gradient(
+          145deg,
+          rgba(254, 236, 221, .22),
+          rgba(209, 163, 122, .13) 52%,
+          rgba(234, 195, 161, .16));
+      box-shadow:
+        0 10px 28px rgba(0, 0, 0, .2),
+        inset 0 1.5px 0 rgba(255, 255, 255, .4),
+        inset 0 -1px 0 rgba(255, 255, 255, .1),
+        0 0 20px rgba(252, 200, 154, .12);
+      backdrop-filter: blur(22px) saturate(165%);
+      -webkit-backdrop-filter: blur(22px) saturate(165%);
+      transition: none !important;
+      will-change: transform, opacity;
+      contain: layout style;
+    }
+    body.layout-liquid > nav .liquid-dock-lens::after {
+      content: "";
+      position: absolute;
+      inset: 1px 14% auto;
+      height: 1px;
+      border-radius: 50%;
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, .7),
+          transparent);
+    }
+    body.layout-liquid > nav > .nav-button {
+      position: relative;
+      z-index: 2;
+    }
+    body.layout-liquid > nav > .nav-button,
+    body.layout-liquid > nav > .nav-button:hover {
+      transition: background .5s ease, border-color .5s ease !important;
+      will-change: auto !important;
+      backface-visibility: visible !important;
+      transform-origin: 50% 100%;
+      filter: brightness(calc(1 + .12 * var(--i, 0))) saturate(calc(1 + .14 * var(--i, 0))) !important;
+      box-shadow:
+        0 calc(7px + 10px * var(--i, 0)) calc(18px + 14px * var(--i, 0)) rgba(0, 0, 0, calc(.16 + .10 * var(--i))),
+        0 0 calc(30px * var(--i, 0)) rgba(253, 206, 165, calc(.34 * var(--i))),
+        inset 0 1.5px 0 rgba(255, 255, 255, calc(.72 + .26 * var(--i))),
+        inset 0 -1px 0 rgba(255, 255, 255, .12) !important;
+    }
+    body.layout-liquid:has(.nav-button:hover) > nav > .nav-button,
+    body.layout-liquid > nav > .nav-button:hover {
+      transform: none;
+    }
+    body.layout-liquid > nav::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+      border: 1px solid rgba(255, 255, 255, .62);
+      border-radius: inherit;
+      box-shadow: inset 0 1.5px 0 rgba(255, 255, 255, .38), inset 0 -1px 0 rgba(255, 255, 255, .12);
+    }
+    body.layout-liquid {
+      background:
+        radial-gradient(
+          ellipse at 12% 8%,
+          rgba(251, 168, 95, .26),
+          transparent 34%),
+        radial-gradient(
+          ellipse at 86% 18%,
+          rgba(249, 151, 136, .22),
+          transparent 32%),
+        radial-gradient(
+          ellipse at 50% 100%,
+          rgba(217, 140, 73, .17),
+          transparent 42%),
+        linear-gradient(
+          145deg,
+          #1e1208 0%,
+          #342111 48%,
+          #2e2116 100%) !important;
+      background-attachment: fixed !important;
+    }
+    body.layout-liquid .topbar,
+    body.layout-liquid .hero,
+    body.layout-liquid .card,
+    body.layout-liquid .field,
+    body.layout-liquid .announcement,
+    body.layout-liquid .suggestion-card,
+    body.layout-liquid .layout-option,
+    body.layout-liquid .footer {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 245, 236, .24) !important;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255, 255, 255, .105) 0%,
+          rgba(255, 255, 255, .035) 22%,
+          rgba(252, 186, 128, .045) 55%,
+          rgba(250, 174, 162, .055) 100%) !important;
+      box-shadow:
+        0 18px 48px rgba(0, 0, 0, .22),
+        0 2px 9px rgba(252, 194, 143, .08),
+        inset 0 1.5px 0 rgba(255, 255, 255, .42),
+        inset 0 -1px 0 rgba(255, 255, 255, .07) !important;
+      backdrop-filter: blur(30px) saturate(190%) contrast(108%);
+      -webkit-backdrop-filter: blur(30px) saturate(190%) contrast(108%);
+    }
+    body.layout-liquid .topbar::before,
+    body.layout-liquid .hero::before,
+    body.layout-liquid .card::before,
+    body.layout-liquid .settings-dialog::before,
+    body.layout-liquid .layout-option::before {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+      z-index: 0;
+      inset: 0;
+      border-radius: inherit;
+      background:
+        linear-gradient(
+          118deg,
+          rgba(255, 255, 255, .20) 0%,
+          rgba(255, 255, 255, .055) 12%,
+          transparent 31%,
+          transparent 68%,
+          rgba(253, 204, 162, .08) 84%,
+          rgba(255, 255, 255, .12) 100%);
+      opacity: .72;
+    }
+    body.layout-liquid .topbar > *,
+    body.layout-liquid .hero > *,
+    body.layout-liquid .card > *,
+    body.layout-liquid .settings-dialog > *,
+    body.layout-liquid .layout-option > * {
+      position: relative;
+      z-index: 1;
+    }
+    body.layout-liquid .topbar {
+      border-radius: 28px !important;
+    }
+    body.layout-liquid .hero {
+      border-radius: 32px !important;
+      box-shadow:
+        0 25px 65px rgba(0, 0, 0, .26),
+        inset 0 1.5px 0 rgba(255, 255, 255, .65),
+        inset 0 0 28px rgba(253, 217, 185, .08) !important;
+    }
+    body.layout-liquid .card {
+      border-radius: 25px !important;
+      transition:
+        transform .42s cubic-bezier(.2, .8, .2, 1),
+        box-shadow .42s ease,
+        border-color .42s ease,
+        background .42s ease !important;
+    }
+    body.layout-liquid .card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(255, 250, 245, .58) !important;
+      box-shadow:
+        0 26px 55px rgba(0, 0, 0, .28),
+        0 0 26px rgba(252, 182, 120, .13),
+        inset 0 1.5px 0 rgba(255, 255, 255, .7) !important;
+    }
+    body.layout-liquid .button,
+    body.layout-liquid button:not(.nav-button):not(.settings-launcher):not(.settings-close) {
+      border: 1px solid rgba(255, 255, 255, .62) !important;
+      background:
+        linear-gradient(
+          155deg,
+          rgba(248, 234, 221, .88),
+          rgba(237, 200, 168, .72) 42%,
+          rgba(216, 170, 129, .62)) !important;
+      box-shadow:
+        0 9px 24px rgba(226, 143, 70, .2),
+        inset 0 1.5px 0 #ffffff,
+        inset 0 -1px 0 rgba(186, 137, 95, .2) !important;
+      transition:
+        transform .32s cubic-bezier(.2, .8, .2, 1),
+        box-shadow .32s ease,
+        filter .32s ease !important;
+    }
+    body.layout-liquid .button:hover,
+    body.layout-liquid button:not(.nav-button):not(.settings-launcher):not(.settings-close):hover {
+      transform: translateY(-2px);
+      filter: brightness(1.06);
+      box-shadow: 0 13px 28px rgba(241, 155, 79, .26), inset 0 1.5px 0 #ffffff !important;
+    }
+    body.layout-liquid .button.secondary {
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255, 255, 255, .23),
+          rgba(253, 214, 179, .09)) !important;
+      color: #fff9f4 !important;
+    }
+    body.layout-liquid .field,
+    body.layout-liquid input,
+    body.layout-liquid textarea,
+    body.layout-liquid select {
+      border: 1px solid rgba(254, 242, 231, .34) !important;
+      border-radius: 16px !important;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255, 255, 255, .12),
+          rgba(42, 25, 10, .32)) !important;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2), 0 5px 18px rgba(0, 0, 0, .08) !important;
+      backdrop-filter: blur(22px) saturate(175%);
+      -webkit-backdrop-filter: blur(22px) saturate(175%);
+    }
+    body.layout-liquid > nav {
+      border: 1px solid rgba(255, 255, 255, .62) !important;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255, 255, 255, .18),
+          rgba(254, 240, 227, .075) 38%,
+          rgba(252, 195, 145, .10) 72%,
+          rgba(255, 255, 255, .07)) !important;
+      box-shadow:
+        0 24px 55px rgba(0, 0, 0, .36),
+        0 0 32px rgba(252, 193, 142, .16),
+        inset 0 1.5px 0 rgba(255, 255, 255, .78),
+        inset 0 -1px 0 rgba(255, 255, 255, .16) !important;
+      backdrop-filter: blur(38px) saturate(220%) contrast(110%) !important;
+      -webkit-backdrop-filter: blur(38px) saturate(220%) contrast(110%) !important;
+    }
+    body.layout-liquid .nav-button {
+      border: 1px solid rgba(255, 255, 255, .48) !important;
+      background:
+        linear-gradient(
+          150deg,
+          rgba(255, 255, 255, .22),
+          rgba(255, 255, 255, .07) 42%,
+          rgba(252, 198, 150, .10)) !important;
+      box-shadow:
+        0 7px 18px rgba(0, 0, 0, .16),
+        inset 0 1.5px 0 rgba(255, 255, 255, .72),
+        inset 0 -1px 0 rgba(255, 255, 255, .12) !important;
+      transition:
+        transform .48s cubic-bezier(.16, 1, .3, 1),
+        background .42s ease,
+        box-shadow .42s ease,
+        border-color .42s ease !important;
+      will-change: transform;
+    }
+    body.layout-liquid .nav-button:hover {
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255, 255, 255, .38),
+          rgba(254, 229, 207, .18) 48%,
+          rgba(253, 209, 171, .20)) !important;
+      box-shadow:
+        0 18px 32px rgba(0, 0, 0, .25),
+        0 0 30px rgba(253, 206, 165, .28),
+        inset 0 1.5px 0 rgba(255, 255, 255, .98) !important;
+    }
+    body.layout-liquid .settings-launcher {
+      border: 1px solid rgba(255, 255, 255, .72) !important;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255, 255, 255, .30),
+          rgba(253, 220, 192, .12) 55%,
+          rgba(253, 210, 172, .14)) !important;
+      box-shadow:
+        0 12px 30px rgba(0, 0, 0, .28),
+        inset 0 1.5px 0 rgba(255, 255, 255, .9),
+        inset 0 -1px 0 rgba(255, 255, 255, .2) !important;
+    }
+    body.layout-liquid .settings-overlay {
+      overflow-y: auto;
+      align-items: flex-start;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+    }
+    body.layout-liquid .settings-dialog {
+      flex: 0 0 auto;
+      max-height: calc(100vh - 36px);
+      max-height: calc(100dvh - 36px);
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(254, 228, 206, .42) transparent;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(63, 43, 26, .88),
+          rgba(33, 22, 13, .91) 55%,
+          rgba(47, 36, 26, .89)) !important;
+      border-color: rgba(254, 239, 226, .27) !important;
+      box-shadow: 0 30px 90px rgba(0, 0, 0, .48), inset 0 1.5px 0 rgba(255, 255, 255, .34) !important;
+    }
+    body.layout-liquid .layout-option.selected {
+      background:
+        linear-gradient(
+          140deg,
+          rgba(253, 219, 190, .28),
+          rgba(253, 210, 172, .2)) !important;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), 0 0 24px rgba(252, 189, 133, .12) !important;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      body.layout-liquid *,
+      body.layout-liquid *::before,
+      body.layout-liquid *::after {
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+      }
+    }
+    body.layout-classic .nav-button,
+    body.layout-moonlight .nav-button,
+    body.layout-bottom .nav-button {
+      height: auto;
+      min-height: 0;
+      padding: 5px 13px;
+      line-height: 1.15;
+      box-sizing: border-box;
+      align-self: center;
+    }
+    body.layout-moonlight .nav-button {
+      border-radius: 10px;
+    }
+    body.layout-bottom nav {
+      width: max-content;
+      max-width: calc(100% - 24px);
+      box-sizing: border-box;
+      justify-content: center;
+      gap: 7px;
+      padding: 7px;
+    }
+    body.layout-bottom .nav-button {
+      flex: 0 0 auto;
+      width: auto;
+      white-space: nowrap;
+      padding: 5px 11px;
+    }
+    body.layout-imac > nav {
+      width: max-content;
+      max-width: calc(100% - 24px);
+      box-sizing: border-box;
+      gap: 8px;
+      padding: 10px 12px;
+      justify-content: center;
+    }
+    body.layout-imac .nav-button {
+      flex: 0 0 58px;
+      width: 58px;
+      height: 58px;
+      min-height: 0;
+      padding: 4px 2px;
+      border-radius: 15px;
+      box-sizing: border-box;
+    }
+    body.layout-imac .nav-button::before {
+      font-size: 24px;
+    }
+    @media (max-width: 560px) {
+      body.layout-bottom nav {
+        justify-content: flex-start;
+        overflow-x: auto;
+      }
+      body.layout-imac > nav {
+        gap: 6px;
+        padding: 9px 10px;
+      }
+      body.layout-imac .nav-button {
+        flex-basis: 52px;
+        width: 52px;
+        height: 52px;
+        border-radius: 13px;
+      }
+      body.layout-imac .nav-button::before {
+        font-size: 22px;
+      }
+    }
+    body.layout-imac > nav {
+      width: max-content !important;
+      max-width: calc(100vw - 24px) !important;
+      box-sizing: border-box;
+      gap: 10px;
+      padding: 12px 14px;
+      justify-content: center;
+    }
+    body.layout-imac .nav-button {
+      flex: 0 0 68px;
+      width: 68px;
+      height: 68px;
+    }
+    body.layout-bottom nav {
+      width: max-content;
+      max-width: calc(100vw - 24px);
+      box-sizing: border-box;
+      justify-content: center;
+      gap: 8px;
+      padding: 9px 12px;
+    }
+    body.layout-bottom .nav-button {
+      flex: 0 0 auto;
+      padding: 9px 16px;
+      min-height: 43px;
+    }
+    body.layout-classic .nav-button,
+    body.layout-moonlight .nav-button,
+    body.layout-topbar .nav-button {
+      min-height: 43px;
+      padding: 9px 16px;
+      box-sizing: border-box;
+      border-radius: 12px;
+    }
+    body.layout-moonlight .nav-button {
+      border-radius: 9px;
+    }
+    nav > .liquid-dock-lens {
+      display: none !important;
+    }
+    body.layout-liquid > nav > .liquid-dock-lens {
+      display: block !important;
+    }
+    body.layout-imac > nav {
+      width: max-content !important;
+      inline-size: max-content !important;
+      max-width: calc(100vw - 24px) !important;
+      box-sizing: border-box !important;
+      gap: 10px !important;
+      padding: 12px !important;
+      justify-content: center !important;
+    }
+    body.layout-imac > nav > .nav-button {
+      flex: 0 0 68px !important;
+      width: 68px !important;
+      min-width: 68px !important;
+      height: 68px !important;
+      min-height: 68px !important;
+      box-sizing: border-box !important;
+    }
+    body.layout-bottom nav {
+      width: max-content !important;
+      inline-size: max-content !important;
+      max-width: calc(100vw - 24px) !important;
+      box-sizing: border-box !important;
+      flex: 0 1 auto !important;
+      justify-content: center !important;
+      gap: 8px !important;
+      padding: 8px 10px !important;
+      overflow-x: auto !important;
+    }
+    body.layout-bottom nav > .nav-button {
+      flex: 0 0 auto !important;
+      min-height: 43px !important;
+      height: 43px !important;
+      padding: 9px 16px !important;
+      box-sizing: border-box !important;
+      border-radius: 12px !important;
+    }
+    body:not(.layout-sidebar):not(.layout-moonlight):not(.layout-bottom):not(.layout-imac):not(.layout-liquid):not(.layout-schoology) .nav-button,
+    body.layout-topbar .nav-button {
+      min-height: 43px !important;
+      height: 43px !important;
+      padding: 9px 16px !important;
+      box-sizing: border-box !important;
+    }
+    body.layout-topbar .nav-button {
+      padding-inline: 16px !important;
+    }
+    @media (max-width: 560px) {
+      body.layout-imac > nav {
+        gap: 7px !important;
+        padding: 9px !important;
+      }
+      body.layout-imac > nav > .nav-button {
+        flex-basis: 60px !important;
+        width: 60px !important;
+        min-width: 60px !important;
+        height: 62px !important;
+        min-height: 62px !important;
+      }
+      body.layout-bottom nav {
+        gap: 6px !important;
+        padding: 7px !important;
+      }
+      body.layout-bottom nav > .nav-button {
+        padding: 9px 12px !important;
+      }
+    }
+    body.layout-liquid {
+      background-color: #1e1208 !important;
+      background-image: none !important;
+      background-attachment: scroll !important;
+    }
+    body.layout-liquid::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(
+          ellipse at 12% 8%,
+          rgba(251, 168, 95, .20),
+          transparent 34%),
+        radial-gradient(
+          ellipse at 86% 18%,
+          rgba(249, 151, 136, .17),
+          transparent 32%),
+        radial-gradient(
+          ellipse at 50% 100%,
+          rgba(217, 140, 73, .13),
+          transparent 42%),
+        linear-gradient(
+          145deg,
+          #1e1208 0%,
+          #342111 48%,
+          #2e2116 100%);
+    }
+    body.layout-liquid .topbar,
+    body.layout-liquid .hero,
+    body.layout-liquid .card,
+    body.layout-liquid .field,
+    body.layout-liquid input,
+    body.layout-liquid textarea,
+    body.layout-liquid select,
+    body.layout-liquid .announcement,
+    body.layout-liquid .suggestion-card,
+    body.layout-liquid .layout-option,
+    body.layout-liquid .footer {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+    body.layout-liquid > nav {
+      backdrop-filter: blur(26px) saturate(140%) !important;
+      -webkit-backdrop-filter: blur(26px) saturate(140%) !important;
+    }
+    body.layout-liquid > nav {
+      will-change: transform;
+    }
+    body.layout-liquid > nav .liquid-dock-lens {
+      backdrop-filter: blur(18px) saturate(125%);
+      -webkit-backdrop-filter: blur(18px) saturate(125%);
+    }
+    body.layout-liquid .button,
+    body.layout-liquid button:not(.nav-button):not(.settings-launcher):not(.settings-close) {
+      color: #ffffff !important;
+      text-shadow: 0 1px 8px rgba(68, 33, 2, .5);
+      background:
+        linear-gradient(
+          155deg,
+          rgba(252, 199, 153, .46),
+          rgba(228, 155, 92, .40) 50%,
+          rgba(230, 138, 124, .38)) !important;
+      border: 1px solid rgba(255, 255, 255, .55) !important;
+      box-shadow:
+        0 8px 22px rgba(137, 76, 23, .28),
+        inset 0 1.5px 0 rgba(255, 255, 255, .7),
+        inset 0 -1px 0 rgba(255, 255, 255, .12) !important;
+    }
+    body.layout-liquid .button:hover,
+    body.layout-liquid button:not(.nav-button):not(.settings-launcher):not(.settings-close):hover {
+      color: #ffffff !important;
+      box-shadow: 0 12px 26px rgba(186, 110, 44, .32), inset 0 1.5px 0 rgba(255, 255, 255, .85) !important;
+    }
+    body.layout-liquid ::placeholder {
+      color: rgba(255, 247, 240, .6);
+    }
+    body.layout-liquid select option {
+      color: #ffffff;
+      background: #392411;
+    }
+
+    /* ===== Falling autumn leaves (decoration only) ===== */
+    #fallLeaves {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .fall-leaf {
+      position: absolute;
+      top: -10vh;
+      opacity: .55;
+      will-change: transform;
+      animation: leafFall linear infinite;
+    }
+    @keyframes leafFall {
+      0%   { transform: translate3d(0, 0, 0) rotate(0deg); }
+      50%  { transform: translate3d(45px, 60vh, 0) rotate(190deg); }
+      100% { transform: translate3d(-35px, 125vh, 0) rotate(380deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #fallLeaves { display: none; }
+    }
+
+    /* =====================================================================
+       SMOOTH ANIMATIONS
+       ===================================================================== */
+    html { scroll-behavior: smooth; }
+
+    /* ---- Page load: header drops in, dock rises, icons pop in one by one ---- */
+    @keyframes bodyIn  { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes topIn   { from { opacity: 0; translate: 0 -18px; } to { opacity: 1; translate: 0 0; } }
+    @keyframes dockIn  { from { opacity: 0; translate: 0 70px; } to { opacity: 1; translate: 0 0; } }
+    @keyframes iconPop {
+      from { opacity: 0; translate: 0 26px; scale: .4; }
+      to   { opacity: 1; translate: 0 0;    scale: 1; }
+    }
+    body { animation: bodyIn .7s ease backwards; }
+    .topbar { animation: topIn .9s cubic-bezier(.22, 1, .36, 1) backwards; }
+    body > nav,
+    body.layout-bottom .topbar > nav {
+      animation: dockIn 1s cubic-bezier(.22, 1, .36, 1) .12s backwards;
+    }
+    body > nav > .nav-button,
+    body.layout-bottom .topbar > nav > .nav-button {
+      animation: iconPop .7s cubic-bezier(.34, 1.45, .55, 1) backwards;
+      animation-delay: calc(.3s + var(--ni, 0) * 70ms);
+    }
+    body > nav > .nav-button:nth-of-type(1), body.layout-bottom .topbar > nav > .nav-button:nth-of-type(1) { --ni: 0; }
+    body > nav > .nav-button:nth-of-type(2), body.layout-bottom .topbar > nav > .nav-button:nth-of-type(2) { --ni: 1; }
+    body > nav > .nav-button:nth-of-type(3), body.layout-bottom .topbar > nav > .nav-button:nth-of-type(3) { --ni: 2; }
+    body > nav > .nav-button:nth-of-type(4), body.layout-bottom .topbar > nav > .nav-button:nth-of-type(4) { --ni: 3; }
+    body > nav > .nav-button:nth-of-type(5), body.layout-bottom .topbar > nav > .nav-button:nth-of-type(5) { --ni: 4; }
+    body > nav > .nav-button:nth-of-type(6), body.layout-bottom .topbar > nav > .nav-button:nth-of-type(6) { --ni: 5; }
+    body > nav > .nav-button:nth-of-type(7), body.layout-bottom .topbar > nav > .nav-button:nth-of-type(7) { --ni: 6; }
+
+    /* ---- Page switching: old page fades out, new page glides in ---- */
+    @keyframes appear {
+      from { opacity: 0; transform: translateY(16px) scale(.992); }
+      to   { opacity: 1; transform: none; }
+    }
+    @keyframes pageOut {
+      to { opacity: 0; transform: translateY(-8px) scale(.994); }
+    }
+    @keyframes riseIn {
+      from { opacity: 0; translate: 0 24px; scale: .97; }
+      to   { opacity: 1; translate: 0 0;    scale: 1; }
+    }
+    .page { animation: appear .55s cubic-bezier(.22, 1, .36, 1); }
+    .page.leaving { animation: pageOut .17s ease-in forwards; pointer-events: none; }
+
+    .page.active .section-title,
+    .page.active .section-description,
+    .page.active .hero > * {
+      animation: riseIn .7s cubic-bezier(.22, 1, .36, 1) backwards;
+    }
+    .page.active .section-description { animation-delay: .06s; }
+    .page.active .hero > :nth-child(2) { animation-delay: .07s; }
+    .page.active .hero > :nth-child(3) { animation-delay: .14s; }
+
+    .page.active .grid > .card,
+    .page.active > .card {
+      animation: riseIn .7s cubic-bezier(.22, 1, .36, 1) backwards;
+      animation-delay: calc(.12s + var(--n, 0) * 65ms);
+    }
+    .grid > .card:nth-child(1) { --n: 0; }
+    .grid > .card:nth-child(2) { --n: 1; }
+    .grid > .card:nth-child(3) { --n: 2; }
+    .grid > .card:nth-child(4) { --n: 3; }
+    .grid > .card:nth-child(5) { --n: 4; }
+    .grid > .card:nth-child(6) { --n: 5; }
+    .grid > .card:nth-child(7) { --n: 6; }
+    .grid > .card:nth-child(8) { --n: 7; }
+    .grid > .card:nth-child(9) { --n: 8; }
+    .grid > .card:nth-child(10) { --n: 9; }
+    .grid > .card:nth-child(n+11) { --n: 9; }
+
+    /* ---- Cards, buttons, inputs ---- */
+    .card {
+      transition:
+        transform .45s cubic-bezier(.22, 1, .36, 1),
+        box-shadow .45s ease,
+        border-color .45s ease;
+    }
+    @media (hover: hover) {
+      .card:hover {
+        transform: translateY(-5px);
+        border-color: #ff790066;
+        box-shadow: 0 18px 38px #00000066, 0 0 24px #ff790022;
+      }
+    }
+    .card:has(> img) { overflow: hidden; }
+    .card > img {
+      transition: opacity .7s ease, filter .5s ease;
+    }
+    .card > img:not(.is-loaded) { opacity: 0; }
+    @media (hover: hover) {
+      .card:hover > img { filter: brightness(1.12) saturate(1.1); }
+    }
+
+    .button {
+      transition:
+        transform .35s cubic-bezier(.22, 1, .36, 1),
+        filter .3s ease,
+        box-shadow .35s ease;
+    }
+    body .button:active,
+    body button:not(.nav-button):not(.settings-launcher):not(.settings-close):active {
+      transform: translateY(0) scale(.96) !important;
+      transition-duration: .08s !important;
+    }
+
+    .nav-button {
+      transition:
+        transform .35s cubic-bezier(.22, 1, .36, 1),
+        background .35s ease,
+        color .35s ease,
+        border-color .35s ease,
+        box-shadow .35s ease;
+    }
+    body:not(.layout-imac):not(.layout-liquid) .nav-button:active {
+      transform: scale(.95);
+      transition-duration: .08s;
+    }
+
+    .field {
+      transition: border-color .3s ease, box-shadow .3s ease, background .3s ease;
+    }
+
+    /* ---- Smooth fade between layouts (View Transitions) ---- */
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation-duration: .5s;
+      animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+    }
+
+    /* =====================================================================
+       SETTINGS: pops out of the gear button, like opening an app on a Mac
+       ===================================================================== */
+    .settings-launcher {
+      transition:
+        transform .65s cubic-bezier(.16, 1, .3, 1),
+        background .3s ease,
+        box-shadow .3s ease;
+    }
+    .settings-launcher:active {
+      transform: scale(.9);
+      transition-duration: .1s;
+    }
+    .settings-launcher[aria-expanded="true"] {
+      transform: rotate(90deg) scale(.92);
+    }
+
+    /* The overlay is always laid out, just hidden, so it can animate both ways. */
+    .settings-overlay {
+      display: flex !important;
+      visibility: hidden;
+      pointer-events: none;
+      background: rgba(0, 0, 0, 0);
+      -webkit-backdrop-filter: blur(0px);
+      backdrop-filter: blur(0px);
+      transition:
+        background-color .5s ease,
+        -webkit-backdrop-filter .5s ease,
+        backdrop-filter .5s ease,
+        visibility 0s linear .55s;
+    }
+    .settings-overlay.open {
+      visibility: visible;
+      pointer-events: auto;
+      background: rgba(0, 0, 0, .55);
+      -webkit-backdrop-filter: blur(10px) saturate(125%);
+      backdrop-filter: blur(10px) saturate(125%);
+      transition-delay: 0s, 0s, 0s, 0s;
+    }
+
+    /* Closed = a tiny round blob sitting exactly on the gear button. */
+    .settings-dialog {
+      margin: auto;
+      transform-origin: 50% 50%;
+      transform: translate3d(var(--gx, 0px), var(--gy, 0px), 0) scale(var(--gs, .11));
+      opacity: 0;
+      border-radius: 200px;
+      will-change: transform, opacity;
+      transition:
+        transform .5s cubic-bezier(.65, 0, .35, 1),
+        opacity .26s ease .14s,
+        border-radius .5s cubic-bezier(.65, 0, .35, 1);
+    }
+    .settings-overlay.open .settings-dialog {
+      transform: none;
+      opacity: 1;
+      border-radius: 22px;
+      transition:
+        transform .8s cubic-bezier(.16, 1, .3, 1),
+        opacity .2s ease-out,
+        border-radius .8s cubic-bezier(.16, 1, .3, 1);
+    }
+    body.layout-liquid .settings-overlay { align-items: flex-start; }
+
+    /* Contents drift in one after another once the window is growing. */
+    .settings-dialog > * {
+      opacity: 0;
+      translate: 0 14px;
+      transition-property: opacity, translate, transform, border-color, background, box-shadow;
+      transition-duration: .2s, .3s, .25s, .25s, .25s, .25s;
+      transition-delay: 0s, 0s, 0s, 0s, 0s, 0s;
+      transition-timing-function: ease, ease, ease, ease, ease, ease;
+    }
+    .settings-overlay.open .settings-dialog > * {
+      opacity: 1;
+      translate: 0 0;
+      transition-duration: .45s, .7s, .25s, .25s, .25s, .25s;
+      transition-timing-function: ease, cubic-bezier(.22, 1, .36, 1), ease, ease, ease, ease;
+      transition-delay:
+        calc(.14s + var(--k, 0) * 50ms),
+        calc(.14s + var(--k, 0) * 50ms),
+        0s, 0s, 0s, 0s;
+    }
+    .settings-dialog > :nth-child(1) { --k: 0; }
+    .settings-dialog > :nth-child(2) { --k: 1; }
+    .settings-dialog > :nth-child(3) { --k: 2; }
+    .settings-dialog > :nth-child(4) { --k: 3; }
+    .settings-dialog > :nth-child(5) { --k: 4; }
+    .settings-dialog > :nth-child(6) { --k: 5; }
+    .settings-dialog > :nth-child(7) { --k: 6; }
+    .settings-dialog > :nth-child(8) { --k: 7; }
+    .settings-dialog > :nth-child(9) { --k: 8; }
+    .layout-option:active { transform: scale(.985); transition-duration: .08s; }
+    .settings-close {
+      transition: transform .3s cubic-bezier(.22, 1, .36, 1), background .25s ease;
+    }
+    .settings-close:hover { transform: rotate(90deg); }
+
+    /* ===== Settings tabs + Panic Key section ===== */
+    .settings-tabs {
+      display: flex;
+      gap: 8px;
+      margin: 10px 0 4px;
+    }
+    .settings-tab {
+      flex: 1 1 0;
+      padding: 10px 12px;
+      border: 1px solid #523116;
+      border-radius: 11px;
+      color: var(--white);
+      background: #171411;
+      transition: background .25s ease, color .25s ease, border-color .25s ease, transform .2s ease;
+    }
+    .settings-tab:hover {
+      border-color: #ffad42;
+      transform: translateY(-1px);
+    }
+    .settings-tab.active {
+      color: #301a0e;
+      font-weight: bold;
+      border-color: var(--orange-light);
+      background: linear-gradient(135deg, var(--orange-light), var(--orange));
+    }
+    .settings-panel {
+      display: none;
+    }
+    .settings-panel.active {
+      display: block;
+      animation: appear .35s ease;
+    }
+    .panic-label {
+      margin-top: 14px;
+      font-size: 14px;
+    }
+    .panic-key-button {
+      margin-top: 6px;
+    }
+    .panic-key-button strong {
+      font-size: 20px;
+    }
+    .panic-key-button.capturing {
+      border: 2px dashed #ff9b2f;
+    }
+    .panic-toggle {
+      margin-top: 14px;
+    }
+    .panic-note {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+      margin: 4px 0 0;
+    }
+    body.layout-imac .settings-tab {
+      border-color: #674c35;
+      background: #271c12;
+    }
+    body.layout-imac .settings-tab.active {
+      color: #2a1d11;
+      background: linear-gradient(135deg, #fee0c6, #fcbd86);
+    }
+    body.layout-moonlight .settings-tab.active {
+      color: #1f0e0f;
+      background: linear-gradient(135deg, #fde2de, #f99e90);
+    }
+    body.layout-liquid button.settings-tab.active:not(.nav-button):not(.settings-launcher):not(.settings-close) {
+      color: #ffffff !important;
+      background:
+        linear-gradient(
+          155deg,
+          rgba(252, 199, 153, .55),
+          rgba(228, 155, 92, .48) 50%,
+          rgba(230, 138, 124, .45)) !important;
+    }
+    body.layout-liquid button.settings-tab:not(.active):not(.nav-button):not(.settings-launcher):not(.settings-close) {
+      background: rgba(255, 255, 255, .08) !important;
+      color: #fff7f0 !important;
+    }
+    body.layout-liquid .panic-key-button.capturing {
+      border-style: dashed !important;
+    }
+
+    /* ===== Theme 6: Schoology (light LMS dashboard look) ===== */
+    body.layout-schoology,
+    body.layout-schoology * {
+      font-family: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+    body.layout-schoology {
+      color: #333;
+      background: #ebebeb;
+    }
+    body.layout-schoology #fallLeaves {
+      display: none;
+    }
+    body.layout-schoology .topbar {
+      position: sticky;
+      top: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: center;
+      gap: 18px;
+      padding: 0 28px;
+      min-height: 60px;
+      background: #fff;
+      border-bottom: 0;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, .18);
+    }
+    body.layout-schoology .brand {
+      flex: 0 0 auto;
+      margin: 0;
+      text-align: left;
+      font-size: 19px;
+      font-weight: 500;
+      color: #333;
+      text-shadow: none;
+    }
+    body.layout-schoology .brand span {
+      color: #1c75bc;
+    }
+    body.layout-schoology nav {
+      justify-content: center;
+      gap: 2px;
+    }
+    body.layout-schoology .nav-button {
+      min-height: 0 !important;
+      height: auto !important;
+      padding: 20px 14px !important;
+      border: 0;
+      border-bottom: 3px solid transparent;
+      border-radius: 0 !important;
+      color: #444;
+      background: transparent;
+      font-size: 14px;
+      white-space: nowrap;
+      transform: none;
+    }
+    body.layout-schoology .nav-button:hover {
+      color: #1c75bc;
+      background: #f3f6f9;
+      border-color: transparent;
+      transform: none;
+    }
+    body.layout-schoology .nav-button.active {
+      color: #1c75bc;
+      background: transparent;
+      border-bottom-color: #1c75bc;
+      font-weight: 500;
+      transform: none;
+    }
+    body.layout-schoology main {
+      max-width: 1180px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 370px;
+      gap: 0 34px;
+      align-items: start;
+      padding-top: 30px;
+    }
+    body.layout-schoology .page {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    body.layout-schoology .hero {
+      text-align: left;
+      padding: 30px 28px;
+      border: 0;
+      border-radius: 2px;
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, .16);
+    }
+    body.layout-schoology .hero h1 {
+      font-size: clamp(26px, 4vw, 34px);
+      font-weight: 500;
+      color: #333;
+      text-shadow: none;
+    }
+    body.layout-schoology .hero p {
+      margin: 0 0 18px;
+      color: #555;
+    }
+    body.layout-schoology .hero .button-row {
+      justify-content: flex-start !important;
+    }
+    body.layout-schoology .section-title {
+      font-size: 24px;
+      font-weight: 500;
+      color: #333;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #cfd2d6;
+    }
+    body.layout-schoology .section-description {
+      color: #666;
+      margin-top: 12px;
+    }
+    body.layout-schoology .grid {
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 26px;
+    }
+    body.layout-schoology .card {
+      padding: 16px;
+      border: 0;
+      border-radius: 2px;
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, .16);
+    }
+    body.layout-schoology .card:hover {
+      transform: none;
+      border-color: transparent;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, .24);
+    }
+    body.layout-schoology .card > img {
+      width: calc(100% + 32px);
+      margin: -16px -16px 12px;
+      border-radius: 0;
+      background: #f1f1f1;
+    }
+    body.layout-schoology .card:hover > img {
+      filter: none;
+    }
+    body.layout-schoology .card h3 {
+      margin: 0 0 6px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #333;
+    }
+    body.layout-schoology .card p {
+      margin: 0 0 12px;
+      font-size: 13px;
+      color: #666;
+    }
+    body.layout-schoology .announcement-date {
+      color: #1c75bc;
+    }
+    body.layout-schoology .button {
+      padding: 9px 16px;
+      border-radius: 3px;
+      color: #fff;
+      background: #1c75bc;
+      font-weight: 500;
+      box-shadow: none;
+    }
+    body.layout-schoology .button:hover {
+      transform: none;
+      filter: brightness(1.12);
+    }
+    body.layout-schoology .button.secondary {
+      color: #333;
+      border: 1px solid #c4c8cc;
+      background: #f3f4f5;
+    }
+    body.layout-schoology label {
+      color: #1c75bc;
+    }
+    body.layout-schoology .field {
+      color: #333;
+      background: #fff;
+      border-color: #bfc4c9;
+    }
+    body.layout-schoology .field:focus {
+      border-color: #1c75bc;
+      box-shadow: 0 0 0 2px #1c75bc33;
+    }
+    body.layout-schoology .status {
+      color: #555;
+    }
+    body.layout-schoology .footer {
+      color: #777;
+      border-top: 1px solid #cfd2d6;
+    }
+    body.layout-schoology .settings-launcher {
+      color: #333;
+      border: 1px solid #c4c8cc;
+      background: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .25);
+    }
+    body.layout-schoology .settings-overlay.open {
+      background: rgba(0, 0, 0, .45);
+    }
+    body.layout-schoology .settings-dialog {
+      color: #333;
+      border: 1px solid #c4c8cc;
+      background: #fff;
+      box-shadow: 0 18px 60px rgba(0, 0, 0, .4);
+    }
+    body.layout-schoology .settings-heading h2,
+    body.layout-schoology .layout-option strong {
+      color: #1c75bc;
+    }
+    body.layout-schoology .settings-intro,
+    body.layout-schoology .layout-option span,
+    body.layout-schoology .panic-note {
+      color: #666;
+    }
+    body.layout-schoology .settings-close {
+      color: #333;
+      border-color: #c4c8cc;
+      background: #fff;
+    }
+    body.layout-schoology .layout-option {
+      color: #333;
+      border-color: #d5d8dc;
+      background: #f5f6f7;
+    }
+    body.layout-schoology .layout-option:hover {
+      border-color: #1c75bc;
+    }
+    body.layout-schoology .layout-option.selected {
+      border: 2px solid #1c75bc;
+      background: #e6f1fa;
+    }
+    body.layout-schoology .settings-tab {
+      color: #333;
+      border-color: #d5d8dc;
+      background: #f5f6f7;
+    }
+    body.layout-schoology .settings-tab.active {
+      color: #fff;
+      border-color: #1c75bc;
+      background: #1c75bc;
+    }
+    @media (max-width: 820px) {
+      body.layout-schoology .topbar {
+        display: block;
+        padding: 12px 10px 0;
+      }
+      body.layout-schoology .brand {
+        text-align: center;
+        margin-bottom: 6px;
+      }
+      body.layout-schoology nav {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      body.layout-schoology .nav-button {
+        padding: 12px 10px !important;
+      }
+    }
+
+    /* Schoology theme: "User • ONLINE" chip and the right-hand To Do side panel */
+    .sg-user,
+    .sg-side {
+      display: none;
+    }
+    body.layout-schoology .sg-user {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      color: #333;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+    body.layout-schoology .sg-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #5fb4f0, #1c75bc 70%);
+      box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .5);
+    }
+    body.layout-schoology .sg-user b {
+      color: #2e9e5b;
+      font-weight: 500;
+    }
+    body.layout-schoology .sg-side {
+      display: block;
+      grid-column: 2;
+      grid-row: 1;
+    }
+    body.layout-schoology .sg-card {
+      margin-bottom: 18px;
+      padding: 16px;
+      border-radius: 2px;
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, .16);
+    }
+    body.layout-schoology .sg-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin: 0 0 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #cfd2d6;
+    }
+    body.layout-schoology .sg-title {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 500;
+      color: #333;
+    }
+    body.layout-schoology .sg-link {
+      padding: 0;
+      border: 0;
+      background: none;
+      color: #1c75bc;
+      font-size: 12px;
+    }
+    body.layout-schoology .sg-link:hover {
+      text-decoration: underline;
+    }
+    body.layout-schoology .sg-sub {
+      margin: 0 0 10px;
+      font-size: 12px;
+      text-transform: uppercase;
+      color: #555;
+    }
+    body.layout-schoology .sg-item {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      margin: 0 0 12px;
+      padding: 0;
+      border: 0;
+      background: none;
+      text-align: left;
+      color: #555;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    body.layout-schoology .sg-icon {
+      flex: 0 0 13px;
+      height: 15px;
+      margin-top: 2px;
+      border-radius: 3px;
+      background: #1aa28c;
+    }
+    body.layout-schoology .sg-item b {
+      display: block;
+      color: #1c75bc;
+      font-weight: 400;
+    }
+    body.layout-schoology .sg-item:hover b {
+      text-decoration: underline;
+    }
+    body.layout-schoology .sg-item i {
+      display: block;
+      font-style: normal;
+    }
+    body.layout-schoology .sg-empty {
+      margin: 0;
+      font-size: 12px;
+      color: #666;
+    }
+    @media (max-width: 900px) {
+      body.layout-schoology main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      body.layout-schoology .sg-side {
+        grid-column: 1;
+        grid-row: 2;
+        margin-top: 24px;
+      }
+    }
+    @media (max-width: 820px) {
+      body.layout-schoology .sg-user {
+        justify-content: center;
+        padding: 0 0 10px;
+      }
+    }
+
+    .sg-done {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .sg-done li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 0 0 10px;
+      font-size: 12px;
+      line-height: 1.35;
+      color: #333;
+    }
+    .sg-done li::before {
+      content: "✓";
+      flex: 0 0 13px;
+      height: 15px;
+      margin-top: 1px;
+      border-radius: 3px;
+      background: #1aa28c;
+      color: #fff;
+      font-size: 10px;
+      line-height: 15px;
+      text-align: center;
+    }
+
+    /* ---- Respect "reduce motion" ---- */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      body, .topbar, body > nav, body > nav > .nav-button,
+      .page, .page *, .page.leaving { animation: none !important; }
+      .settings-dialog,
+      .settings-overlay.open .settings-dialog {
+        transform: none !important;
+        border-radius: 22px;
+        transition: opacity .2s ease !important;
+      }
+      .settings-dialog > * { translate: none !important; transition-duration: .2s !important; transition-delay: 0s !important; }
+      .settings-launcher[aria-expanded="true"] { transform: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="brand">🦃 <span>ULTRA</span> GАМЕ STASH</div>
+
+    <nav>
+      <button type="button" class="nav-button active" data-page="home" data-dock-label="Home" onclick="showPage(&quot;home&quot;)">Home</button>
+      <button type="button" class="nav-button" data-page="announcements" data-dock-label="Announcements" onclick="showPage(&quot;announcements&quot;)">Announcements</button>
+      <button type="button" class="nav-button" data-page="gаmеs" data-dock-label="Gаmеs" onclick="showPage(&quot;gаmеs&quot;)">Gаmеs</button>
+      <button type="button" class="nav-button" data-page="сhаt" data-dock-label="Сhаt" onclick="showPage(&quot;сhаt&quot;)">Сhаt</button>
+      <button type="button" class="nav-button" data-page="about" data-dock-label="About" onclick="showPage(&quot;about&quot;)">About</button>
+      <button type="button" class="nav-button" data-page="suggestions" data-dock-label="Suggestions" onclick="showPage(&quot;suggestions&quot;)">Suggestions</button>
+    </nav>
+
+    <div class="sg-user" aria-hidden="true"><span class="sg-avatar"></span><span>User • <b>ONLINE</b></span></div>
+  </header>
+
+  <main>
+    <section id="home" class="page active">
+      <div class="hero">
+        <h1>🦃 Ultra Gаmе Stash</h1>
+        <p>
+          Welcome to your cozy fall gаmіng hideout!
+          Find gаmеs, check announcements, talk with other players,
+          and suggest what should be added next.
+        </p>
+
+        <div class="button-row" style="justify-content:center">
+          <button class="button" onclick="showPage('gаmеs')">🎮 Browse Gаmеs</button>
+          <button class="button secondary" onclick="showPage('announcements')">
+            📰 Announcements
+          </button>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h3>🎮 Gаmеs</h3>
+          <p>Open your favorite gаmеs from the stash.</p>
+          <button class="button" onclick="showPage('gаmеs')">View Gаmеs</button>
+        </div>
+
+        <div class="card">
+          <h3>💬 Сhаt</h3>
+          <p>Talk with other players in the external сhаt.</p>
+          <button class="button" onclick="showPage('сhаt')">Enter Сhаt</button>
+        </div>
+
+        <div class="card">
+          <h3>💡 Suggestions</h3>
+          <p>Tell us which gаmеs or features you want added.</p>
+          <button class="button" onclick="showPage('suggestions')">Suggest Something</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="announcements" class="page">
+      <h2 class="section-title">📰 Announcements</h2>
+      <p class="section-description">
+        Updates, news, and announcements. Edit their URLs in the configuration below.
+      </p>
+      <div id="announcementsGrid" class="grid"></div>
+    </section>
+
+    <section id="gаmеs" class="page">
+      <h2 class="section-title">🎮 Gаmе Stash</h2>
+      <p class="section-description">
+        Choose a gаmе to open its fetched HTML in a new about:blank tab.
+      </p>
+      <div id="gаmеsGrid" class="grid"></div>
+    </section>
+
+    <section id="сhаt" class="page">
+      <h2 class="section-title">💬 Сhаt Room</h2>
+      <p class="section-description">
+        Open the external сhаt to talk with other players.
+      </p>
+
+      <div class="card">
+        <h3>External Сhаt</h3>
+        <p>This сhаt is recommended! More customizable and responsive.</p>
+        <button class="button" onclick="openConfiguredСhаt()">Open External Сhаt</button>
+      </div>
+    </section>
+
+    <section id="about" class="page">
+      <h2 class="section-title">🍁 About Ultra Gаmе Stash</h2>
+      <div class="card">
+        <h3>Your Fall Gаmіng Hub</h3>
+        <p>
+          Ultra Gаmе Stash V2 is a functional website that provides District 303 students with the ability to play a variety of video gаmеs. Some of the gаmеs are AI, and some are real!
+Us as students, have discovered that finding gаmеs can become extremely difficult considering our district blocks everything, so we fixed this issue!
+Every single gаmе on our website is completely functional and provides a fun experience for students.  Bored in class, no work, or just bored? Then come check out our gаmе selection.
+Alongside the gаmеs, we have a сhаtroom to engage with others from your district.
+Thank you for using Ultra Gаmе Stash V2!
+        </p>
+      </div>
+    </section>
+
+    <section id="suggestions" class="page">
+      <h2 class="section-title">💡 Suggestions</h2>
+      <p class="section-description">
+        Have an idea for the website? Send it in.
+      </p>
+
+      
+      <div class="card">
+        <h3>Suggestion Box</h3>
+        <p>Click the button to open the suggestion form in a new tab.</p>
+        <button class="button" type="button" onclick="openSuggestions()">Open Suggestion Box 🍂</button>
+      </div>
+      <div class="card" style="margin-top:18px">
+        <h3>Game Ratings</h3>
+        <p>Rate the games and tell us which ones you like best.</p>
+        <button class="button" type="button" onclick="openRatings()">Rate Games ⭐</button>
+      </div>
+    </section>
+    <aside class="sg-side" aria-label="Quick links">
+      <div class="sg-card">
+        <div class="sg-head"><h3 class="sg-title">To Do</h3></div>
+        <div class="sg-sub">Upcoming</div>
+        <button type="button" class="sg-item" onclick="goToNav(2)">
+          <span class="sg-icon"></span>
+          <span><b>Play something fun</b><i>Due whenever you want</i><i>Browse the stash</i></span>
+        </button>
+        <button type="button" class="sg-item" onclick="goToNav(1)">
+          <span class="sg-icon"></span>
+          <span><b>Check the announcements</b><i>Due whenever you want</i><i>Website News</i></span>
+        </button>
+        <button type="button" class="sg-item" onclick="goToNav(3)">
+          <span class="sg-icon"></span>
+          <span><b>Say hi in the chat</b><i>Due right now</i><i>Chat Room</i></span>
+        </button>
+        <button type="button" class="sg-item" onclick="goToNav(5)">
+          <span class="sg-icon"></span>
+          <span><b>Send in an idea</b><i>Due anytime</i><i>Suggestions</i></span>
+        </button>
+      </div>
+
+      <div class="sg-card">
+        <div class="sg-head">
+          <h3 class="sg-title">Upcoming Events</h3>
+          <button type="button" class="sg-link" onclick="goToNav(1)">Announcements</button>
+        </div>
+        <p class="sg-empty">No upcoming events</p>
+      </div>
+
+      <div class="sg-card">
+        <div class="sg-head"><h3 class="sg-title">Recently Completed</h3></div>
+        <p class="sg-empty" id="sgCompletedEmpty">Nothing completed yet. Go have some fun!</p>
+        <ul class="sg-done" id="sgCompleted"></ul>
+      </div>
+    </aside>
+  </main>
+
+  <button type="button" class="settings-launcher" id="settingsLauncher"
+          aria-label="Open website settings" title="Website settings"
+          onclick="openSettings()">⚙️</button>
+
+  <div class="settings-overlay" id="settingsOverlay" role="dialog"
+       aria-modal="true" aria-labelledby="settingsTitle" onclick="closeSettingsFromBackdrop(event)">
+    <div class="settings-dialog">
+      <div class="settings-heading">
+        <h2 id="settingsTitle">🦃 Website Settings</h2>
+        <button type="button" class="settings-close" aria-label="Close settings"
+                onclick="closeSettings()">×</button>
+      </div>
+      <div class="settings-tabs" role="tablist">
+        <button type="button" class="settings-tab active" id="settingsTabLayout" data-settings-tab="layout" role="tab" onclick="showSettingsTab('layout')">🎨 Layout</button>
+        <button type="button" class="settings-tab" id="settingsTabPanic" data-settings-tab="panic" role="tab" onclick="showSettingsTab('panic')">🚨 Panic Key</button>
+      </div>
+      <div class="settings-panel active" id="settingsPanelLayout" data-settings-panel="layout">
+      <p class="settings-intro">Choose your favorite fall look. Your choice stays active as you switch between Home, Gаmеs, About, and every other page.</p>
+      <button type="button" class="layout-option selected" data-layout-choice="classic" onclick="setLayout('classic')">
+        <strong>🦃 1. Classic Thanksgiving (Default)</strong>
+        <span>The cozy orange-and-brown harvest layout, with the centered header and glowing gаmе cards.</span>
+      </button>
+      <button type="button" class="layout-option" data-layout-choice="sidebar" onclick="setLayout('sidebar')">
+        <strong>🍁 2. Harvest Sidebar</strong>
+        <span>A fixed left-side navigation menu and a roomier, left-aligned home hero.</span>
+      </button>
+      <button type="button" class="layout-option" data-layout-choice="moonlight" onclick="setLayout('moonlight')">
+        <strong>🏡 3. Cozy Cabin</strong>
+        <span>A warm cabin-style library: split harvest hero, asymmetrical two-column card gallery, and rich burgundy panels.</span>
+      </button>
+      <button type="button" class="layout-option" data-layout-choice="bottom" onclick="setLayout('bottom')">
+        <strong>⬇️ 4. Harvest Bottom Dock</strong>
+        <span>Moves the page navigation into a floating bar fixed along the bottom of the screen, like a gаmе console dock.</span>
+      </button>
+      <button type="button" class="layout-option" data-layout-choice="topbar" onclick="setLayout('topbar')">
+        <strong>↔️ 5. Compact Top Bar</strong>
+        <span>Places the logo and navigation side by side in a slim app-style header, with a wider split hero section.</span>
+      </button>
+      <button type="button" class="layout-option" data-layout-choice="schoology" onclick="setLayout('schoology')">
+        <strong>🎓 6. Schoology</strong>
+        <span>A light dashboard look: top bar with page tabs, a grid of thumbnail cards, and a "To Do" side panel.</span>
+      </button>
+      <button type="button" class="layout-option" data-layout-choice="imac" onclick="setLayout('imac')">
+        <strong>🖥️ 7. iMac App Dock</strong>
+        <span>A frosted-glass desktop dock with emoji app icons in rounded squares. Hover over an icon to see it smoothly pop up and grow.</span>
+      </button>
+      <button type="button" class="layout-option" data-layout-choice="liquid" onclick="setLayout('liquid')">
+        <strong>💧 8. Liquid Glass</strong>
+        <span>The iMac app dock with glossy translucent glass, bright reflective edges, colorful refractions, and liquid-glass panels throughout the site.</span>
+      </button>
+      </div>
+
+      <div class="settings-panel" id="settingsPanelPanic" data-settings-panel="panic">
+        <p class="settings-intro">Press your panic key any time to instantly jump to another page. Pick the key and the link it opens.</p>
+
+        <button type="button" class="button secondary panic-toggle" id="panicToggle" onclick="togglePanicEnabled()">Panic key: ON</button>
+
+        <label class="panic-label" for="panicKeyButton">Panic key</label>
+        <button type="button" class="layout-option panic-key-button" id="panicKeyButton" onclick="startPanicKeyCapture()">
+          <strong id="panicKeyLabel">` (Tilde key)</strong>
+          <span id="panicKeyHint">Click here, then press the key you want to use.</span>
+        </button>
+
+        <label class="panic-label" for="panicUrlInput">Panic link (where the key takes you)</label>
+        <input class="field" id="panicUrlInput" type="text" autocomplete="off" spellcheck="false"
+               placeholder="d303.schoology.com" value="d303.schoology.com">
+
+        <div class="button-row">
+          <button type="button" class="button" onclick="savePanicSettings()">Save</button>
+          <button type="button" class="button secondary" onclick="resetPanicSettings()">Reset to default</button>
+          <button type="button" class="button secondary" onclick="triggerPanic()">Test it</button>
+        </div>
+        <div class="status" id="panicStatus" aria-live="polite"></div>
+        <p class="panic-note">The panic key works on this page (not inside a gаmе's own tab). It will not fire while you are typing in a text box.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    🦃 Ultra Gаmе Stash · Happy Thanksgiving and happy fall! 🍂
+  </footer>
+
+  <script>
+    /*
+      ============================================================
+      CONFIGURATION
+      Replace the example URLs with your own URLs.
+      ============================================================
+    */
+
+    const gаmеs = [
+      /* Add an image URL to any gаmе's image: "" line. Leave it empty for the normal card. */
+      {
+        title: "Adopt Me!",
+        description: "Hatch pets from eggs, and trade with friends!",
+        url: "https://cdn.jsdelivr.net/gh/N3rdy3333/My-games/Adopt_Me_-_Halloween_V89.html",
+        image: "https://i.postimg.cc/NfzjgFzF/Adopt-Me.png" // paste an image URL here (optional)
+      },
+      {
+        title: "Blockcraft",
+        description: "Build homes, explore a new world, go on adventures, you name it!",
+        url: "https://cdn.jsdelivr.net/gh/N3rdy3333/My-games/Blockcraft%20-%20Redstone.html",
+        image: "https://i.postimg.cc/RhwjJM1v/image-2026-10-24-221626690.png" // paste an image URL here (optional)
+      },
+      {
+        title: "Retro Bowl",
+        description: "Football.",
+        url: "https://cdn.jsdelivr.net/gh/N3rdy3333/UGS/Retro_Bowl.html",
+        image: "https://i.postimg.cc/8CVG0dbt/retro-bowl-logo.png" // paste an image URL here (optional)
+      },
+      {
+        title: "Drive Mad",
+        description: "Drive around obstacles and finish the levels!",
+        url: "https://cdn.jsdelivr.net/gh/N3rdy3333/UGS/Drive_Mad.html",
+        image: "https://i.postimg.cc/Ls7YJfyK/drive-mad-logo.png" // paste an image URL here (optional)
+      },
+      {
+        title: "Dice A Million",
+        description: "(Takes a second to load) Roll the dice?",
+        url: "https://cdn.jsdelivr.net/gh/NotRexed/Unblocked-Games/diceamillion/index.html",
+        image: "https://i.postimg.cc/MGDg9p8k/Dice-AMillion.avif" // paste an image URL here (optional)
+      },
+      {
+        title: "Cookie Clicker",
+        description: "Click the cookie and gain clicks!",
+        url: "https://cdn.jsdelivr.net/gh/N3rdy3333/UGS/Cookie_Clicker.html",
+        image: "https://i.postimg.cc/44MqL0jb/cookieclicker.jpg" // paste an image URL here (optional)
+      },
+      {
+        title: "Geometry Dash",
+        description: "FIXED! Jump on cubes and avoid the spikes!",
+        url: "https://cdn.jsdelivr.net/gh/ihavenoidea212/geometry-dash/index.html",
+        image: "https://i.postimg.cc/c4MPJq76/image-2026-10-29-162642587.png" // paste an image URL here (optional)
+      },
+      {
+        title: "Roblox Obby",
+        description: "100 level obby based off popular Roblox obbies!",
+        url: "https://cdn.jsdelivr.net/gh/N3rdy3333/My-games/Super%20Obby%203D.html",
+        image: "https://i.postimg.cc/d3FTj3Y1/Colorful-Roblox-Obby-in-the-Sky.png" // paste an image URL here (optional)
+      },
+      {
+        title: "Cooking Class",
+        description: "Make food, but don't burn the house down!",
+        url: "https://cdn.jsdelivr.net/gh/N3rdy3333/My-games/Cooking_Class.html",
+        image: "https://i.postimg.cc/gcKKBFBC/Cooking-Class.png" // paste an image URL here (optional)
+      },
+      {
+        title: "Hole.io 3D",
+        description: "Become a sinkhole! Suck in different things.",
+        url: "https://cdn.jsdelivr.net/gh/N3rdy3333/My-games/Hole%20Rush%203D%20(1).html",
+        image: "https://i.postimg.cc/Pxyd05DT/Hole-io.png" // paste an image URL here (optional)
+      },
+      {
+        title: "Build A Boat For Treasure",
+        description: "Build a boat and avoid hitting obstacles!",
+        url: "https://cdn.jsdelivr.net/gh/N3rdy3333/My-games/BoatCraft%203D%20(1).html",
+        image: "https://i.postimg.cc/c4bLsCbD/Build-a-Boat-for-Treasure.png" // paste an image URL here (optional)
+      },
+      {
+        title: "Paper.io 3D",
+        description: "Conquer the different countries and play with your friends!",
+        url: "https://cdn.jsdelivr.net/gh/N3rdy3333/My-games/Paper.io%203D%20Multiplayer.html",
+        image: "https://i.postimg.cc/66Zk73q0/Paper-io-3D.png" // paste an image URL here (optional)
+      },
+      {
+        title: "Flee The Facility",
+        description: "Flee the beast and hack computers to escape!",
+        url: "https://cdn.jsdelivr.net/gh/N3rdy3333/My-games/flee-the-facility%20(3).html",
+        image: "https://i.postimg.cc/vBbQPVck/Flee-the-Facility.png" // paste an image URL here (optional)
+      },
+      {
+        title: "Football Bowl",
+        description: "Play football! 3D retro bowl?",
+        url: "https://cdn.jsdelivr.net/gh/N3rdy3333/My-games/gridiron3d.html",
+        image: "https://i.postimg.cc/B64qhKXr/Football-Bowl.png" // paste an image URL here (optional)
+      },
+      {
+        title: "Bloxburg",
+        description: "Become an architect from the comfort of your school.",
+        url: "https://cdn.jsdelivr.net/gh/N3rdy3333/My-games/homecraft3d%20(1).html",
+        image: "https://i.postimg.cc/J7QQdVdK/Bloxburg.png" // paste an image URL here (optional)
+      },
+      {
+        title: "Cataclysm",
+        description: "Survive the disasters.",
+        url: "https://cdn.jsdelivr.net/gh/N3rdy3333/My-games/CATACLYSM_google_sites%20(1).html",
+        image: "https://i.postimg.cc/bvPLdyGj/Screenshot-2026-10-04-173856.png" // paste an image URL here (optional)
+      },
+      {
+        title: "Doors",
+        description: "Find the keys, escape the hotel.",
+        url: "https://cdn.jsdelivr.net/gh/N3rdy3333/My-games/DOORS%20-%20Hotel%20Elysium.html",
+        image: "https://i.postimg.cc/s2pj9cDB/Doors.png" // paste an image URL here (optional)
+      },
+      {
+        title: "Backrooms",
+        description: "Escape the backrooms.",
+        url: "https://cdn.jsdelivr.net/gh/N3rdy3333/My-games/backrooms%20(1).html",
+        image: "https://i.postimg.cc/KYXcMVFy/Backrooms.png" // paste an image URL here (optional)
+      },
+      {
+        title: "Block Blast",
+        description: "Play fake tetris!",
+        url: "https://cdn.jsdelivr.net/gh/N3rdy3333/My-games/blockblast.html",
+        image: "https://i.postimg.cc/02QNRDc6/Block-Blast.png" // paste an image URL here (optional)
+      },
+      {
+        title: "Fish for Fun",
+        description: "Fish and ride boats to different islands!",
+        url: "https://cdn.jsdelivr.net/gh/N3rdy3333/My-games/castaways-catch-updated%20(3).html",
+        image: "https://i.postimg.cc/3JXQqRHG/image-2026-10-24-181839578.png" // paste an image URL here (optional)
+      },
+      {
+        title: "Dockfire",
+        description: "Similar to Call of Duty, but different.",
+        url: "https://cdn.jsdelivr.net/gh/N3rdy3333/My-games/dockfire.html",
+        image: "https://i.postimg.cc/zfmDgM5S/Dockfire.png" // paste an image URL here (optional)
+      },
+      {
+        title: "FL Studio",
+        description: "Create beats with famous producers' sounds!",
+        url: "https://cdn.jsdelivr.net/gh/N3rdy3333/My-games/FL%20Studio.html",
+        image: "https://i.postimg.cc/KzYRhzPg/image-2026-10-25-194648911.png" // paste an image URL here (optional)
+      },
+      {
+        title: "Stealing Cars V",
+        description: "GTA 5 but definitely worse.",
+        url: "https://cdn.jsdelivr.net/gh/N3rdy3333/My-games/drift-city.html",
+        image: "https://i.postimg.cc/HxdpSyrL/Stealing-Cars-V.png" // paste an image URL here (optional)
+      }
+    ];
+
+    const announcements = [
+      {
+        title: "Official UGS Announcements",
+        description: "Up to date info on updates and issues to inform our users.",
+        date: "Website News",
+        url: "https://cdn.jsdelivr.net/gh/N3rdy3333/UGS/Ultra%20Announcements%20-%20Fall.html"
+      }
+    ];
+
+    const externalСhаtUrl = "https://cdn.jsdelivr.net/gh/N3rdy3333/UGS/Ultra%20Chat%20-%20Fall.html";
+    // Example: const externalСhаtUrl = "https://cdn.jsdelivr.net/gh/N3rdy3333/UGS/Ultra%20Chat%20-%20Fall.html";
+
+    /*
+      ============================================================
+      FETCH HTML AND WRITE IT INTO ABOUT:BLANK
+      ============================================================
+
+      This follows your example:
+        1. Open about:blank immediately from the click.
+        2. Fetch the configured URL.
+        3. Read the response as text.
+        4. Write the HTML into the blank tab.
+
+      Relative asset URLs are given the original page's base URL.
+    */
+
+    function openInAboutBlank(url) {
+      let parsedUrl;
+      let newWindow;
+
+      try {
+        parsedUrl = new URL(url);
+        if (parsedUrl.protocol !== "https:" || parsedUrl.hostname !== "cdn.jsdelivr.net") {
+          throw new Error("Only HTTPS URLs hosted on cdn.jsdelivr.net are allowed.");
+        }
+      } catch (error) {
+        alert("Invalid URL: " + error.message);
+        return;
+      }
+
+      // Open the blank tab immediately during the click, before any async work.
+      newWindow = window.open("about:blank", "_blank");
+
+      if (!newWindow) {
+        alert("Your browser blocked the new tab. Allow pop-ups for this page and try again.");
+        return;
+      }
+
+      function showLoading() {
+        try {
+          newWindow.document.open();
+          newWindow.document.write(
+            "<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Loading...</title>" +
+            "<style>body{background:#111;color:#ffad42;font-family:sans-serif;" +
+            "display:grid;place-items:center;height:90vh}</style></head>" +
+            "<body>Loading gаmе...</body></html>"
+          );
+          newWindow.document.close();
+        } catch (error) {
+          console.error("Could not display loading page:", error);
+        }
+      }
+
+      function showError(message) {
+        if (!newWindow || newWindow.closed) return;
+        const safeMessage = String(message || "Unknown error").replace(/[&<>"]/g, ch => ({
+          "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"
+        }[ch]));
+
+        try {
+          newWindow.document.open();
+          newWindow.document.write(
+            "<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Unable to load</title>" +
+            "<style>body{background:#111;color:#fff;font-family:sans-serif;padding:30px}" +
+            "h2{color:#ffad42}</style></head><body><h2>Could not load this page</h2><p>" +
+            safeMessage + "</p><p>The URL must be reachable and return HTML.</p></body></html>"
+          );
+          newWindow.document.close();
+        } catch (error) {
+          alert("Could not load page: " + message);
+        }
+      }
+
+      function writeFetchedHtml(html) {
+        if (!newWindow || newWindow.closed) return;
+
+        const baseHref = new URL(".", parsedUrl.href).href;
+        const baseTag = '<base href="' +
+          baseHref.replace(/&/g, "&amp;").replace(/"/g, "&quot;") + '">';
+
+        html = String(html).replace(/<base\b[^>]*>/gi, "");
+
+        if (/<head\b[^>]*>/i.test(html)) {
+          html = html.replace(/<head\b[^>]*>/i, match => match + baseTag);
+        } else if (/<html\b[^>]*>/i.test(html)) {
+          html = html.replace(/<html\b[^>]*>/i, match =>
+            match + "<head>" + baseTag + "</head>"
+          );
+        } else {
+          html = "<!DOCTYPE html><html><head>" + baseTag +
+            "</head><body>" + html + "</body></html>";
+        }
+
+        newWindow.document.open();
+        newWindow.document.write(html);
+        newWindow.document.close();
+      }
+
+      showLoading();
+
+      // Apps Script fetches the HTML server-side to avoid browser CORS failures.
+      if (window.google && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(writeFetchedHtml)
+          .withFailureHandler(error => showError(error && error.message ? error.message : error))
+          .fetchRemoteHtml(parsedUrl.href);
+      } else {
+        // Fallback for copies opened outside Apps Script, if the host permits CORS.
+        fetch(parsedUrl.href)
+          .then(response => {
+            if (!response.ok) throw new Error("HTTP " + response.status);
+            return response.text();
+          })
+          .then(writeFetchedHtml)
+          .catch(error => showError(error.message || error));
+      }
+    }
+
+    function openConfiguredСhаt() {
+      if (!externalСhаtUrl) {
+        alert("Add your external сhаt URL to the externalСhаtUrl setting in Index.html.");
+        return;
+      }
+
+      openInAboutBlank(externalСhаtUrl);
+    }
+
+    /*
+      ============================================================
+      RENDER GАМЕ AND ANNOUNCEMENT CARDS
+      ============================================================
+    */
+
+    function makeCard(title, description, buttonText, url, extraText, imageUrl) {
+      const card = document.createElement("article");
+      card.className = "card";
+
+      // Optional image. With no URL (or if it fails to load) the card looks exactly like before.
+      if (imageUrl && String(imageUrl).trim()) {
+        const image = document.createElement("img");
+        image.className = "gаmе-image";
+        image.alt = title;
+        image.addEventListener("load", () => image.classList.add("is-loaded"));
+        image.loading = "lazy";
+        image.referrerPolicy = "no-referrer";
+        image.addEventListener("error", () => image.remove());
+        image.src = String(imageUrl).trim();
+        card.appendChild(image);
+      }
+
+      const heading = document.createElement("h3");
+      heading.textContent = title;
+      card.appendChild(heading);
+
+      if (extraText) {
+        const extra = document.createElement("div");
+        extra.className = "announcement-date";
+        extra.textContent = extraText;
+        card.appendChild(extra);
+      }
+
+      const paragraph = document.createElement("p");
+      paragraph.textContent = description;
+      card.appendChild(paragraph);
+
+      const button = document.createElement("button");
+      button.className = "button";
+      button.textContent = buttonText;
+
+      // Both gаmе and announcement buttons use the fetch-to-about:blank method.
+      button.addEventListener("click", () => {
+        recordCompleted(/^Play/i.test(buttonText) ? "Played " + title + "!" : "Checked announcements!");
+        openInAboutBlank(url);
+      });
+
+      card.appendChild(button);
+      return card;
+    }
+
+    function renderGаmеs() {
+      const grid = document.getElementById("gаmеsGrid");
+      grid.replaceChildren();
+
+      gаmеs.forEach(gаmе => {
+        grid.appendChild(
+          makeCard(gаmе.title, gаmе.description, "Play Gаmе →", gаmе.url, "", gаmе.image)
+        );
+      });
+    }
+
+    function renderAnnouncements() {
+      const grid = document.getElementById("announcementsGrid");
+      grid.replaceChildren();
+
+      announcements.forEach(announcement => {
+        grid.appendChild(
+          makeCard(
+            announcement.title,
+            announcement.description,
+            "Open Announcement →",
+            announcement.url,
+            announcement.date || ""
+          )
+        );
+      });
+    }
+
+    /*
+      ============================================================
+      PAGE NAVIGATION
+      ============================================================
+    */
+
+    let pageSwitchTimer = 0;
+    function showPage(pageId) {
+      document.querySelectorAll(".nav-button").forEach(button => {
+        button.classList.toggle("active", button.dataset.page === pageId);
+      });
+
+      const next = document.getElementById(pageId);
+      if (!next) return;
+
+      const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const pages = Array.from(document.querySelectorAll(".page"));
+      const current = pages.find(p => p.classList.contains("active") && !p.classList.contains("leaving"));
+
+      clearTimeout(pageSwitchTimer);
+      // Finish off any page that was still fading out from an earlier click.
+      pages.forEach(p => { if (p !== next && p !== current) p.classList.remove("active", "leaving"); });
+      next.classList.remove("leaving");
+      if (current === next) return;
+
+      const reveal = () => {
+        if (current) current.classList.remove("active", "leaving");
+        next.classList.add("active");
+        if (window.scrollY > 0) window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+      };
+
+      if (!current || reduce) { reveal(); return; }
+      current.classList.add("leaving");
+      pageSwitchTimer = setTimeout(reveal, 170);
+    }
+
+    /* SUGGESTIONS: opens an ordinary link in a new tab (put your link in suggestionsUrl). */
+    const suggestionsUrl = "https://forms.gle/hf6Mupg9d2ZCakRn9";
+    const ratingsUrl = "https://forms.gle/FG2uJF8ckC5NkoBb7";
+
+    function openRatings() {
+      window.open(ratingsUrl, "_blank", "noopener");
+    }
+
+    function openSuggestions() {
+      if (!suggestionsUrl) { alert("Add your suggestion link to suggestionsUrl."); return; }
+      window.open(suggestionsUrl, "_blank", "noopener");
+    }
+
+    /*
+      ============================================================
+      WEBSITE LAYOUT SETTINGS
+      The settings control sits outside the page sections, so it
+      remains available when users switch pages.
+    */
+    const availableLayouts = ["classic", "sidebar", "moonlight", "bottom", "topbar", "schoology", "imac", "liquid"];
+    const mainNavigation = document.querySelector(".topbar > nav");
+    const originalNavigationParent = mainNavigation ? mainNavigation.parentElement : null;
+
+    // ============================================================
+    // LIQUID GLASS DOCK ENGINE
+    // A single glass lens lives inside the dock, behind the icons. It is described by four
+    // spring-driven edges (left/right/top/bottom) so it can MOLD: when the pointer is near the
+    // dock's outline the lens is a half-circle arch that is pulled out of that rim (its flat base
+    // stays welded to the outline and its dome follows the pointer); as the pointer moves inward
+    // the arch swells and rounds off into the full rounded square that cradles the icon. Leaving
+    // does the reverse, sinking back into the rim. The lens never leaves the dock's bounds.
+    // Everything is transform/opacity in one requestAnimationFrame loop that sleeps at rest.
+    // ============================================================
+    let liquidDockLens = null;
+    let liquidDockReset = () => {};
+    function setupLiquidDockLens() {
+      if (!mainNavigation || liquidDockLens) return;
+      const nav = mainNavigation;
+      const reduceMotion = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : { matches: false };
+
+      liquidDockLens = document.createElement("span");
+      liquidDockLens.className = "liquid-dock-lens";
+      liquidDockLens.setAttribute("aria-hidden", "true");
+      nav.insertBefore(liquidDockLens, nav.firstChild);
+      const lens = liquidDockLens;
+
+      // ---- tiny spring toolkit ----
+      const mk = (value, k, c, eps = .02) => ({ x: value, v: 0, t: value, k, c, eps });
+      const snap = (s, v) => { s.x = s.t = v; s.v = 0; };
+      const atRest = s => Math.abs(s.x - s.t) < s.eps && Math.abs(s.v) < s.eps * 5;
+      const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+      const smooth = t => { t = clamp(t, 0, 1); return t * t * (3 - 2 * t); };
+      function step(s, dt, K, C) {
+        const a = -s.k * K * (s.x - s.t) - s.c * C * s.v;
+        s.v += a * dt;
+        s.x += s.v * dt;
+      }
+
+      const L = {
+        l: mk(0, 150, 23), r: mk(0, 150, 23),
+        t: mk(0, 130, 21), b: mk(0, 130, 21),
+        att: mk(1, 120, 20, .002),      // 1 = welded to the rim (arch), 0 = free rounded square
+        pres: mk(0, 110, 19, .002),     // opacity
+        press: mk(0, 400, 28, .002)     // mouse/finger-down squish
+      };
+      const MAG = .16, LIFT = 3, SIGMA = 64, PAD = 10, EDGE_PAD = 3;
+
+      let btns = [];
+      function measure() {
+        btns = Array.from(nav.querySelectorAll(":scope > .nav-button")).map((el, i) => {
+          const prev = btns[i];
+          return {
+            el, cx: el.offsetLeft + el.offsetWidth / 2, top: el.offsetTop, w: el.offsetWidth, h: el.offsetHeight,
+            s: prev ? prev.s : mk(1, 430, 27, .0008),
+            lift: prev ? prev.lift : mk(0, 430, 27, .02),
+            press: prev ? prev.press : mk(0, 560, 30, .002),
+            infl: 0
+          };
+        });
+      }
+      const halfPitch = i => {
+        const d = [80];
+        if (btns[i - 1]) d.push(btns[i].cx - btns[i - 1].cx);
+        if (btns[i + 1]) d.push(btns[i + 1].cx - btns[i].cx);
+        return Math.min(...d) / 2;
+      };
+
+      const ptr = { inside: false, x: 0, y: 0, down: -1, edge: "bottom" };
+      const isLiquid = () => document.body.classList.contains("layout-liquid");
+      function localPoint(e) {
+        const r = nav.getBoundingClientRect();
+        ptr.x = e.clientX - r.left - nav.clientLeft;
+        ptr.y = e.clientY - r.top - nav.clientTop;
+      }
+      // Nearest outline edge, with a little hysteresis so the arch never flickers between edges.
+      function pickEdge(navW, navH) {
+        const d = { left: ptr.x, right: navW - ptr.x, top: ptr.y, bottom: navH - ptr.y };
+        const m = Math.min(d.left, d.right, d.top, d.bottom);
+        if (d[ptr.edge] > m + 6) ptr.edge = Object.keys(d).find(k => d[k] === m);
+        return d[ptr.edge];
+      }
+      // The arch: a half circle whose flat base is welded to the rim at the pointer, tip reaching toward the pointer.
+      function archRect(edge, depth, navW, navH) {
+        const tip = Math.max(6, depth + 8);
+        const half = tip;                                  // half-width == height, so it's a true half circle
+        const M = 24;                                      // keep clear of the dock's rounded corners
+        const px = clamp(ptr.x, half + M, navW - half - M);
+        const py = clamp(ptr.y, half + M, navH - half - M);
+        if (edge === "bottom") return { l: px - half, r: px + half, t: navH - 1 - tip, b: navH - 1 };
+        if (edge === "top")    return { l: px - half, r: px + half, t: 1, b: 1 + tip };
+        if (edge === "left")   return { l: 1, r: 1 + tip, t: py - half, b: py + half };
+        return { l: navW - 1 - tip, r: navW - 1, t: py - half, b: py + half };
+      }
+
+      function retarget() {
+        const motion = reduceMotion.matches ? 0 : 1;
+        const navW = nav.clientWidth, navH = nav.clientHeight;
+        let near = -1, best = Infinity;
+        if (ptr.inside) btns.forEach((b, i) => { const d = Math.abs(ptr.x - b.cx); if (d < best) { best = d; near = i; } });
+
+        btns.forEach((b, i) => {
+          const d = ptr.x - b.cx;
+          b.infl = ptr.inside ? Math.exp(-(d * d) / (2 * SIGMA * SIGMA)) : 0;
+          b.s.t = 1 + MAG * motion * b.infl;
+          b.lift.t = LIFT * motion * b.infl;
+          b.press.t = ptr.down === i ? 1 : 0;
+        });
+
+        let T;
+        if (ptr.inside && near >= 0) {
+          const depth = Math.max(0, pickEdge(navW, navH));
+          const depthT = smooth(depth / Math.max(20, Math.min(40, navH * .36)));
+          const A = archRect(ptr.edge, depth, navW, navH);
+
+          // Full rounded square around the icon under the pointer, clamped to stay inside the dock.
+          const b = btns[near];
+          const d = ptr.x - b.cx;
+          const s = b.s.x;
+          const between = smooth(Math.abs(d) / halfPitch(near));
+          const fw = Math.min((b.w * s + PAD + 6) * (1 - .2 * between), navW - 2 * EDGE_PAD);
+          const fh = Math.min(b.h * s + PAD, navH - 2 * EDGE_PAD);
+          const visCy = (b.top + b.h) - b.lift.x - (b.h * s) / 2;
+          const fx = clamp(ptr.x + (b.cx - ptr.x) * .4 * (1 - between), fw / 2 + EDGE_PAD, navW - fw / 2 - EDGE_PAD);
+          const fy = clamp(visCy, fh / 2 + EDGE_PAD, navH - fh / 2 - EDGE_PAD);
+          const F = { l: fx - fw / 2, r: fx + fw / 2, t: fy - fh / 2, b: fy + fh / 2 };
+
+          T = {};
+          for (const k of ["l", "r", "t", "b"]) T[k] = A[k] + (F[k] - A[k]) * depthT;
+          L.att.t = 1 - depthT;
+          L.pres.t = 1;
+        } else {
+          // Leaving: the lens sinks back into the rim the pointer left through.
+          pickEdge(navW, navH);
+          T = archRect(ptr.edge, 0, navW, navH);
+          const cx = (T.l + T.r) / 2, cy = (T.t + T.b) / 2;
+          const rimX = ptr.edge === "left" ? 1 : ptr.edge === "right" ? navW - 1 : cx;
+          const rimY = ptr.edge === "top" ? 1 : ptr.edge === "bottom" ? navH - 1 : cy;
+          T = { l: Math.min(cx, rimX) - (ptr.edge === "left" || ptr.edge === "right" ? 0 : 7), r: Math.max(cx, rimX) + (ptr.edge === "left" || ptr.edge === "right" ? 0 : 7),
+                t: Math.min(cy, rimY) - (ptr.edge === "top" || ptr.edge === "bottom" ? 0 : 7), b: Math.max(cy, rimY) + (ptr.edge === "top" || ptr.edge === "bottom" ? 0 : 7) };
+          L.att.t = 1;
+          L.pres.t = 0;
+        }
+        L.l.t = T.l; L.r.t = T.r; L.t.t = T.t; L.b.t = T.b;
+        L.press.t = ptr.inside && ptr.down >= 0 ? 1 : 0;
+      }
+
+      function render() {
+        btns.forEach(b => {
+          const g = clamp((b.s.x - 1) / MAG, 0, 1);
+          const sc = b.s.x * (1 - .07 * b.press.x);
+          b.el.style.transform = `translate3d(0, ${(-b.lift.x).toFixed(2)}px, 0) scale(${sc.toFixed(4)})`;
+          b.el.style.setProperty("--i", g.toFixed(3));
+          b.el.style.zIndex = String(2 + Math.round(g * 2));
+        });
+
+        const navW = nav.clientWidth, navH = nav.clientHeight;
+        const squish = 1 - .06 * L.press.x;
+        const vx = reduceMotion.matches ? 0 : (L.l.v + L.r.v) / 2;
+        const st = clamp(Math.abs(vx) / 1700, 0, .2);            // horizontal liquid stretch while moving
+        let w = Math.max(1, (L.r.x - L.l.x) * squish * (1 + st));
+        let h = Math.max(1, (L.b.x - L.t.x) * squish);
+        let cx = (L.l.x + L.r.x) / 2, cy = (L.t.x + L.b.x) / 2;
+        // Hard guarantee: the lens never pokes outside the dock.
+        cx = clamp(cx, Math.min(w / 2, navW / 2), Math.max(navW - w / 2, navW / 2));
+        cy = clamp(cy, Math.min(h / 2, navH / 2), Math.max(navH - h / 2, navH / 2));
+        const sx = w / 100, sy = h / 100;
+
+        // Corner radii (separate horizontal/vertical): while attached, the two tip corners are elliptical
+        // quarter-arcs that join into a half circle; base corners (on the rim side) stay tight.
+        // As att -> 0 everything blends back to the normal uniform rounded-square radius R.
+        const R = Math.min(26, Math.min(w, h) / 2);
+        const att = clamp(L.att.x, 0, 1);
+        const rb = R - (R - 3) * att;
+        const mix = target => R + (target - R) * att;
+        const sideEdge = ptr.edge === "left" || ptr.edge === "right";
+        const tipX = Math.max(.5, mix(sideEdge ? w - rb : w / 2));
+        const tipY = Math.max(.5, mix(sideEdge ? h / 2 : h - rb));
+        let tl = [tipX, tipY], tr = [tipX, tipY], br = [tipX, tipY], bl = [tipX, tipY];
+        const base = [rb, rb];
+        if (ptr.edge === "bottom") { br = base; bl = base; }
+        else if (ptr.edge === "top") { tl = base; tr = base; }
+        else if (ptr.edge === "left") { tl = base; bl = base; }
+        else { tr = base; br = base; }
+        const fx = a => (a / sx).toFixed(2) + "px";
+        const fy = a => (a / sy).toFixed(2) + "px";
+        lens.style.transform = `translate3d(${(cx - 50).toFixed(2)}px, ${(cy - 50).toFixed(2)}px, 0) scale(${sx.toFixed(4)}, ${sy.toFixed(4)})`;
+        lens.style.borderRadius =
+          `${fx(tl[0])} ${fx(tr[0])} ${fx(br[0])} ${fx(bl[0])} / ${fy(tl[1])} ${fy(tr[1])} ${fy(br[1])} ${fy(bl[1])}`;
+        lens.style.opacity = clamp(L.pres.x * 1.8, 0, 1).toFixed(3);
+      }
+
+      function allRest() {
+        return Object.values(L).every(atRest) && btns.every(b => atRest(b.s) && atRest(b.lift) && atRest(b.press));
+      }
+      function cleanup() {
+        lens.style.opacity = "0";
+        lens.style.transform = "translate3d(0,0,0) scale(.01)";
+        btns.forEach(b => {
+          b.el.style.transform = ""; b.el.style.zIndex = "";
+          b.el.style.removeProperty("--i");
+          snap(b.s, 1); snap(b.lift, 0); snap(b.press, 0);
+        });
+      }
+
+      let raf = 0, last = 0;
+      function frame(now) {
+        raf = 0;
+        if (!isLiquid()) { cleanup(); return; }
+        let dt = (now - last) / 1000; last = now;
+        if (!(dt > 0)) dt = 1 / 60;
+        dt = Math.min(dt, 1 / 30);
+        const n = Math.max(1, Math.ceil(dt * 240)), h = dt / n;
+        const K = reduceMotion.matches ? 4 : 1, C = reduceMotion.matches ? 2 : 1;
+        retarget();
+        for (let i = 0; i < n; i++) {
+          for (const k in L) step(L[k], h, K, C);
+          for (const b of btns) { step(b.s, h, K, C); step(b.lift, h, K, C); step(b.press, h, K, C); }
+        }
+        render();
+        if (!allRest()) raf = requestAnimationFrame(frame);
+        else if (!ptr.inside) cleanup();
+      }
+      function start() {
+        if (raf) return;
+        last = performance.now();
+        raf = requestAnimationFrame(frame);
+      }
+
+      function enter(e) {
+        if (!isLiquid()) return;
+        const wasInside = ptr.inside;
+        measure();
+        localPoint(e);
+        ptr.inside = true;
+        // A fresh entrance starts as a zero-size bead sitting exactly where the pointer crossed
+        // the outline; re-entering mid-exit simply reverses from wherever the lens currently is.
+        if (!wasInside && L.pres.x < .04) {
+          const navW = nav.clientWidth, navH = nav.clientHeight;
+          ptr.edge = "bottom"; pickEdge(navW, navH);
+          const x = clamp(ptr.x, 0, navW), y = clamp(ptr.y, 0, navH);
+          const rimX = ptr.edge === "left" ? 1 : ptr.edge === "right" ? navW - 1 : x;
+          const rimY = ptr.edge === "top" ? 1 : ptr.edge === "bottom" ? navH - 1 : y;
+          snap(L.l, rimX); snap(L.r, rimX); snap(L.t, rimY); snap(L.b, rimY);
+          snap(L.att, 1); snap(L.pres, 0);
+        }
+        start();
+      }
+      nav.addEventListener("pointerenter", enter);
+      nav.addEventListener("pointermove", e => {
+        if (!isLiquid()) return;
+        if (!ptr.inside) { enter(e); return; }
+        localPoint(e);
+        start();
+      });
+      nav.addEventListener("pointerleave", e => {
+        if (!isLiquid() || !ptr.inside) return;
+        localPoint(e);
+        ptr.inside = false; ptr.down = -1;
+        start();
+      });
+      nav.addEventListener("pointerdown", e => {
+        if (!isLiquid()) return;
+        if (!ptr.inside) enter(e); else localPoint(e);
+        const btn = e.target.closest && e.target.closest(".nav-button");
+        ptr.down = btn ? btns.findIndex(b => b.el === btn) : -1;
+        start();
+      });
+      const release = () => { if (ptr.down !== -1) { ptr.down = -1; start(); } };
+      window.addEventListener("pointerup", release);
+      window.addEventListener("pointercancel", release);
+      window.addEventListener("resize", () => { if (isLiquid()) { measure(); start(); } });
+
+      liquidDockReset = () => {
+        if (raf) { cancelAnimationFrame(raf); raf = 0; }
+        ptr.inside = false; ptr.down = -1;
+        Object.values(L).forEach(s => snap(s, 0));
+        snap(L.att, 1);
+        cleanup();
+      };
+    }
+    setupLiquidDockLens();
+    const originalNavigationNextSibling = mainNavigation ? mainNavigation.nextSibling : null;
+
+    function placeNavigationForLayout(layout) {
+      if (!mainNavigation || !originalNavigationParent) return;
+      if (layout === "imac" || layout === "liquid") {
+        // Make the dock a direct child of <body>, so fixed bottom positioning is viewport-based.
+        if (mainNavigation.parentElement !== document.body) document.body.appendChild(mainNavigation);
+      } else if (mainNavigation.parentElement !== originalNavigationParent) {
+        if (originalNavigationNextSibling && originalNavigationNextSibling.parentElement === originalNavigationParent) {
+          originalNavigationParent.insertBefore(mainNavigation, originalNavigationNextSibling);
+        } else {
+          originalNavigationParent.appendChild(mainNavigation);
+        }
+      }
+    }
+
+    function applyLayout(layout, saveChoice = true) {
+      const safeLayout = availableLayouts.includes(layout) ? layout : "classic";
+      placeNavigationForLayout(safeLayout);
+      document.body.classList.remove("layout-sidebar", "layout-moonlight", "layout-arcade", "layout-pumpkin", "layout-bottom", "layout-topbar", "layout-schoology", "layout-imac", "layout-liquid");
+      if (safeLayout === "sidebar") document.body.classList.add("layout-sidebar");
+      if (safeLayout === "moonlight") document.body.classList.add("layout-moonlight");
+      if (safeLayout === "bottom") document.body.classList.add("layout-bottom");
+      if (safeLayout === "topbar") document.body.classList.add("layout-topbar");
+      if (safeLayout === "schoology") document.body.classList.add("layout-schoology");
+      if (safeLayout === "imac") document.body.classList.add("layout-imac");
+      if (safeLayout === "liquid") document.body.classList.add("layout-liquid");
+
+      // Stop the Liquid Glass spring engine and clear its inline styles when leaving the theme.
+      if (safeLayout !== "liquid") liquidDockReset();
+
+      document.querySelectorAll("[data-layout-choice]").forEach(option => {
+        const selected = option.dataset.layoutChoice === safeLayout;
+        option.classList.toggle("selected", selected);
+        option.setAttribute("aria-pressed", String(selected));
+      });
+
+      if (saveChoice) {
+        try { localStorage.setItem("ugsWebsiteLayout", safeLayout); }
+        catch (error) { /* Settings still work for this page view if storage is blocked. */ }
+      }
+    }
+
+    function setLayout(layout) {
+      const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      // Fade smoothly from one layout to the next where the browser supports it.
+      if (document.startViewTransition && !reduce) {
+        try { document.startViewTransition(() => applyLayout(layout)); return; }
+        catch (error) { /* fall through to the instant switch */ }
+      }
+      applyLayout(layout);
+    }
+
+    /*
+      Settings window "genie": it grows out of the gear button and shrinks back into it.
+      We measure where the button is relative to the window's resting spot, and the CSS
+      uses those numbers (--gx, --gy, --gs) as the window's closed position and size.
+    */
+    let settingsClosing = false;
+    let settingsCloseTimer = 0;
+
+    function positionSettingsGenie() {
+      const dialog = document.querySelector(".settings-dialog");
+      const launcher = document.getElementById("settingsLauncher");
+      if (!dialog || !launcher) return;
+
+      dialog.style.transition = "none";
+      dialog.style.transform = "none";
+      const d = dialog.getBoundingClientRect();
+      const b = launcher.getBoundingClientRect();
+
+      const dx = (b.left + b.width / 2) - (d.left + d.width / 2);
+      const dy = (b.top + b.height / 2) - (d.top + d.height / 2);
+      const scale = Math.max(.05, Math.min(.2, b.width / Math.max(d.width, 1)));
+
+      dialog.style.setProperty("--gx", dx.toFixed(1) + "px");
+      dialog.style.setProperty("--gy", dy.toFixed(1) + "px");
+      dialog.style.setProperty("--gs", scale.toFixed(3));
+
+      dialog.style.transform = "";
+      void dialog.offsetWidth;          // commit the closed pose before animating
+      dialog.style.transition = "";
+    }
+
+    function openSettings() {
+      const overlay = document.getElementById("settingsOverlay");
+      const launcher = document.getElementById("settingsLauncher");
+      if (overlay.classList.contains("open")) return;
+
+      if (!settingsClosing) positionSettingsGenie();
+      overlay.classList.add("open");
+      launcher.setAttribute("aria-expanded", "true");
+
+      const closeButton = overlay.querySelector(".settings-close");
+      setTimeout(() => { if (overlay.classList.contains("open") && closeButton) closeButton.focus({ preventScroll: true }); }, 400);
+    }
+
+    function closeSettings() {
+      const overlay = document.getElementById("settingsOverlay");
+      const launcher = document.getElementById("settingsLauncher");
+      if (!overlay.classList.contains("open")) return;
+
+      stopPanicCapture();
+      overlay.classList.remove("open");
+      launcher.setAttribute("aria-expanded", "false");
+
+      settingsClosing = true;
+      clearTimeout(settingsCloseTimer);
+      settingsCloseTimer = setTimeout(() => { settingsClosing = false; }, 600);
+      try { launcher.focus({ preventScroll: true }); } catch (error) { /* ignore */ }
+    }
+
+    window.addEventListener("resize", () => {
+      const overlay = document.getElementById("settingsOverlay");
+      if (overlay && overlay.classList.contains("open")) positionSettingsGenie();
+    });
+
+    function closeSettingsFromBackdrop(event) {
+      if (event.target === document.getElementById("settingsOverlay")) closeSettings();
+    }
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") closeSettings();
+    });
+
+    /*
+      ============================================================
+      SETTINGS TABS + PANIC KEY
+      Defaults: key = the tilde / backtick key, link = d303.schoology.com
+      ============================================================
+    */
+    const PANIC_DEFAULT_URL = "https://d303.schoology.com";
+    const PANIC_DEFAULT_KEY = { key: "`", code: "Backquote" };
+    const PANIC_STORAGE = "ugsPanicSettings";
+
+    let panicSettings = {
+      enabled: true,
+      key: PANIC_DEFAULT_KEY.key,
+      code: PANIC_DEFAULT_KEY.code,
+      url: PANIC_DEFAULT_URL
+    };
+    let panicCapturing = false;
+    let panicStatusTimer = 0;
+
+    function showSettingsTab(name) {
+      document.querySelectorAll("[data-settings-tab]").forEach(tab => {
+        const on = tab.dataset.settingsTab === name;
+        tab.classList.toggle("active", on);
+        tab.setAttribute("aria-selected", String(on));
+      });
+      document.querySelectorAll("[data-settings-panel]").forEach(panel => {
+        panel.classList.toggle("active", panel.dataset.settingsPanel === name);
+      });
+      if (name !== "panic") stopPanicCapture();
+    }
+
+    function normalizePanicUrl(raw) {
+      raw = String(raw || "").trim();
+      if (!raw) return PANIC_DEFAULT_URL;
+      if (!/^[a-z][a-z0-9+.-]*:\/\//i.test(raw)) raw = "https://" + raw;
+      try {
+        const u = new URL(raw);
+        if (u.protocol !== "https:" && u.protocol !== "http:") return null;
+        return u.href;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function panicKeyName(key, code) {
+      if (code === "Backquote" || key === "`" || key === "~") return "` (Tilde key)";
+      if (key === " ") return "Space";
+      if (key && key.length === 1) return key.toUpperCase();
+      return key || "Not set";
+    }
+
+    function savePanicToStorage() {
+      try { localStorage.setItem(PANIC_STORAGE, JSON.stringify(panicSettings)); }
+      catch (error) { /* Still works for this page view if storage is blocked. */ }
+    }
+
+    function showPanicStatus(message) {
+      const box = document.getElementById("panicStatus");
+      if (!box) return;
+      box.textContent = message;
+      clearTimeout(panicStatusTimer);
+      if (message) panicStatusTimer = setTimeout(() => { box.textContent = ""; }, 3500);
+    }
+
+    function renderPanicSettings() {
+      const label = document.getElementById("panicKeyLabel");
+      const hint = document.getElementById("panicKeyHint");
+      const btn = document.getElementById("panicKeyButton");
+      const toggle = document.getElementById("panicToggle");
+      const input = document.getElementById("panicUrlInput");
+      if (label) label.textContent = panicKeyName(panicSettings.key, panicSettings.code);
+      if (hint) hint.textContent = panicCapturing
+        ? "Press any key now… (Esc to cancel)"
+        : "Click here, then press the key you want to use.";
+      if (btn) btn.classList.toggle("capturing", panicCapturing);
+      if (toggle) toggle.textContent = "Panic key: " + (panicSettings.enabled ? "ON" : "OFF");
+      if (input && document.activeElement !== input) {
+        input.value = panicSettings.url.replace(/^https?:\/\//i, "").replace(/\/$/, "");
+      }
+    }
+
+    function startPanicKeyCapture() {
+      panicCapturing = true;
+      renderPanicSettings();
+    }
+
+    function stopPanicCapture() {
+      if (!panicCapturing) return;
+      panicCapturing = false;
+      renderPanicSettings();
+    }
+
+    function togglePanicEnabled() {
+      panicSettings.enabled = !panicSettings.enabled;
+      savePanicToStorage();
+      renderPanicSettings();
+      showPanicStatus(panicSettings.enabled ? "Panic key turned on." : "Panic key turned off.");
+    }
+
+    function savePanicSettings() {
+      const input = document.getElementById("panicUrlInput");
+      const url = normalizePanicUrl(input ? input.value : "");
+      if (!url) {
+        showPanicStatus("That link doesn't look right. Try something like d303.schoology.com");
+        return;
+      }
+      panicSettings.url = url;
+      savePanicToStorage();
+      if (input) input.value = url.replace(/^https?:\/\//i, "").replace(/\/$/, "");
+      showPanicStatus("Saved! Press " + panicKeyName(panicSettings.key, panicSettings.code) + " to go to " + url);
+    }
+
+    function resetPanicSettings() {
+      panicSettings = {
+        enabled: true,
+        key: PANIC_DEFAULT_KEY.key,
+        code: PANIC_DEFAULT_KEY.code,
+        url: PANIC_DEFAULT_URL
+      };
+      panicCapturing = false;
+      savePanicToStorage();
+      const input = document.getElementById("panicUrlInput");
+      if (input) input.value = "";
+      renderPanicSettings();
+      showPanicStatus("Reset to the tilde key and d303.schoology.com.");
+    }
+
+    function triggerPanic() {
+      const url = normalizePanicUrl(panicSettings.url) || PANIC_DEFAULT_URL;
+      try { window.top.location.replace(url); }
+      catch (error) {
+        try { window.top.location.href = url; }
+        catch (error2) { window.location.href = url; }
+      }
+    }
+
+    function panicKeyMatches(event) {
+      if (panicSettings.code) return event.code === panicSettings.code;
+      return event.key === panicSettings.key;
+    }
+
+    function panicKeyHandler(event) {
+      if (panicCapturing) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (event.key === "Escape") { stopPanicCapture(); return; }
+        if (["Shift", "Control", "Alt", "Meta", "CapsLock", "Tab"].includes(event.key)) return;
+        panicSettings.key = event.key;
+        panicSettings.code = event.code || "";
+        panicCapturing = false;
+        savePanicToStorage();
+        renderPanicSettings();
+        showPanicStatus("Panic key set to " + panicKeyName(panicSettings.key, panicSettings.code) + ".");
+        return;
+      }
+
+      if (!panicSettings.enabled) return;
+      if (event.ctrlKey || event.metaKey || event.altKey) return;
+
+      const target = event.target;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)) return;
+
+      if (panicKeyMatches(event)) {
+        event.preventDefault();
+        triggerPanic();
+      }
+    }
+
+    // Listen on this page, and on the outer page too (if the browser allows it) so the key
+    // still works when focus is outside the embedded site.
+    document.addEventListener("keydown", panicKeyHandler, true);
+    try { window.parent.document.addEventListener("keydown", panicKeyHandler, true); }
+    catch (error) { /* Outer page not reachable; this page's listener is enough. */ }
+
+    try {
+      const stored = JSON.parse(localStorage.getItem(PANIC_STORAGE) || "null");
+      if (stored && typeof stored === "object") {
+        if (typeof stored.enabled === "boolean") panicSettings.enabled = stored.enabled;
+        if (typeof stored.key === "string" && stored.key) panicSettings.key = stored.key;
+        if (typeof stored.code === "string") panicSettings.code = stored.code;
+        const safeUrl = normalizePanicUrl(stored.url);
+        if (safeUrl) panicSettings.url = safeUrl;
+      }
+    } catch (error) { /* Use defaults when storage is unavailable. */ }
+    renderPanicSettings();
+
+    /*
+      ============================================================
+      RECENTLY COMPLETED (shown in the Schoology theme's side panel)
+      Remembers the last 4 things you opened, newest first.
+      ============================================================
+    */
+    const COMPLETED_STORAGE = "ugsRecentlyCompleted";
+    const COMPLETED_MAX = 4;
+    let completedItems = [];
+    try {
+      const saved = JSON.parse(localStorage.getItem(COMPLETED_STORAGE) || "[]");
+      if (Array.isArray(saved)) completedItems = saved.filter(x => typeof x === "string").slice(0, COMPLETED_MAX);
+    } catch (error) { /* Start empty when storage is unavailable. */ }
+
+    function renderCompleted() {
+      const list = document.getElementById("sgCompleted");
+      const empty = document.getElementById("sgCompletedEmpty");
+      if (!list) return;
+      list.replaceChildren();
+      completedItems.forEach(text => {
+        const li = document.createElement("li");
+        li.textContent = text;
+        list.appendChild(li);
+      });
+      if (empty) empty.hidden = completedItems.length > 0;
+    }
+
+    function recordCompleted(text) {
+      completedItems = completedItems.filter(item => item !== text);
+      completedItems.unshift(text);
+      completedItems = completedItems.slice(0, COMPLETED_MAX);
+      try { localStorage.setItem(COMPLETED_STORAGE, JSON.stringify(completedItems)); }
+      catch (error) { /* Still works for this page view. */ }
+      renderCompleted();
+    }
+
+    // Chat, Suggestions and Ratings buttons use inline onclick handlers, so catch them here.
+    document.addEventListener("click", event => {
+      const button = event.target.closest && event.target.closest("button");
+      const handler = button ? (button.getAttribute("onclick") || "") : "";
+      if (handler.includes("openConfigured")) recordCompleted("Joined the chat!");
+      else if (handler.includes("openSuggestions")) recordCompleted("Opened the suggestion box!");
+      else if (handler.includes("openRatings")) recordCompleted("Rated the games!");
+    }, true);
+
+    renderCompleted();
+
+    function goToNav(index) {
+      const buttons = document.querySelectorAll("nav > .nav-button");
+      if (buttons[index]) showPage(buttons[index].dataset.page);
+    }
+
+    let savedLayout = "classic";
+    try { savedLayout = localStorage.getItem("ugsWebsiteLayout") || "classic"; }
+    catch (error) { /* Use the default layout when storage is unavailable. */ }
+    applyLayout(savedLayout, false);
+
+
+    renderGаmеs();
+    renderAnnouncements();
+
+    /* Falling autumn leaves: a few emoji leaves drifting down the screen. */
+    (function createFallLeaves() {
+      const box = document.createElement("div");
+      box.id = "fallLeaves";
+      box.setAttribute("aria-hidden", "true");
+
+      const icons = ["🍂", "🍁", "🍂", "🍁", "🍂"];
+      const count = 12;
+
+      for (let i = 0; i < count; i++) {
+        const leaf = document.createElement("span");
+        const duration = 16 + Math.random() * 14;
+
+        leaf.className = "fall-leaf";
+        leaf.textContent = icons[i % icons.length];
+        leaf.style.left = (Math.random() * 100) + "%";
+        leaf.style.fontSize = (16 + Math.random() * 16) + "px";
+        leaf.style.animationDuration = duration + "s";
+        leaf.style.animationDelay = (-Math.random() * duration) + "s";
+        box.appendChild(leaf);
+      }
+
+      document.body.appendChild(box);
+    })();
+    
+  
+  </script>
+</body>
+</html>
+]]></script>
+
+  <!-- ===================== LOADER ===================== -->
+  <script><![CDATA[
+    document.getElementById("site").srcdoc =
+      document.getElementById("site-source").textContent;
+  ]]></script>
+</svg>
