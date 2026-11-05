@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Snapchat</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23fffc00'/%3E%3Cpath d='M50 18C38 18 33 27 33 37l.4 9c-3 0-6-3-8.500-3-2.500 0-3.500 2.500-2 4 1.500 1.500 5.500 3 7 4-1.500 4-8 6-10 7.500-1.500 1.500 0 3.500 2.500 3.500 3 .500 6 .500 7 2.500 1 2 1 4 3 4 3 0 6-1.500 9 0 3 1.500 5 7 11 7s8-5.500 11-7c3-1.500 6 0 9 0 2 0 2-2 3-4 1-2 4-2 7-2.500 2.500 0 4-2 2.500-3.500-2-1.500-8.500-3.500-10-7.500 1.500-1 5.500-2.500 7-4 1.500-1.500.500-4-2-4-2.500 0-5.500 3-8.500 3l.4-9C67 27 62 18 50 18z' fill='%23fff' stroke='%23000' stroke-width='3' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+:root{--bg:#0b0b0c;--panel:#151517;--card:#1e1e21;--line:#2b2b30;--mut:#9b9ba4;--blue:#0fadff;--red:#f23c57;--yel:#fffc00}
+*{box-sizing:border-box;margin:0;font-family:"Avenir Next",Inter,Helvetica,Arial,sans-serif}
+html,body{height:100%;background:var(--bg);color:#fff}
+button{cursor:pointer;border:0;background:none;color:inherit;font-size:inherit}
+input{font-size:16px;color:#fff}
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-thumb{background:#33333a;border-radius:8px}
+#app{height:100%;display:flex}
+/* auth */
+.authwrap{margin:auto;width:100%;max-width:420px;padding:24px}
+.auth{background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:34px 30px;text-align:center;box-shadow:0 20px 60px #000a}
+.auth h1{font-size:26px;margin:14px 0 4px}.auth .sub{color:var(--mut);font-size:14px;margin-bottom:18px}
+.auth input,.field{width:100%;padding:14px 16px;margin:6px 0;border:1px solid var(--line);border-radius:14px;background:#0e0e10;outline:0;transition:.15s}
+.auth input:focus,.field:focus,.bar input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #0fadff30}
+.auth label{display:block;text-align:left;font-size:12px;color:var(--mut);margin:8px 0 0 4px}
+.btn{display:block;width:100%;padding:14px;margin-top:14px;border-radius:30px;background:var(--yel);color:#000;font-weight:800;font-size:16px;transition:.15s}
+.btn:hover{filter:brightness(.93)}.btn.blue{background:var(--blue);color:#fff}.btn.gray{background:#2a2a2f;color:#fff}.btn.red{background:#3a1f25;color:#ff6b81}
+.err{color:#ff6b81;font-size:14px;min-height:20px;margin-top:8px}
+.link{color:var(--blue);font-weight:700;margin-top:16px}
+/* sidebar */
+.side{width:380px;display:flex;flex-direction:column;flex-shrink:0;background:var(--bg)}
+.top{display:flex;align-items:center;justify-content:space-between;padding:12px 14px}
+.ib{width:38px;height:38px;border-radius:50%;background:#26262b;display:grid;place-items:center}
+.ib.blue{background:var(--blue)}.ib:hover{filter:brightness(1.2)}
+.meb{position:relative}.meb .gear{position:absolute;right:-2px;bottom:-2px;background:#26262b;border-radius:50%;width:16px;height:16px;display:grid;place-items:center;font-size:10px}
+.banner{margin:0 0 4px;background:linear-gradient(90deg,#0fadff,#1a8cff);padding:14px 16px;display:flex;gap:12px;align-items:center;font-size:13px;line-height:1.35}
+.banner b{display:block;font-size:16px}.banner .x{margin-left:auto;font-size:18px}
+.search{margin:10px 14px;display:flex;align-items:center;gap:8px;background:#232327;border-radius:22px;padding:0 14px}
+.search input{flex:1;background:none;border:0;outline:0;padding:12px 0}
+.search:focus-within{box-shadow:0 0 0 2px var(--blue)}
+.stories{display:flex;gap:14px;padding:12px 16px;overflow-x:auto;border-bottom:1px solid var(--line)}
+.stories::-webkit-scrollbar{display:none}
+.st{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;font-weight:700;min-width:58px;cursor:pointer}
+.ring{padding:3px;border-radius:50%;border:2px solid #3a3a40}.ring.new{border-color:var(--blue)}
+.st span{max-width:60px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.list{flex:1;overflow:auto}
+.row{display:flex;align-items:center;gap:14px;padding:12px 16px;cursor:pointer;border-bottom:1px solid #1c1c20}
+.row:hover{background:#1a1a1d}.row.on{background:#222226}
+.row b{display:block;font-size:17px;font-weight:600}
+.row small{color:var(--mut);font-size:13px;display:flex;align-items:center;gap:6px;margin-top:3px}
+.sq{width:11px;height:11px;border-radius:3px;border:2px solid var(--red);display:inline-block}.sq.new{background:var(--blue);border-color:var(--blue)}
+.ar{width:0;height:0;border:5px solid transparent;border-left:9px solid var(--red);border-right:0;display:inline-block}
+.cam{margin-left:auto;text-align:center;font-size:10px;font-weight:700}
+.cam i{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;margin:auto;font-style:normal;color:var(--mut)}
+.cam.new i{color:#fff;background:#33333a}
+.lbl{padding:14px 16px 6px;color:var(--mut);font-size:12px;font-weight:700;letter-spacing:.6px}
+/* main */
+.main{flex:1;margin:8px 8px 8px 0;border-radius:16px;background:var(--panel);border:1px solid var(--line);display:flex;flex-direction:column;min-width:0;overflow:hidden;position:relative}
+.empty{margin:auto;text-align:center;color:var(--mut);padding:30px}
+.head{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.head b{font-size:18px}.head small{display:block;color:var(--mut);font-size:13px}
+.msgs{flex:1;overflow:auto;padding:12px 18px 18px}
+.g{border-left:3px solid;margin:14px 0 4px 6px;padding-left:12px}.g.me{border-color:var(--red)}.g.them{border-color:var(--blue)}
+.gh{display:flex;justify-content:space-between;max-width:560px;margin:-2px 0 6px -2px;font-size:12px;font-weight:800;letter-spacing:.3px}
+.g.me .gh b{color:var(--red)}.g.them .gh b{color:var(--blue)}.gh span{color:var(--mut);font-weight:500}
+.m{display:inline-block;clear:both;max-width:560px;padding:9px 14px;margin:2px 0;border:1px solid var(--line);border-radius:6px;font-size:16px;line-height:1.35;white-space:pre-wrap;word-break:break-word;background:#19191c}
+.mw{display:flex;align-items:center;gap:8px}
+.pen{opacity:0;font-size:13px;color:var(--mut);padding:2px 6px;border-radius:8px}.mw:hover .pen,.pen:focus{opacity:1}.pen:hover{color:#fff}
+@media(hover:none){.pen{opacity:.7}}
+.edtag{font-size:11px;color:var(--mut);text-decoration:underline;padding:2px}.edtag:hover{color:#fff}
+.ed{display:flex;gap:6px;align-items:center;flex:1;max-width:560px}
+.ed input{flex:1;padding:9px 12px;border-radius:6px;border:1px solid var(--blue);background:#0e0e10;outline:0}
+.ed .ib{width:34px;height:34px}.ed .ib.ok{background:var(--blue)}
+.ver{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:8px 0;white-space:pre-wrap;word-break:break-word}
+.ver small{display:block;color:var(--mut);font-size:12px;margin-bottom:4px}.ver.cur{border-color:var(--blue)}
+.bar{display:flex;gap:10px;padding:12px 16px;align-items:center;position:relative}
+.bar input{flex:1;border:1px solid transparent;border-radius:26px;padding:13px 18px;outline:0;background:#26262b}
+.emo{position:absolute;right:16px;bottom:66px;background:#26262b;border:1px solid var(--line);border-radius:16px;padding:10px;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;font-size:24px;z-index:5}
+.emo button{padding:4px;border-radius:8px}.emo button:hover{background:#38383f}
+.back{display:none}
+/* profile */
+.prof{overflow:auto;padding:24px;max-width:640px;margin:0 auto;width:100%}
+.gen{display:flex;gap:10px;margin:6px 0}.gen button{flex:1;padding:12px;border-radius:14px;background:#2a2a2f;border:2px solid transparent;font-weight:700;color:#fff;font-size:15px}.gen button.on{border-color:var(--blue);box-shadow:0 0 0 2px #0fadff55}.gprev{display:flex;flex-direction:column;align-items:center;gap:6px;margin:6px 0;color:var(--mut);font-size:13px;font-weight:600}
+.hero{text-align:center;padding:10px 0 6px}.hero h2{margin-top:10px;font-size:24px}.hero p{color:var(--mut)}
+.card{background:var(--card);border-radius:18px;padding:6px 18px;margin:14px 0;border:1px solid var(--line)}
+.card.pad{padding:16px 18px}
+.kv{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}
+.kv:last-child{border:0}.kv span{color:var(--mut)}
+.tabs{display:flex;gap:6px;overflow-x:auto;margin:12px 0 4px;padding-bottom:4px}
+.tab{padding:8px 16px;border-radius:20px;background:#2a2a2f;font-weight:700;font-size:14px;white-space:nowrap}.tab.on{background:var(--yel);color:#000}
+.opt{margin:14px 0 6px}.opt p{font-size:12px;font-weight:700;color:var(--mut);margin-bottom:8px;letter-spacing:.5px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{min-width:38px;height:38px;padding:0 14px;border-radius:19px;background:#2a2a2f;border:2px solid transparent;font-size:13px;font-weight:600}
+.chip.sw{width:38px;padding:0;border-color:#0004}.chip.on{border-color:var(--blue);box-shadow:0 0 0 2px #0fadff55}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#fff;color:#000;padding:10px 20px;border-radius:22px;font-size:14px;font-weight:600;z-index:9}
+.ov{position:fixed;inset:0;background:#000c;display:grid;place-items:center;z-index:20;padding:12px}
+.sv{width:min(420px,100%);height:min(740px,94vh);border-radius:22px;position:relative;display:flex;flex-direction:column;overflow:hidden;color:#111;box-shadow:0 20px 70px #000}
+.pbs{display:flex;gap:4px;padding:12px 14px 0;position:relative;z-index:2}
+.pb{flex:1;height:3px;border-radius:3px;background:#0003;overflow:hidden}
+.pb i{display:block;height:100%;width:0;background:#fff}.pb i.full{width:100%}.pb i.run{animation:fill 5s linear forwards}
+@keyframes fill{to{width:100%}}
+.svh{display:flex;align-items:center;gap:10px;padding:12px 14px;position:relative;z-index:2;color:#fff;text-shadow:0 1px 4px #0006}
+.svh small{display:block;font-size:12px;opacity:.9}.svh .ib{margin-left:auto;background:#0004;color:#fff}
+.svt{flex:1;display:grid;place-items:center;text-align:center;padding:28px;font-size:28px;font-weight:800;line-height:1.25;color:#fff;text-shadow:0 2px 10px #0005;white-space:pre-wrap;word-break:break-word}
+.nv{position:absolute;top:90px;bottom:0;width:40%;z-index:1}.nv.l{left:0}.nv.r{right:0}
+.sm{width:min(440px,100%);max-height:92vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:18px}
+.smh{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.smh b{font-size:20px}
+.mut{color:var(--mut);font-size:13px;margin:4px 0 10px}
+.sc{border-radius:14px;padding:16px;margin:8px 0;color:#fff;font-weight:700;text-shadow:0 1px 6px #0005;display:flex;gap:10px;align-items:flex-start;white-space:pre-wrap;word-break:break-word}
+.sc div{flex:1}.sc small{display:block;font-weight:500;opacity:.9;margin-top:6px}
+.sc button{background:#0005;border-radius:50%;width:32px;height:32px;flex-shrink:0}
+.sm textarea{width:100%;min-height:90px;resize:none;padding:12px 14px;margin-top:8px;border:1px solid var(--line);border-radius:14px;background:#0e0e10;color:#fff;font-size:16px;outline:0}
+.sm textarea:focus{border-color:var(--blue)}
+.plus{position:absolute;right:-2px;bottom:-2px;width:20px;height:20px;border-radius:50%;background:var(--blue);display:grid;place-items:center;font-size:15px;line-height:1;border:2px solid var(--bg)}
+.ring.mine{border-color:var(--yel)}.ring.seen{border-color:#55555d}
+@media(max-width:760px){.side{width:100%}.main{display:none;margin:0;border-radius:0}.chatopen .side{display:none}.chatopen .main{display:flex}.back{display:grid}}
+</style></head>
+<body><div id="app"><div style="margin:auto;font-size:64px">👻</div></div>
+<script>
+function fail(m){document.getElementById('app').innerHTML='<div style="margin:auto;max-width:420px;padding:24px;text-align:center"><h3>Something went wrong</h3><p style="color:#ff6b81;margin-top:10px;font-size:14px">'+String(m).replace(/</g,'&lt;')+'</p><p style="color:#9b9ba4;margin-top:10px;font-size:13px">Make sure you are online and serve this file via http://localhost (python3 -m http.server). Press F12 → Console for details.</p></div>'}
+window.addEventListener('error',e=>fail(e.message));
+window.addEventListener('unhandledrejection',e=>fail(e.reason&&e.reason.message||e.reason));
+setTimeout(()=>{if(!window.__ok)fail('Could not load the Firebase libraries.')},6000);
+</script>
+<script type="module">
+const firebaseConfig = {
+  apiKey: "AIzaSyAjoTwW2HoBhMONvke_-_vS8Zz-QW7Z04M",
+  authDomain: "snapchat-ultra-6b1c2.firebaseapp.com",
+  databaseURL: "https://snapchat-ultra-6b1c2-default-rtdb.firebaseio.com", // use the exact URL from your Realtime Database page if different
+  projectId: "snapchat-ultra-6b1c2",
+  storageBucket: "snapchat-ultra-6b1c2.firebasestorage.app",
+  messagingSenderId: "646281068714",
+  appId: "1:646281068714:web:badf9f0c6a73b4fe35d0d3"
+};
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut,setPersistence,browserLocalPersistence,deleteUser} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {getDatabase,ref,get,set,update,push,onValue,query,orderByChild,startAt,endAt,limitToFirst,increment,remove} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+const fb=initializeApp(firebaseConfig),auth=getAuth(fb),db=getDatabase(fb);
+setPersistence(auth,browserLocalPersistence).catch(()=>{});
+const $=s=>document.querySelector(s),app=$('#app');window.__ok=1;
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ---------- Snapchat ghost logo ---------- */
+const ghost=(s=40,stroke='#fff')=>`<svg width="${s}" height="${s*.9}" viewBox="0 0 100 90"><path d="M50 6C34 6 27 17 27 30l.5 12c-3.500 0-7.500-4-10.500-4-3 0-4 3-2 5 2 2 7 4 9 5-2 6-10 8-13 10-2 2 0 5 3 5 4 1 8 1 9 4 1 3 1 5 4 5 4 0 8-2 12 0 4 2 6 8 11 8s7-6 11-8c4-2 8 0 12 0 3 0 3-2 4-5 1-3 5-3 9-4 3 0 5-3 3-5-3-2-11-4-13-10 2-1 7-3 9-5 2-2 1-5-2-5-3 0-7 4-10.500 4L73 30C73 17 66 6 50 6z" fill="#fffc00" stroke="${stroke}" stroke-width="4" stroke-linejoin="round"/></svg>`;
+
+/* ---------- Avatar (glossy 3D-cartoon style, full body + bust) ---------- */
+const sh=(h,p)=>{const n=parseInt(h.slice(1),16);return'#'+[(n>>16)&255,(n>>8)&255,n&255].map(c=>Math.max(0,Math.min(255,Math.round(c*(1+p))))).map(x=>x.toString(16).padStart(2,'0')).join('')};
+const P={
+ skin:['#f6d9c4','#f0cdb0','#dcae86','#cf9a6c','#b87a4b','#a0683a','#8a5331','#6b3f25','#4e2c1b','#f8d8d0'],
+ hair:['#17110d','#4a3020','#5c3a21','#8a5a2b','#b8793a','#d9a95a','#ecd9a0','#b3401f','#7a7a80','#e8e8ee','#d83a7c','#5b47e0','#1fa7a1'],
+ eye:['#3b2a1a','#5c8a3a','#2f74b5','#6b6b72','#8a4b1e','#7a3ab8','#1d1d1d'],
+ lip:['#d4687c','#e08a8f','#c4585f','#9c3b4a','#8a4a3a','#e0556b','#6b3a3a'],
+ top:['#fffc00','#0fadff','#f23c57','#2fd06b','#8b5cf6','#ff8a3d','#111111','#f2f2f4','#ff6fb1','#2f4b7c','#8a5a2b','#1fa7a1'],
+ shadow:['#8b5cf6','#ff6fb1','#0fadff','#2fd06b','#c9961a','#8a4b1e','#111111','#f23c57'],
+ bot:['#17171a','#4a4a52','#2f4b7c','#8a2b35','#f2f2f4','#3d6b4a','#c9b48a','#7a4a2b'],
+ bg:[['#fffc00','#ffd400'],['#ffa0c8','#ff5f9e'],['#8fd6ff','#3d9bff'],['#b8f2c0','#3ccf83'],['#d7c2ff','#9b6bff'],['#ffd2a1','#ff8a3d'],['#3a3a44','#16161a'],['#ff8a8a','#f23c57'],['#7ff0e6','#1fa7a1'],['#f4f4f8','#c9c9d4']]
+};
+const HS=['Short','Long','Bun','Curly','Bald','Buzz','Side part','Spiky','Wavy','Ponytail','Mohawk','Bob','Afro','Pixie','Slick back','Braids'];
+const CATS=[
+ ['Face',[['skin','SKIN TONE',P.skin],['face','FACE SHAPE',['Oval','Round','Long','Square']],['nose','NOSE',['Soft','Button','Pointed']],['ears','EARS',['Normal','Small','Big']],['extra','DETAILS',['None','Freckles','Blush','Both']],['mole','MOLES',['None','Beauty mark','Cheek mole','Both']]]],
+ ['Hair',[['style','HAIRSTYLE',HS],['hair','HAIR COLOR',P.hair],['beard','FACIAL HAIR',['None','Stubble','Mustache','Goatee','Full beard']]]],
+ ['Eyes',[['eyes','EYE STYLE',['Classic','Almond','Big','Sleepy','Happy','Wink']],['eyec','EYE COLOR',P.eye],['lash','EYELASHES',['None','Natural','Long','Dramatic']],['shad','EYESHADOW',['None','Subtle','Bold']],['shadc','SHADOW COLOR',P.shadow],['brow','EYEBROWS',['Thin','Thick','Arched','Angled']],['acc','GLASSES',['None','Round','Square','Shades','Aviator','Cat-eye','Gold round']]]],
+ ['Mouth',[['mood','EXPRESSION',['Smile','Grin','Wow','Smirk','Neutral','Tongue','Kiss','Laugh']],['lip','LIP COLOR',P.lip],['gloss','LIP GLOSS',['Off','On']]]],
+ ['Style',[['top','OUTFIT',['T-shirt','Hoodie','V-neck','Polo','Jacket','Tank','Sweater']],['topc','OUTFIT COLOR',P.top],['bot','BOTTOMS',['Cargo pants','Joggers','Shorts','Skirt','Jeans']],['botc','BOTTOMS COLOR',P.bot],['hat','HEADWEAR',['None','Cap','Beanie','Headband','Crown']],['hatc','HEADWEAR COLOR',P.top],['ear','EARRINGS',['None','Studs','Hoops','Gold studs']],['neck','NECKLACE',['None','Chain','Pearls','Pendant']]]],
+ ['Scene',[['pose','POSE',['Point','Wave','Relaxed']],['shoe','SHOES',['Sneakers','Boots','Sandals','Heels']],['bg','BACKGROUND',P.bg],['bgfx','BACKDROP',['Hills','Plain','Sparkles']]]]
+];
+const BASE={skin:1,face:0,nose:0,ears:0,extra:0,mole:0,style:0,hair:1,beard:0,eyes:0,eyec:2,lash:0,shad:0,shadc:0,brow:0,acc:0,mood:0,lip:0,gloss:0,top:1,topc:1,bot:0,botc:1,hat:0,hatc:2,ear:0,neck:0,pose:0,shoe:0,bg:2,bgfx:0};
+const defAv=(g)=>g=='female'?{...BASE,skin:2,style:1,hair:1,eyec:1,lip:2,topc:2,bot:1,botc:1,bg:4,mood:0}:{...BASE};
+let gid=0;
+function avatar(a,size=44,full=false){a={...defAv(),...(a||{})};const id='a'+(gid++),u=n=>`url(#${n}${id})`;
+ const sk=P.skin[a.skin],skd=sh(sk,-.14),skk=sh(sk,-.32),hc=P.hair[a.hair],hd=sh(hc,-.3),tc=P.top[a.topc],tc2=sh(tc,-.22),tc3=sh(tc,.2),lc=P.lip[a.lip],ec=P.eye[a.eyec],bg=P.bg[a.bg],bc=P.bot[a.botc],bc2=sh(bc,-.25),bc3=sh(bc,.18),ht=P.top[a.hatc],ht2=sh(ht,-.22),ht3=sh(ht,.2);
+ const w=[22,25,20,23][a.face],ch=[78,76,82,74][a.face],jf=[.55,.7,.5,.92][a.face],L=50-w,R=50+w,S=a.style,T=a.top,H=full?158:104;
+ const ex=[4.6,3.4,5.8][a.ears],ey=[6,4.6,7.6][a.ears];
+ const face=`M${L} 44C${L} 22 ${L+4} 18 50 18S${R} 22 ${R} 44C${R} 62 ${50+w*jf} ${ch} 50 ${ch}S${L} 62 ${L} 44Z`;
+ /* ----- hair ----- */
+ const cap=(y1,y2)=>`M${L-1.5} 46C${L-4} 14 ${L+6} 9 50 9S${R+4} 14 ${R+1.5} 46C${R-2} 38 ${R-6} ${y1} 50 ${y2}S${L+2} 38 ${L-1.5} 46Z`;
+ const hl=`<path d="M${L+5} 24Q50 6 ${R-5} 24" stroke="#fff" stroke-opacity=".24" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;
+ const capP=(y1,y2,op=1)=>`<path d="${cap(y1,y2)}" fill="${u('h')}" opacity="${op}"/>`+(op==1?hl:'');
+ const ball=(x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${u('s')}"/>`;
+ let bk='',fr='';
+ if([0,2,9,11].includes(S))fr=capP(27,29);
+ if(S==1){bk=`<path d="M${L-4} 50C${L-7} 8 ${R+7} 8 ${R+4} 50L${R+7} 108H${L-7}Z" fill="${u('h')}"/>`;
+  fr=capP(27,29)+`<path d="M${L-3} 42Q${L-8} 80 ${L-5} 108L${L+3} 108Q${L+2} 70 ${L+3} 46Z" fill="${u('h')}"/><path d="M${R+3} 42Q${R+8} 80 ${R+5} 108L${R-3} 108Q${R-2} 70 ${R-3} 46Z" fill="${u('h')}"/>`}
+ if(S==2)bk=ball(50,8,10.5);
+ if(S==3){const o=[];for(let i=0;i<9;i++){const t=Math.PI*(1.08+i*.105);o.push(ball((50+(w+9)*Math.cos(t)).toFixed(1),(36+27*Math.sin(t)).toFixed(1),9.5))}
+  bk=`<path d="${cap(27,29)}" fill="${hd}"/>`+o.join('')+ball(L-3,50,9)+ball(R+3,50,9);
+  fr=[0,1,2,3,4].map(i=>ball((L+7+i*(w*2-14)/4).toFixed(1),(27-Math.sin(i/4*Math.PI)*4).toFixed(1),6.8)).join('')}
+ if(S==5)fr=capP(25,27,.55);
+ if(S==6)fr=capP(22,32)+`<path d="M${L+6} 24Q50 14 ${R-2} 30" stroke="${hd}" stroke-width="1.5" fill="none"/>`;
+ if(S==7)fr=capP(26,28)+`<path d="M${L+2} 24L${L+4} 6L${L+13} 16L${50-6} 1L50 14L${50+6} 1L${R-13} 16L${R-4} 6L${R-2} 24Z" fill="${u('h')}"/>`;
+ if(S==8){bk=`<path d="M${L-4} 48C${L-8} 8 ${R+8} 8 ${R+4} 48Q${R+10} 70 ${R+3} 90Q${R-6} 82 58 90Q50 82 ${L+8} 90Q${L-2} 84 ${L-3} 90Q${L-9} 70 ${L-4} 48Z" fill="${u('h')}"/>`;fr=capP(34,36)}
+ if(S==9){bk=`<path d="M${R-4} 24Q${R+18} 26 ${R+12} 70Q${R+10} 50 ${R-6} 40Z" fill="${u('h')}"/>`;fr=capP(27,29)}
+ if(S==10)fr=capP(24,26,.4)+`<path d="M43 24Q50-6 57 24L56 34H44Z" fill="${u('h')}"/>`;
+ if(S==12){const o=[];for(let i=0;i<11;i++){const t=Math.PI*(1.02+i*.096);o.push(ball((50+(w+14)*Math.cos(t)).toFixed(1),(40+32*Math.sin(t)).toFixed(1),12.5))}
+  bk=`<path d="${cap(27,29)}" fill="${hd}"/>`+o.join('')+ball(L-8,52,11)+ball(R+8,52,11)+ball(50,6,13);fr=capP(26,28)}
+ if(S==13)fr=capP(23,27)+`<path d="M${L-2} 40Q${L+4} 30 ${L+14} 28Q${L+4} 36 ${L+3} 50Z" fill="${u('h')}"/><path d="M${L+8} 22Q40 14 ${R+2} 30" stroke="${hd}" stroke-width="1.300" fill="none"/>`;
+ if(S==14)fr=capP(15,17)+`<path d="M${L+8} 20Q50 8 ${R-8} 20M${L+10} 26Q50 12 ${R-10} 26" stroke="${hd}" stroke-width=".9" fill="none" opacity=".6"/>`;
+ if(S==15){bk=`<path d="M${L-4} 50C${L-7} 8 ${R+7} 8 ${R+4} 50L${R+5} 100H${L-5}Z" fill="${u('h')}"/>`;fr=capP(27,29)+[0,1,2,3,4,5,6].map(i=>ball(L-3+i*.4,56+i*8,4.6)+ball(R+3-i*.4,56+i*8,4.6)).join('')}
+ if(S==11)bk=`<path d="M${L-4} 54C${L-6} 8 ${R+6} 8 ${R+4} 54L${R+3} 70Q50 63 ${L-3} 70Z" fill="${u('h')}"/>`;
+ /* ----- eyes ----- */
+ const lk=a.lash,shO=[0,.35,.75][a.shad];
+ const eye0=(x,t,fl)=>{const dr=fl?1:-1,K='stroke="#2a1a14" stroke-linecap="round"',
+  lash=!lk?'':lk==1?`<path d="M${x+dr*5.2} 45.2L${x+dr*7.6} 43M${x+dr*5.4} 46.6L${x+dr*8} 45.8" ${K} stroke-width="1.1"/>`
+   :lk==2?`<path d="M${x+dr*4.2} 43.2L${x+dr*6.6} 40.400M${x+dr*5.2} 44.6L${x+dr*8.4} 42.600M${x+dr*5.6} 46L${x+dr*8.8} 45.400" ${K} stroke-width="1.200"/>`
+   :`<path d="M${x-3} 41.400L${x-3.600} 38.800M${x} 40.600V37.800M${x+3} 41.400L${x+3.600} 38.800M${x+dr*4.600} 43L${x+dr*7} 40M${x+dr*5.400} 44.600L${x+dr*8.800} 43M${x+dr*5.600} 46.200L${x+dr*9} 46" ${K} stroke-width="1.400"/>`;
+  const arc=`<path d="M${x-5.5} 46.5Q${x} 40.5 ${x+5.5} 46.5" stroke="#2a1a14" stroke-width="2.200" fill="none" stroke-linecap="round"/>`+lash;
+  const ry=[3.8,3,4.9,3.8][t]||3.8,ir=[2.8,2.4,3.5,2.8][t]||2.8;
+  const base=`<ellipse cx="${x}" cy="46" rx="5.4" ry="${ry}" fill="#fff"/><circle cx="${x}" cy="46" r="${ir}" fill="${ec}"/><circle cx="${x}" cy="46" r="${(ir*.5).toFixed(1)}" fill="#111"/><circle cx="${x+1}" cy="45" r=".9" fill="#fff"/>`;
+  const lid=`<path d="M${x-5.8} 46Q${x} 40 ${x+5.8} 46" stroke="#2a1a14" stroke-width="2" fill="none" stroke-linecap="round"/>`+lash;
+  if(t==4)return arc;if(t==5)return fl?arc:base+lid;
+  if(t==3)return base+`<path d="M${x-5.6} 45.8a5.6 5.4 0 0 1 11.2 0Z" fill="${sk}"/><path d="M${x-5.8} 45.8H${x+5.8}" stroke="#2a1a14" stroke-width="2" stroke-linecap="round"/>`+lash;
+  return base+lid};
+ const eye=(x,t,fl)=>(shO?`<ellipse cx="${x}" cy="41.500" rx="6.600" ry="3.400" fill="${P.shadow[a.shadc]}" opacity="${shO}"/>`:'')+eye0(x,t,fl);
+ const bw=['M33 39Q39 36 45 38','M33 39Q39 35.500 45 38','M33 40Q39 33 45 38','M33 36L45 40'][a.brow],bsw=a.brow==1?4:2.4;
+ const bp=`stroke="${hd}" stroke-width="${bsw}" fill="none" stroke-linecap="round"`;
+ const brows=`<path d="${bw}" ${bp}/><path transform="translate(100 0) scale(-1 1)" d="${bw}" ${bp}/>`;
+ const nose=['M50 46.500L48.500 56Q50 59 53 57.500','M46.500 57.500Q50 61 53.500 57.500M50 47L49.500 56','M50 46L47.500 57Q50 60.500 53.500 58'][a.nose];
+ const noseS=`<path d="${nose}" stroke="${skk}" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+ const mouth=[`<path d="M41 63Q50 70.500 59 63" stroke="${lc}" stroke-width="3.400" fill="none" stroke-linecap="round"/>`,
+  `<path d="M38 61Q50 78 62 61Z" fill="#5a1a24"/><path d="M40 61.500Q50 65 60 61.500L59 65Q50 68 41 65Z" fill="#fff"/>`,
+  `<ellipse cx="50" cy="66" rx="5" ry="6.500" fill="#5a1a24"/><ellipse cx="50" cy="66" rx="5" ry="6.500" fill="none" stroke="${lc}" stroke-width="1.600"/>`,
+  `<path d="M42 66Q52 70 60 62" stroke="${lc}" stroke-width="3.200" fill="none" stroke-linecap="round"/>`,
+  `<path d="M43 65H57" stroke="${lc}" stroke-width="3.200" stroke-linecap="round"/>`,
+  `<path d="M41 62Q50 72 59 62Z" fill="#5a1a24"/><ellipse cx="50" cy="69" rx="4.200" ry="4" fill="#ff6b81"/>`,
+  `<ellipse cx="50" cy="65" rx="3.800" ry="3" fill="${lc}"/>`,
+  `<path d="M36 60Q50 82 64 60Z" fill="#5a1a24"/><path d="M43 71Q50 65 57 71Q50 77 43 71Z" fill="#ff7b95"/><path d="M38 60.500Q50 65 62 60.500L61 64.500Q50 68.500 39 64.500Z" fill="#fff"/>`][a.mood];
+ const bd=a.beard,beard=bd==0?'':bd==4?`<path d="M${L+.5} 50C${L+1} 66 ${50-w*.6} ${ch+1} 50 ${ch+1}S${R-1} 66 ${R-.5} 50C${R-5} 58 ${R-10} 56 50 56S${L+5} 58 ${L+.5} 50Z" fill="${hc}"/>`
+  :bd==1?`<path d="M${L+.5} 50C${L+1} 66 ${50-w*.6} ${ch} 50 ${ch}S${R-1} 66 ${R-.5} 50C${R-5} 58 ${R-10} 56 50 56S${L+5} 58 ${L+.5} 50Z" fill="${hc}" opacity=".3"/>`
+  :`<path d="M39 58Q45 52.500 50 56Q55 52.500 61 58Q55 60 50 58.500Q45 60 39 58Z" fill="${hc}"/>`+(bd==3?`<ellipse cx="50" cy="${ch-5}" rx="6.500" ry="5.500" fill="${hc}"/>`:'');
+ const extras=(a.extra==1||a.extra==3?[[36,53],[40,55],[34,56],[64,53],[60,55],[66,56]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r=".9" fill="${sh(sk,-.4)}"/>`).join(''):'')+(a.extra>=2?`<ellipse cx="33" cy="56" rx="6" ry="3.500" fill="#ff5a7a" opacity=".3"/><ellipse cx="67" cy="56" rx="6" ry="3.500" fill="#ff5a7a" opacity=".3"/>`:'');
+ const moles=(a.mole==1||a.mole==3?`<circle cx="59" cy="61" r="1" fill="${skk}"/>`:'')+(a.mole>=2?`<circle cx="66" cy="54" r="1.100" fill="${skk}"/>`:'');
+ const gloss=a.gloss?`<ellipse cx="46.500" cy="${a.mood==1||a.mood==7?62.5:65}" rx="2.600" ry=".9" fill="#fff" opacity=".55"/>`:'';
+ const g=['',
+  `<g fill="#fff" fill-opacity=".12" stroke="#141414" stroke-width="2.600"><circle cx="39" cy="46" r="8.500"/><circle cx="61" cy="46" r="8.500"/><path d="M47.500 45H52.500" fill="none"/></g>`,
+  `<g fill="#fff" fill-opacity=".12" stroke="#141414" stroke-width="2.200"><rect x="30" y="39" width="17" height="13" rx="3"/><rect x="53" y="39" width="17" height="13" rx="3"/><path d="M47 44H53" fill="none"/></g>`,
+  `<g fill="#111"><path d="M28 40H47V48Q47 53.500 41 53.500H34Q28 53.500 28 47Z"/><path d="M72 40H53V48Q53 53.500 59 53.500H66Q72 53.500 72 47Z"/><rect x="46" y="41" width="8" height="2.600"/></g><path d="M32 43L40 42M56 43L64 42" stroke="#fff" stroke-width="1.300" opacity=".45" stroke-linecap="round"/>`,
+  `<g fill="#2a4a6a" fill-opacity=".35" stroke="#c9a227" stroke-width="1.800"><path d="M29 41H47Q47 55 38 55Q29 54 29 41Z"/><path d="M71 41H53Q53 55 62 55Q71 54 71 41Z"/><path d="M47 43H53" fill="none"/></g>`,
+  `<g fill="#fff" fill-opacity=".12" stroke="#141414" stroke-width="2.200" stroke-linejoin="round"><path d="M27 37L46 42V47Q46 53.500 38 53.500Q29 52.500 28 46Z"/><path d="M73 37L54 42V47Q54 53.500 62 53.500Q71 52.500 72 46Z"/><path d="M46 43.500H54" fill="none"/></g>`,
+  `<g fill="#fff" fill-opacity=".1" stroke="#d9a82a" stroke-width="1.600"><circle cx="39" cy="46" r="8"/><circle cx="61" cy="46" r="8"/><path d="M47 45H53" fill="none"/></g>`][a.acc];
+ /* ----- headwear / earrings ----- */
+ const hat=['',
+  `<path d="M${L-2} 38C${L-3} 10 ${R+3} 10 ${R+2} 38Z" fill="${ht}"/><path d="M${L} 37Q50 43 ${R+12} 40L${R+13} 35Q${R} 32 ${L} 32Z" fill="${ht2}"/><path d="M${L+4} 16Q50 6 ${R-4} 16" stroke="#fff" stroke-opacity=".25" stroke-width="2" fill="none" stroke-linecap="round"/>`,
+  `<path d="M${L-2} 36C${L-4} 6 ${R+4} 6 ${R+2} 36Z" fill="${ht}"/><g stroke="${ht3}" stroke-width=".9" opacity=".7" fill="none"><path d="M${L+4} 12Q${L+2} 24 ${L+1} 30M${L+12} 8V30M50 7V30M${R-12} 8V30M${R-4} 12Q${R-2} 24 ${R-1} 30"/></g><rect x="${L-3.500}" y="29" width="${w*2+7}" height="9" rx="4" fill="${ht2}"/><circle cx="50" cy="5" r="5" fill="${ht2}"/>`,
+  `<path d="M${L-1} 31Q50 22 ${R+1} 31L${R+1} 37Q50 28 ${L-1} 37Z" fill="${ht}"/>`,
+  `<path d="M${L+2} 22L${L+4} 6L${L+13} 16L50 2L${R-13} 16L${R-4} 6L${R-2} 22Z" fill="#ffc83d" stroke="#c9961a" stroke-width="1.200"/>`][a.hat];
+ const ear=['',
+  `<circle cx="${L-1}" cy="58" r="1.700" fill="#eee"/><circle cx="${R+1}" cy="58" r="1.700" fill="#eee"/>`,
+  `<circle cx="${L-1.500}" cy="62" r="3.800" fill="none" stroke="#e0b030" stroke-width="1.400"/><circle cx="${R+1.500}" cy="62" r="3.800" fill="none" stroke="#e0b030" stroke-width="1.400"/>`,
+  `<circle cx="${L-1}" cy="58" r="1.900" fill="#ffc83d"/><circle cx="${R+1}" cy="58" r="1.900" fill="#ffc83d"/>`][a.ear];
+ /* ----- body ----- */
+ const pz=full?a.pose:2,sl=[42,100,100,42,100,0,100][T],cuff=T==1||T==4||T==6;
+ const AL=['M19 88L12 122L25 106','M19 88L9 118L14 94','M19 88L14 138'][pz],AR=['M81 88L89 122L76 134','M81 88L87 138','M81 88L86 138'][pz];
+ const HL=[[26,104],[14,91],[14,140]][pz],HR=[[75,135],[87,140],[86,140]][pz];
+ const hd1=(x,y,k)=>{const b=`<circle cx="${x}" cy="${y}" r="5.200" fill="${sk}" stroke="${skd}" stroke-width=".6"/>`;
+  return k=='point'?`<ellipse cx="${x-1}" cy="${y-6}" rx="2.200" ry="4.200" fill="${sk}" stroke="${skd}" stroke-width=".6"/>`+b:k=='wave'?[-4.500,-1.500,1.500,4.500].map((d,i)=>`<ellipse cx="${x+d}" cy="${y-6-(i%3==1?1.500:0)}" rx="1.700" ry="3.600" fill="${sk}" stroke="${skd}" stroke-width=".5"/>`).join('')+b:b};
+ const arm=(d,col)=>{const p=`pathLength="100" fill="none" stroke-linejoin="round"`;
+  return`<path d="${d}" ${p} stroke="${sk}" stroke-width="9.500" stroke-linecap="round"/>`+(sl?`<path d="${d}" ${p} stroke="${tc}" stroke-width="13" stroke-linecap="round" stroke-dasharray="${sl} 100"/><path d="${d}" ${p} stroke="${tc2}" stroke-opacity=".5" stroke-width="3" stroke-dasharray="${sl} 100" transform="translate(${col},0)"/>`+(cuff?`<path d="${d}" ${p} stroke="${tc2}" stroke-width="13" stroke-dasharray="0 ${sl-14} 14 100"/>`:''):'')};
+ const torso=T==5?`<path d="M20 88Q20 77 50 76Q80 77 80 88L76 ${H}H24Z" fill="${skd}"/><path d="M30 ${H}V82Q34 78 40 78L50 86L60 78Q66 78 70 82V${H}H30Z" fill="${u('t')}"/>`:`<path d="M21 88Q21 77 50 76Q79 77 79 88L76 ${H}H24Z" fill="${u('t')}"/>`;
+ const hood=T==1?`<path d="M${L-4} 70Q${L-9} 98 22 108H78Q${R+9} 98 ${R+4} 70Q50 58 ${L-4} 70Z" fill="${tc2}"/>`:'';
+ const det=[`<path d="M40 76Q50 90 60 76Z" fill="${skd}"/><path d="M40 76Q50 90 60 76" stroke="${tc2}" stroke-width="1.600" fill="none"/>`,
+  `<path d="M41 77Q50 90 59 77Z" fill="${skd}"/><path d="M38 77Q50 94 62 77" stroke="${tc2}" stroke-width="2.400" fill="none"/><path d="M44.500 89V101M55.500 89V101" stroke="#fff" stroke-width="1.200" stroke-linecap="round"/><circle cx="44.500" cy="101" r="1.100" fill="#fff"/><circle cx="55.500" cy="101" r="1.100" fill="#fff"/>`+(full?`<path d="M30 ${H-28}Q50 ${H-33} 70 ${H-28}L73 ${H-7}H27Z" fill="${tc2}" opacity=".4"/><rect x="24" y="${H-7}" width="52" height="7" fill="${tc2}"/>`:''),
+  `<path d="M40 76L50 97L60 76Z" fill="${skd}"/>`,
+  `<path d="M43 76L50 87L57 76Z" fill="${skd}"/><path d="M41 76L50 92L36 85Z M59 76L50 92L64 85Z" fill="#fff"/><path d="M50 92V${H-4}" stroke="${tc2}" stroke-width="1.300"/>`,
+  `<rect x="38" y="64" width="24" height="18" rx="7" fill="${tc2}"/><path d="M50 82V${H}" stroke="${sh(tc,.4)}" stroke-width="1.200"/><rect x="48.600" y="84" width="2.800" height="6" rx="1.200" fill="#ddd"/>`+(full?`<rect x="24" y="${H-1}" width="52" height="3" fill="#f2f2f4"/>`:''),
+  `<path d="M41 79Q50 90 59 79" stroke="${skk}" stroke-width=".8" fill="none"/>`,
+  `<path d="M41 77Q50 88 59 77Z" fill="${skd}"/><path d="M39 77Q50 90 61 77" stroke="${tc2}" stroke-width="3" fill="none"/>`+(full?`<rect x="24" y="${H-7}" width="52" height="7" fill="${tc2}"/>`:'')][T];
+ const nk=[``,`<path d="M40 77Q50 94 60 77" stroke="#e0b030" stroke-width="1" fill="none"/>`,[0,1,2,3,4,5,6,7].map(i=>{const t=i/7,x=40+t*20,y=77+Math.sin(t*Math.PI)*12;return`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.500" fill="#f4efe6" stroke="#c9c2b4" stroke-width=".3"/>`}).join(''),`<path d="M41 77L50 92L59 77" stroke="#e0b030" stroke-width=".9" fill="none"/><circle cx="50" cy="93" r="2.600" fill="#ff4d6d" stroke="#e0b030" stroke-width="1"/>`][a.neck];
+ let legs='',shoes='',hills='';
+ if(full){const lg=`<rect x="31" y="150" width="15" height="80" fill="${sk}"/><rect x="54" y="150" width="15" height="80" fill="${sk}"/>`;
+  const pants=`<rect x="28" y="150" width="21" height="80" rx="2" fill="${u('c')}"/><rect x="51" y="150" width="21" height="80" rx="2" fill="${u('c')}"/>`;
+  legs=lg+[pants+`<rect x="28" y="172" width="8.500" height="17" rx="1.500" fill="${bc2}" opacity=".7"/><rect x="63.500" y="172" width="8.500" height="17" rx="1.500" fill="${bc2}" opacity=".7"/>`,
+   pants+`<rect x="28" y="218" width="21" height="12" fill="${bc2}"/><rect x="51" y="218" width="21" height="12" fill="${bc2}"/>`,
+   `<rect x="28" y="150" width="21" height="42" rx="2" fill="${u('c')}"/><rect x="51" y="150" width="21" height="42" rx="2" fill="${u('c')}"/>`,
+   `<path d="M26 150H74L81 206Q50 212 19 206Z" fill="${u('c')}"/><path d="M50 150V209" stroke="${bc2}" stroke-width="1"/>`,
+   pants+`<rect x="28" y="150" width="44" height="5" fill="${bc2}"/><path d="M31 157H46M54 157H69M48.500 158V230M51.500 158V230" stroke="#fff" stroke-width=".6" opacity=".35" fill="none" stroke-dasharray="2 1.500"/>`][a.bot];
+  const fx=[[24,48],[52,76]];
+  shoes=[fx.map(([x1,x2])=>`<rect x="${x1}" y="230" width="${x2-x1}" height="15" rx="6" fill="${tc}"/><rect x="${x1}" y="241" width="${x2-x1}" height="4.500" rx="2.200" fill="#f4f4f6"/><path d="M${x1+7} 233.500H${x2-7}M${x1+7} 236.500H${x2-7}" stroke="#fff" stroke-width="1.200"/>`).join(''),
+   fx.map(([x1,x2])=>`<rect x="${x1+7}" y="221" width="${x2-x1-14}" height="10" fill="#fff"/><rect x="${x1}" y="229" width="${x2-x1}" height="16" rx="4" fill="#8a5a2b"/><rect x="${x1}" y="241" width="${x2-x1}" height="4.500" rx="2" fill="#2a1a14"/><path d="M${x1+6} 233H${x2-6}M${x1+6} 236.500H${x2-6}" stroke="#d9a95a" stroke-width="1.100"/>`).join(''),
+   fx.map(([x1,x2])=>`<path d="M${x1+3} 230H${x2-3}L${x2-1} 240Q${x2-1} 242 ${x2-4} 242H${x1+5}Q${x1} 242 ${x1} 238Z" fill="${tc}"/><rect x="${(x1+x2)/2-1.2}" y="242" width="2.4" height="4" fill="${tc2}"/>`).join(''),
+   fx.map(([x1,x2])=>`<ellipse cx="${(x1+x2)/2}" cy="239" rx="12" ry="5" fill="${sk}"/><rect x="${x1}" y="241" width="${x2-x1}" height="4.500" rx="2.200" fill="#1a1a1a"/><path d="M${x1+3} 238Q${(x1+x2)/2} 230 ${x2-3} 238" stroke="#1a1a1a" stroke-width="2.200" fill="none"/>`).join('')][[0,1,3,2][a.shoe]];
+  hills=(a.bgfx==0?`<path d="M0 212Q28 194 58 206T100 198V250H0Z" fill="#000" opacity=".1"/><path d="M0 232Q35 214 100 228V250H0Z" fill="#000" opacity=".16"/>`:'')+(a.bgfx==2?[[12,20,2],[84,34,1.5],[20,70,1.2],[88,96,2.2],[10,128,1.5],[90,150,1.2],[78,12,1],[16,190,1.6],[88,200,2]].map(([x,y,r])=>`<path d="M${x} ${y-r*2}L${x+r*.6} ${y-r*.6}L${x+r*2} ${y}L${x+r*.6} ${y+r*.6}L${x} ${y+r*2}L${x-r*.6} ${y+r*.6}L${x-r*2} ${y}L${x-r*.6} ${y-r*.6}Z" fill="#fff" opacity=".55"/>`).join(''):'')+`<ellipse cx="50" cy="245.500" rx="34" ry="3.200" fill="#000" opacity=".25"/>`}
+ const vb=full?'0 0 100 250':'0 0 100 100',rd=full?'14px':'50%';
+ return `<svg width="${full?size*.8:size}" height="${full?size*2:size}" viewBox="${vb}" style="border-radius:${rd};flex-shrink:0;display:block"><defs>
+ <linearGradient id="b${id}" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="${bg[0]}"/><stop offset="1" stop-color="${bg[1]}"/></linearGradient>
+ <radialGradient id="f${id}" cx=".45" cy=".35" r=".8"><stop offset="0" stop-color="${sh(sk,.05)}"/><stop offset="1" stop-color="${sh(sk,-.1)}"/></radialGradient>
+ <linearGradient id="h${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sh(hc,.14)}"/><stop offset="1" stop-color="${sh(hc,-.2)}"/></linearGradient>
+ <radialGradient id="s${id}" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="${sh(hc,.32)}"/><stop offset="1" stop-color="${hd}"/></radialGradient>
+ <linearGradient id="t${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${tc3}"/><stop offset=".55" stop-color="${tc}"/><stop offset="1" stop-color="${tc2}"/></linearGradient>
+ <linearGradient id="c${id}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${bc3}"/><stop offset=".5" stop-color="${bc}"/><stop offset="1" stop-color="${bc2}"/></linearGradient>
+ <linearGradient id="n${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${skk}"/><stop offset="1" stop-color="${skd}"/></linearGradient></defs>
+ <rect width="100" height="${full?250:100}" fill="${u('b')}"/>${hills}${bk}${hood}${legs}${shoes}<rect x="43" y="60" width="14" height="24" fill="${u('n')}"/>${torso}${det}${nk}${arm(AL,-2)}${arm(AR,2)}${hd1(...HL,pz==0?'point':pz==1?'wave':'fist')}${hd1(...HR,'fist')}
+ <ellipse cx="50" cy="${ch+3}" rx="${w*.8}" ry="5.500" fill="#000" opacity=".14"/>
+ <ellipse cx="${L-1}" cy="50" rx="${ex}" ry="${ey}" fill="${skd}"/><ellipse cx="${R+1}" cy="50" rx="${ex}" ry="${ey}" fill="${skd}"/><ellipse cx="${L-.5}" cy="50.500" rx="${ex*.48}" ry="${ey*.58}" fill="${skk}" opacity=".45"/><ellipse cx="${R+.5}" cy="50.500" rx="${ex*.48}" ry="${ey*.58}" fill="${skk}" opacity=".45"/>
+ <path d="${face}" fill="${u('f')}"/>${extras}${beard}${noseS}${mouth}${gloss}${moles}${eye(39,a.eyes)}${eye(61,a.eyes,1)}${brows}${g}${fr}${hat}${ear}</svg>`}
+
+/* ---------- helpers ---------- */
+const zodiac=b=>{if(!b)return'—';const[,m,d]=b.split('-').map(Number);
+ const z=[[1,20,'Capricorn ♑'],[2,19,'Aquarius ♒'],[3,20,'Pisces ♓'],[4,20,'Aries ♈'],[5,21,'Taurus ♉'],[6,21,'Gemini ♊'],[7,23,'Cancer ♋'],[8,23,'Leo ♌'],[9,23,'Virgo ♍'],[10,23,'Libra ♎'],[11,22,'Scorpio ♏'],[12,22,'Sagittarius ♐']];
+ return(d<z[m-1][1]?z[(m+10)%12]:z[m-1])[2]};
+const fmtB=b=>b?new Date(b+'T12:00').toLocaleDateString(undefined,{month:'long',day:'numeric',year:'numeric'}):'Not set';
+const ago=t=>{if(!t)return'';const s=(Date.now()-t)/1000;return s<60?'now':s<3600?Math.floor(s/60)+'m':s<86400?Math.floor(s/3600)+'h':Math.floor(s/86400)+'d'};
+const clock=t=>new Date(t).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
+const toast=m=>{const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.append(t);setTimeout(()=>t.remove(),2500)};
+const cid=(a,b)=>[a,b].sort().join('_');
+const errMsg=e=>({'auth/invalid-credential':'Wrong email or password.','auth/email-already-in-use':'That email is already registered.','auth/weak-password':'Password needs 6+ characters.','auth/invalid-email':'Invalid email address.'}[e.code]||e.message);
+const IC={add:'<svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><circle cx="8" cy="7" r="3.500"/><path d="M2 17c0-4 3-6 6-6s6 2 6 6M16 5v6M13 8h6"/></svg>',
+ chat:'<svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 11v4a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5M15 2v6M12 5h6"/></svg>',
+ srch:'<svg width="18" height="18" fill="none" stroke="#9b9ba4" stroke-width="2" stroke-linecap="round"><circle cx="8" cy="8" r="6"/><path d="M13 13l4 4"/></svg>',
+ cam:'<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="14" height="10" rx="3"/><circle cx="9" cy="10" r="2.500"/></svg>',
+ emo:'<svg width="22" height="22" fill="none" stroke="#fff" stroke-width="1.800" stroke-linecap="round"><circle cx="11" cy="11" r="9"/><path d="M7 13c1 2 7 2 8 0M8 8v1M14 8v1"/></svg>'};
+const EMO=['😀','😂','🥹','😍','😎','🤔','😭','🔥','👍','👻','💀','🎉','❤️','🙏','😴','🥳'];
+
+/* ---------- state ---------- */
+let me=null,chats=[],U={},unsubs=[],active=null,msgUnsub=null,view='chat',results=null,mode='login',showFriend=null,bn=true,emoOpen=false,edTab=0,editor=false,ovMode=null,editing=null;
+
+/* ---------- word filter ---------- */
+const WS=['fuck','phuck','shit','bullshit','bitch','cunt','nigger','nigga','faggot','retard','whore','slut','pussy','bastard','asshole','motherfucker','wetback','wanker','bollocks','dickhead','dumbass','jackass','cocksucker','tranny','towelhead','raghead','zipperhead','jigaboo','porchmonkey','sandnigger'];
+const WW=['ass','arse','piss','cock','dick','twat','fag','cum','prick','kike','spic','chink','gook','coon','dyke','paki','beaner','fuk','fck'];
+const ALLOW=['scunthorpe','shiitake','shitake','retardant','assassin','assess','assist','assume','assign','associate','assembly','classic','passage','massage','bassist','cocktail','peacock','hancock','dickens','dickinson'];
+const rxw=(w,sep)=>w.split('').map(c=>c+'+').join(sep?'[._\\-*]*':'');
+const SUBR=new RegExp(WS.map(w=>rxw(w,1)).join('|'));
+const WRDR=new RegExp('(^|[^a-z0-9])('+WW.map(w=>rxw(w,0)).join('|')+')(s|es)?($|[^a-z0-9])');
+const LT={'0':'o','1':'i','3':'e','4':'a','5':'s','7':'t','@':'a','$':'s','!':'i','+':'t'};
+const bad=t=>{if(!t)return false;let p=String(t).normalize('NFKD').replace(/[̀-ͯ]/g,'').toLowerCase();
+ ALLOW.forEach(a=>{p=p.split(a).join(' ')});
+ const full=p.replace(/[0134578@$!+]/g,c=>LT[c]),sym=p.replace(/[@$!+]/g,c=>LT[c]);
+ return [p,full].some(v=>SUBR.test(v))||[p,sym].some(v=>WRDR.test(v))};
+const san=u=>{if(u.displayName&&bad(u.displayName))u.displayName='Snapchatter';if(u.username&&bad(u.username))u.username='user_'+String(u.id||'').slice(0,5);return u};
+
+/* ---------- stories (24h text stories, max 3) ---------- */
+const SW={};let S={},svTimer=null;
+const actS=uid=>(S[uid]||[]).filter(s=>s.exp>Date.now()&&!bad(s.text));
+const seenSet=()=>{try{return new Set(JSON.parse(localStorage.getItem('seenSt')||'[]'))}catch(e){return new Set()}};
+const markSt=id=>{try{const x=seenSet();x.add(id);localStorage.setItem('seenSt',JSON.stringify([...x].slice(-300)))}catch(e){}};
+const GR=[['#ff7eb3','#ff4f7b'],['#4cc9f0','#4361ee'],['#f7971e','#f2b705'],['#a18cd1','#e07bd0'],['#2fd06b','#1fa7a1'],['#fa709a','#f5a623'],['#7b61ff','#f093fb'],['#f5576c','#ff8a3d']];
+const grad=id=>{let h=0;for(const c of String(id))h=(h*31+c.charCodeAt(0))>>>0;return GR[h%GR.length]};
+const leftT=s=>{const m=Math.max(1,Math.round((s.exp-Date.now())/6e4));return m>=60?Math.floor(m/60)+'h left':m+'m left'};
+function watchStories(uid){if(SW[uid])return;SW[uid]=1;
+ unsubs.push(onValue(ref(db,'stories/'+uid),x=>{const a=[];x.forEach(c=>{a.push({id:c.key,uid,...c.val()})});
+  a.sort((p,q)=>p.ts-q.ts);S[uid]=a;
+  if(me&&uid==me.id)a.forEach(t=>{if(t.exp<=Date.now())remove(ref(db,`stories/${uid}/${t.id}`)).catch(()=>{})});
+  if($('#list'))renderList();if(ovMode=='mine')manageStory()},()=>{}))}
+function mkOv(h){let o=$('#sov');if(!o){o=document.createElement('div');o.id='sov';o.className='ov';o.onclick=e=>{if(e.target===o)closeStory()};document.body.append(o)}o.innerHTML=h}
+function closeStory(){clearTimeout(svTimer);ovMode=null;const o=$('#sov');if(o)o.remove();if($('#list'))renderList()}
+function showStory(uid,i){clearTimeout(svTimer);const l=actS(uid);if(!l.length||i>=l.length)return closeStory();i=Math.max(0,i);
+ const s=l[i],u=uid==me.id?me:(U[uid]||{}),g=grad(s.id);markSt(s.id);ovMode='view';
+ mkOv(`<div class="sv" style="background:linear-gradient(160deg,${g[0]},${g[1]})"><div class="pbs">${l.map((_,k)=>`<div class="pb"><i class="${k<i?'full':k==i?'run':''}"></i></div>`).join('')}</div>
+  <div class="svh">${avatar(u.avatar,38)}<div><b>${esc(u.displayName||'')}</b><small>${ago(s.ts)=='now'?'just now':ago(s.ts)+' ago'}</small></div>${uid==me.id?'<button class="ib" id="sed" style="margin-left:auto" title="Manage my story">✎</button>':''}<button class="ib" id="sx" style="margin-left:${uid==me.id?'8px':'auto'}">✕</button></div>
+  <div class="svt">${esc(s.text)}</div><button class="nv l" id="sp" aria-label="Previous"></button><button class="nv r" id="sn" aria-label="Next"></button></div>`);
+ $('#sx').onclick=closeStory;const ed=$('#sed');if(ed)ed.onclick=manageStory;$('#sp').onclick=()=>showStory(uid,i-1);$('#sn').onclick=()=>showStory(uid,i+1);
+ svTimer=setTimeout(()=>showStory(uid,i+1),5000);if($('#list'))renderList()}
+function manageStory(){const l=actS(me.id);ovMode='mine';clearTimeout(svTimer);const draft=$('#stx')?.value||'';
+ mkOv(`<div class="sm"><div class="smh"><b>My Story</b><button class="ib" id="sx">✕</button></div>
+  <p class="mut">Stories disappear after 24 hours. ${l.length}/3 posted.</p>
+  ${l.map(t=>{const g=grad(t.id);return`<div class="sc" style="background:linear-gradient(160deg,${g[0]},${g[1]})"><div>${esc(t.text)}<small>${leftT(t)}</small></div><button data-d="${t.id}" title="Delete">🗑</button></div>`}).join('')}
+  ${l.length<3?`<textarea id="stx" maxlength="200" placeholder="What is on your mind?">${esc(draft)}</textarea><div class="err" id="ste"></div><button class="btn" id="stp">Post to Story</button>`
+  :`<p class="mut" style="margin-top:12px">You have 3 stories up. Delete one to post another.</p>`}
+  ${l.length?`<button class="btn gray" id="stv">▶ Preview my story</button>`:''}</div>`);
+ $('#sx').onclick=closeStory;
+ const v=$('#stv');if(v)v.onclick=()=>showStory(me.id,0);
+ document.querySelectorAll('#sov [data-d]').forEach(b=>b.onclick=()=>remove(ref(db,`stories/${me.id}/${b.dataset.d}`)).catch(e=>toast(e.message)));
+ const p=$('#stp');if(p)p.onclick=async()=>{const t=$('#stx').value.trim(),err=m=>$('#ste').textContent=m;err('');
+  if(!t)return err('Write something first.');
+  if(bad(t))return err('That language is not allowed on stories.');
+  try{const sn=await get(ref(db,'stories/'+me.id));let n=0;sn.forEach(c=>{if(c.val().exp>Date.now())n++});
+   if(n>=3)return err('You can only have 3 stories at a time.');
+   const now=Date.now();await set(push(ref(db,'stories/'+me.id)),{text:t,ts:now,exp:now+864e5});
+   $('#stx').value='';toast('Story posted ✓')}catch(e){err(e.message)}}}
+document.addEventListener('keydown',e=>{
+ if($('#sov')){if(e.key=='Escape')closeStory();return}
+ if(e.key=='Escape'&&editor&&$('#main')){editor=false;renderMain()}});
+setInterval(()=>{if(me&&$('#list')&&!ovMode)renderList()},60000);
+
+onAuthStateChanged(auth,async u=>{
+ unsubs.forEach(f=>f());unsubs=[];msgUnsub&&msgUnsub();active=null;Object.keys(SW).forEach(k=>delete SW[k]);S={};editor=false;closeStory();
+ if(!u){me=null;return renderAuth()}
+ let tries=0,snap;
+ while(tries++<8){snap=await get(ref(db,'users/'+u.uid));if(snap.exists())break;await new Promise(r=>setTimeout(r,400))}
+ if(!snap.exists())return renderAuth();
+ unsubs.push(onValue(ref(db,'users/'+u.uid),x=>{me=san({id:u.uid,...x.val()});U[u.uid]=me;render()}));watchStories(u.uid);
+ unsubs.push(onValue(ref(db,'userChats/'+u.uid),x=>{const v=x.val()||{};
+  chats=Object.entries(v).map(([o,c])=>({id:cid(u.uid,o),other:o,...c})).sort((a,b)=>(b.lastTs||0)-(a.lastTs||0));
+  chats.forEach(c=>{const o=c.other;watchStories(o);if(!U[o]){U[o]={id:o,username:'…'};unsubs.push(onValue(ref(db,'users/'+o),d=>{U[o]=san({id:o,...d.val()});render()}))}});
+  render()}));
+});
+
+/* ---------- message editing ---------- */
+const fmtT=t=>new Date(t).toLocaleString([],{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
+function msgHtml(x,mine){const ed=editing&&editing.id==x.id;
+ return `<div class="mw">${ed?`<div class="ed"><input id="ei" maxlength="1000" autocomplete="off" value="${esc(editing.val)}"><button type="button" class="ib ok" id="es" title="Save">✓</button><button type="button" class="ib" id="ec" title="Cancel">✕</button></div>`:`<div class="m">${esc(x.text)}</div>`}`
+  +(x.history&&!ed?`<button class="edtag" data-h="${x.id}">edited</button>`:'')
+  +(mine&&!ed?`<button class="pen" data-ed="${x.id}" title="Edit message" aria-label="Edit message">✎</button><button class="pen" data-del="${x.id}" title="Delete message" aria-label="Delete message">🗑</button>`:'')+`</div>`}
+function saveEdit(){if(!editing)return;const {id,val}=editing,t=val.trim(),m=(window.msgs||[]).find(x=>x.id==id),chat=cid(me.id,active);
+ editing=null;
+ if(!m||!t||t==m.text){renderMain(true);return}
+ const h=[...Object.values(m.history||{}),{text:m.text,ts:m.editedAt||m.ts}];
+ renderMain(true);
+ update(ref(db,`messages/${chat}/${id}`),{text:t,editedAt:Date.now(),history:h}).catch(e=>toast('Edit failed: '+e.message))}
+function showHistory(id){const x=(window.msgs||[]).find(y=>y.id==id);if(!x)return;const h=Object.values(x.history||{});ovMode='hist';
+ mkOv(`<div class="sm"><div class="smh"><b>Edit history</b><button class="ib" id="sx">✕</button></div><p class="mut">Newest first.</p>
+  <div class="ver cur"><small>Current · ${fmtT(x.editedAt||x.ts)}</small>${esc(x.text)}</div>
+  ${h.slice().reverse().map((v,i)=>`<div class="ver"><small>${i==h.length-1?'Original':'Previous'} · ${fmtT(v.ts)}</small>${esc(v.text)}</div>`).join('')}</div>`);
+ $('#sx').onclick=closeStory}
+
+/* ---------- auth screen ---------- */
+let regGender=null;
+function renderAuth(){const reg=mode=='register';
+ app.innerHTML=`<div class="authwrap"><div class="auth">${ghost(84)}<h1>${reg?'Create your account':'Log in to Snapchat'}</h1><div class="sub">${reg?'Pick a username friends can search for':'Chat with friends, right from your computer'}</div>
+ ${reg?`<input id="dn" placeholder="Display name"><input id="un" placeholder="Username (letters, numbers, . _)" autocapitalize="off"><label>Birthday</label><input id="bd" type="date"><label>I am (required)</label><div class="gen"><button type="button" data-g="male">♂ Male</button><button type="button" data-g="female">♀ Female</button></div><div class="gprev" id="gp"></div>`:''}
+ <input id="em" type="email" placeholder="Email"><input id="pw" type="password" placeholder="Password">
+ <div class="err" id="err"></div><button class="btn" id="go">${reg?'Sign Up & Accept':'Log In'}</button>
+ <button class="link" id="sw">${reg?'Already have an account? Log in':'New to Snapchat? Sign up'}</button></div></div>`;
+ $('#sw').onclick=()=>{mode=reg?'login':'register';renderAuth()};
+ const updG=()=>{app.querySelectorAll('.gen button').forEach(b=>b.classList.toggle('on',b.dataset.g==regGender));const gp=$('#gp');if(gp)gp.innerHTML=regGender?avatar(defAv(regGender),92)+`<span>${regGender=='male'?'♂ Male':'♀ Female'} · default character</span>`:''};
+ app.querySelectorAll('.gen button').forEach(b=>b.onclick=()=>{regGender=b.dataset.g;updG()});updG();
+ const err=m=>$('#err').textContent=m;
+ $('#go').onclick=async()=>{err('');const em=$('#em').value.trim(),pw=$('#pw').value;
+  try{
+   if(!reg){await signInWithEmailAndPassword(auth,em,pw);return}
+   const dn=$('#dn').value.trim(),un=$('#un').value.trim(),bd=$('#bd').value;
+   if(!dn)return err('Enter a display name.');
+   if(!regGender)return err('Please choose Male or Female.');
+   if(!/^[A-Za-z][A-Za-z0-9._]{2,15}$/.test(un))return err('Username: 3–16 chars, start with a letter; letters, numbers, . and _ only.');
+   if(bad(dn)||bad(un))return err('Please pick a different name - that one has language that is not allowed.');const ul=un.toLowerCase();
+   if((await get(ref(db,'usernames/'+ul))).exists())return err('That username is taken.');
+   const cr=await createUserWithEmailAndPassword(auth,em,pw);
+   try{await update(ref(db),{['usernames/'+ul]:cr.user.uid,['users/'+cr.user.uid]:{displayName:dn,username:un,usernameLower:ul,birthday:bd||'',gender:regGender,score:0,avatar:defAv(regGender),created:Date.now()}})}
+   catch(e2){await deleteUser(cr.user).catch(()=>{});throw e2}
+  }catch(e){err(errMsg(e))}};
+ app.querySelectorAll('input').forEach(i=>i.addEventListener('keydown',e=>{if(e.key=='Enter')$('#go').click()}));
+}
+
+/* ---------- main render ---------- */
+function render(){if(!me)return;
+ app.className=(active||view=='profile'||showFriend)?'chatopen':'';
+ const keep=$('#q')?.value||'',foc=document.activeElement?.id=='q';
+ app.innerHTML=`<div class="side"><div class="top"><button class="meb" id="me">${avatar(me.avatar,40)}<span class="gear">⚙</span></button>${ghost(38,'#0b0b0c')}
+  <div style="display:flex;gap:8px"><button class="ib" id="af" title="Add friend">${IC.add}</button><button class="ib blue" id="nc" title="New chat">${IC.chat}</button></div></div>
+  ${bn?`<div class="banner"><div style="font-size:34px">📣</div><div><b>Keep up with your friends</b>Search a username to start a new chat</div><button class="x" id="bx">✕</button></div>`:''}
+  <div class="search">${IC.srch}<input id="q" placeholder="Search" autocomplete="off" autocapitalize="off" value="${esc(keep)}"></div><div class="list" id="list"></div></div><div class="main" id="main"></div>`;
+ if(foc){const q=$('#q');q.focus();q.setSelectionRange(keep.length,keep.length)}
+ $('#me').onclick=()=>{editor=false;view='profile';active=null;showFriend=null;msgUnsub&&msgUnsub();render()};
+ $('#af').onclick=$('#nc').onclick=()=>$('#q').focus();
+ $('#bx')&&($('#bx').onclick=()=>{bn=false;render()});
+ $('#q').oninput=searchUsers;
+ renderList();renderMain();
+}
+function renderList(){const l=$('#list');const q=$('#q').value.trim();let h='';
+ if(q){h+=`<div class="lbl">RESULTS</div>`;
+  if(results===null)h+=`<div class="empty">Searching…</div>`;
+  else if(!results.length)h+=`<div class="empty">No users found for “${esc(q)}”</div>`;
+  else h+=results.map(r=>`<div class="row" data-u="${r.id}">${avatar(r.avatar,54)}<div><b>${esc(r.displayName)}</b><small>@${esc(r.username)} · 🔥 ${r.score||0}</small></div></div>`).join('');
+ }else{
+  {const fr=chats.map(c=>c.other).filter(o=>actS(o).length),sn=seenSet(),mn=actS(me.id).length;
+   h+=`<div class="stories"><div class="st" data-s="${me.id}"><div class="ring mine" style="position:relative">${avatar(me.avatar,52)}<b class="plus" data-add="1" title="Add or manage stories">+</b></div><span>My Story</span></div>`+
+   fr.map(o=>{const u=U[o]||{},ns=actS(o).some(t=>!sn.has(t.id));return`<div class="st" data-s="${o}"><div class="ring ${ns?'new':'seen'}">${avatar(u.avatar,52)}</div><span>${esc(u.displayName||'…')}</span></div>`}).join('')+`</div>`}
+  if(!chats.length)h+=`<div class="empty"><div style="margin-bottom:10px">${ghost(70)}</div>No chats yet.<br>Search a username above to say hi 👋</div>`;
+  h+=chats.map(c=>{const o=c.other,u=U[o]||{},nw=c.lastFrom&&c.lastFrom!==me.id&&c.lastTs>(c.seen||0),mine=c.lastFrom==me.id;
+   const st=mine?`<i class="ar"></i><span>Sent</span>`:nw?`<i class="sq new"></i><span style="color:var(--blue);font-weight:700">New Chat</span>`:`<i class="sq"></i><span>Received</span>`;
+   return `<div class="row ${active==o?'on':''}" data-u="${o}">${avatar(u.avatar,56)}<div style="min-width:0"><b>${esc(u.displayName||u.username||'…')}</b><small>${st}<span>·</span><span>${ago(c.lastTs)}</span></small></div><div class="cam ${nw?'new':''}"><i>${IC.cam}</i>${nw?'Reply':''}</div></div>`}).join('')}
+ l.innerHTML=h;
+ l.querySelectorAll('[data-s]').forEach(r=>r.onclick=e=>{if(r.dataset.s==me.id){if(e.target.closest('[data-add]')||!actS(me.id).length)manageStory();else showStory(me.id,0)}else showStory(r.dataset.s,0)});
+ l.querySelectorAll('[data-u]').forEach(r=>r.onclick=()=>{const id=r.dataset.u;if(results){const f=results.find(x=>x.id==id);if(f)U[id]=f}openChat(id)});
+}
+let st;function searchUsers(){const q=$('#q').value.trim().toLowerCase().replace(/^@/,'');clearTimeout(st);
+ if(!q){results=null;return renderList()}
+ results=null;renderList();
+ st=setTimeout(async()=>{try{
+  const sn=await get(query(ref(db,'users'),orderByChild('usernameLower'),startAt(q),endAt(q+'\uf8ff'),limitToFirst(10)));
+  results=[];sn.forEach(d=>{if(d.key!=me.id)results.push(san({id:d.key,...d.val()}))});
+  const ex=results.findIndex(r=>r.usernameLower==q);if(ex>0)results.unshift(results.splice(ex,1)[0]);
+ }catch(e){results=[];toast(e.message)}renderList()},250)}
+
+function openChat(o){view='chat';showFriend=null;active=o;emoOpen=false;editing=null;const q=$('#q');if(q)q.value='';results=null;
+ msgUnsub&&msgUnsub();window.msgs=[];
+ msgUnsub=onValue(query(ref(db,'messages/'+cid(me.id,o)),orderByChild('ts')),x=>{
+  const a=[];x.forEach(c=>{a.push({id:c.key,...c.val()})});window.msgs=a;renderMain(true);markSeen()},()=>{});
+ render();}
+async function markSeen(){const c=chats.find(x=>x.other==active);
+ if(c&&c.lastFrom!==me.id&&c.lastTs>(c.seen||0))update(ref(db,`userChats/${me.id}/${active}`),{seen:Date.now()}).catch(()=>{})}
+
+function renderMain(keep){const m=$('#main');if(!m)return;
+ if(showFriend)return renderFriend(m);
+ if(view=='profile'&&!active)return renderProfile(m);
+ if(!active){m.innerHTML=`<div class="empty"><div style="margin-bottom:12px">${ghost(110)}</div><p style="font-size:18px;font-weight:700;color:#fff">Welcome to Snapchat Ultra</p><p>Select a chat or search a username to start</p></div>`;return}
+ const u=U[active]||{},prev=$('#in')?.value||'',f=document.activeElement?.id=='in',fe=document.activeElement?.id=='ei';
+ const groups=[];(window.msgs||[]).forEach(x=>{const g=groups[groups.length-1];if(g&&g.from==x.from)g.items.push(x);else groups.push({from:x.from,t:x.ts,items:[x]})});
+ const body=groups.map(g=>{const mine=g.from==me.id;return`<div class="g ${mine?'me':'them'}"><div class="gh"><b>${mine?'ME':esc((u.displayName||'').toUpperCase())}</b><span>${clock(g.t)}</span></div>${g.items.map(x=>msgHtml(x,mine)).join('')}</div>`}).join('');
+ m.innerHTML=`<div class="head"><button class="ib back" id="bk">‹</button><button id="hp">${avatar(u.avatar,42)}</button><div><b>${esc(u.displayName)}</b><small>@${esc(u.username)}</small></div></div>
+  <div class="msgs" id="ms">${body||`<div class="empty">Say hi to ${esc(u.displayName)} 👋</div>`}</div>
+  <form class="bar" id="fm"><input id="in" placeholder="Send a chat" autocomplete="off" value="${esc(prev)}"><button type="button" class="ib" id="eb">${IC.emo}</button>
+  ${emoOpen?`<div class="emo">${EMO.map(e=>`<button type="button" data-e="${e}">${e}</button>`).join('')}</div>`:''}</form>`;
+ const ms=$('#ms');ms.scrollTop=ms.scrollHeight;
+ if(editing){const ei=$('#ei');if(ei&&(fe||editing.fresh)){ei.focus();ei.setSelectionRange(ei.value.length,ei.value.length);editing.fresh=false}}else if(f||keep===undefined)$('#in').focus();
+ $('#bk').onclick=()=>{active=null;editing=null;msgUnsub&&msgUnsub();render()};
+ $('#hp').onclick=()=>{showFriend=active;renderMain()};
+ $('#eb').onclick=()=>{emoOpen=!emoOpen;renderMain(true);$('#in').focus()};
+ m.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{$('#in').value+=b.dataset.e;$('#in').focus()});
+ m.querySelectorAll('[data-ed]').forEach(b=>b.onclick=()=>{const x=(window.msgs||[]).find(y=>y.id==b.dataset.ed);if(x){editing={id:x.id,val:x.text,fresh:true};renderMain(true)}});
+ m.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{if(!confirm("Delete this message? This can't be undone."))return;
+  if(editing&&editing.id==b.dataset.del)editing=null;
+  remove(ref(db,`messages/${cid(me.id,active)}/${b.dataset.del}`)).catch(e=>toast('Delete failed: '+e.message))});
+ m.querySelectorAll('[data-h]').forEach(b=>b.onclick=()=>showHistory(b.dataset.h));
+ const ei=$('#ei');if(ei){ei.oninput=()=>{if(editing)editing.val=ei.value};
+  ei.onkeydown=e=>{if(e.key=='Enter'){e.preventDefault();saveEdit()}else if(e.key=='Escape'){editing=null;renderMain(true)}};
+  $('#es').onclick=saveEdit;$('#ec').onclick=()=>{editing=null;renderMain(true)}}
+ $('#fm').onsubmit=async e=>{e.preventDefault();const t=$('#in').value.trim();if(!t)return;$('#in').value='';
+  const id=cid(me.id,active),now=Date.now(),a=active;
+  try{await set(push(ref(db,'messages/'+id)),{from:me.id,text:t,ts:now});
+   await update(ref(db),{[`userChats/${me.id}/${a}/lastText`]:t,[`userChats/${me.id}/${a}/lastFrom`]:me.id,[`userChats/${me.id}/${a}/lastTs`]:now,[`userChats/${me.id}/${a}/seen`]:now,
+    [`userChats/${a}/${me.id}/lastText`]:t,[`userChats/${a}/${me.id}/lastFrom`]:me.id,[`userChats/${a}/${me.id}/lastTs`]:now});
+   update(ref(db,'users/'+me.id),{score:increment(1)});
+  }catch(e){toast('Failed: '+e.message)}};
+}
+function profInfo(u,own){return`<div class="card"><div class="kv"><span>Snap Score</span><b>🔥 ${u.score||0}</b></div><div class="kv"><span>Birthday</span><b>${fmtB(u.birthday)}</b></div><div class="kv"><span>Zodiac</span><b>${zodiac(u.birthday)}</b></div><div class="kv"><span>Gender</span><b>${u.gender=='male'?'♂ Male':u.gender=='female'?'♀ Female':'Not set'}</b></div>${own?`<div class="kv"><span>Email</span><b>${esc(auth.currentUser?.email)}</b></div>`:''}</div>`}
+function renderFriend(m){const u=U[showFriend]||{};
+ m.innerHTML=`<div class="head"><button class="ib back" style="display:grid" id="bk">‹</button><b>Profile</b></div><div class="prof"><div class="hero">${avatar(u.avatar,150,1)}<h2>${esc(u.displayName)}</h2><p>@${esc(u.username)}</p></div>${profInfo(u)}<button class="btn blue" id="ch">Chat</button></div>`;
+ $('#bk').onclick=()=>{showFriend=null;render()};$('#ch').onclick=()=>{showFriend=null;renderMain()};
+}
+
+/* ---------- own profile + character editor ---------- */
+function renderProfile(m){const a={...defAv(),...me.avatar};
+ if(editor)return renderEditor(m,a);
+ m.innerHTML=`<div class="head"><button class="ib back" style="display:grid" id="bk">‹</button><b>My Profile</b></div><div class="prof">
+ <div class="hero">${avatar(a,150,1)}<h2>${esc(me.displayName)}</h2><p>@${esc(me.username)}</p></div>${profInfo(me,1)}
+ <button class="btn blue" id="vs">📖 ${actS(me.id).length?'View my story':'Post a story'}</button>
+ <button class="btn gray" id="oe">✏️ Edit your character</button>
+ <div class="card pad"><b style="font-size:18px">Edit info</b>
+  <input class="field" id="edn" placeholder="Display name" value="${esc(me.displayName)}">
+  <div style="font-size:12px;color:var(--mut);margin:8px 0 0 4px">Birthday</div><input class="field" id="ebd" type="date" value="${esc(me.birthday||'')}">
+  <div style="font-size:12px;color:var(--mut);margin:8px 0 4px 4px">Gender</div><div class="gen" id="eg"><button type="button" data-g="male" class="${me.gender=='male'?'on':''}">♂ Male</button><button type="button" data-g="female" class="${me.gender=='female'?'on':''}">♀ Female</button></div>
+  <button class="btn" id="sv">Save Changes</button></div>
+ <button class="btn red" id="lo">Log Out</button><div style="height:30px"></div></div>`;
+ $('#bk').onclick=()=>{view='chat';render()};
+ $('#oe').onclick=()=>{editor=true;renderMain()};
+ $('#vs').onclick=()=>actS(me.id).length?showStory(me.id,0):manageStory();
+ let eg=me.gender||'';$('#eg').querySelectorAll('button').forEach(b=>b.onclick=()=>{eg=b.dataset.g;$('#eg').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x==b))});
+ $('#sv').onclick=async()=>{const dn=$('#edn').value.trim();if(!dn)return toast('Name cannot be empty');
+  if(bad(dn))return toast('That name has language that is not allowed');
+  await update(ref(db,'users/'+me.id),{displayName:dn,birthday:$('#ebd').value,...(eg?{gender:eg}:{})});if(eg)me.gender=eg;renderProfile($('#main'));toast('Saved ✓')};
+ $('#lo').onclick=()=>signOut(auth);
+}
+function renderEditor(m,a){const sc=$('.prof')?.scrollTop||0,[,groups]=CATS[edTab];
+ const chip=(k,i,v)=>{const on=a[k]==i,arr=Array.isArray(v),sw=arr||String(v).startsWith('#');
+  return`<button class="chip ${sw?'sw':''} ${on?'on':''}" data-k="${k}" data-i="${i}" ${sw?`style="background:${arr?`linear-gradient(135deg,${v[0]},${v[1]})`:v}"`:''}>${sw?'':v}</button>`};
+ m.innerHTML=`<div class="head"><button class="ib" style="display:grid" id="ex" title="Close" aria-label="Close editor">✕</button><b>Edit your character</b></div><div class="prof">
+ <div class="hero">${avatar(a,120,1)}</div>
+ <div class="card pad">
+  <div class="tabs">${CATS.map((c,i)=>`<button class="tab ${i==edTab?'on':''}" data-t="${i}">${c[0]}</button>`).join('')}</div>
+  ${groups.map(([k,label,vals])=>`<div class="opt"><p>${label}</p><div class="chips">${vals.map((v,i)=>chip(k,i,v)).join('')}</div></div>`).join('')}
+  <button class="btn gray" id="rnd">🎲 Randomize</button><button class="btn gray" id="rst">↺ Reset to ${me.gender=='female'?'female':'male'} default</button></div>
+ <button class="btn" id="dn">Done</button><div style="height:30px"></div></div>`;
+ $('.prof').scrollTop=sc;
+ const setAv=na=>{me.avatar=na;renderProfile($('#main'));update(ref(db,'users/'+me.id),{avatar:na})};
+ const closeEd=()=>{editor=false;renderMain()};
+ $('#ex').onclick=closeEd;$('#dn').onclick=closeEd;
+ m.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{edTab=+t.dataset.t;renderProfile(m)});
+ m.querySelectorAll('.chip').forEach(c=>c.onclick=()=>setAv({...a,[c.dataset.k]:+c.dataset.i}));
+ $('#rst').onclick=()=>setAv(defAv(me.gender));
+ $('#rnd').onclick=()=>{const r={};CATS.forEach(([,gs])=>gs.forEach(([k,,v])=>r[k]=Math.floor(Math.random()*v.length)));setAv(r)};
+}
+</script></body></html>
